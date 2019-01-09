@@ -21,7 +21,8 @@ description:         Please see the README on GitHub at <https://github.com/will
 
 dependencies:
 - base >= 4.7 && < 5
-- brick
+- brick >= 0.46
+- HUnit
 
 library:
   source-dirs: src

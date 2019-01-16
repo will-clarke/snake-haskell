@@ -5,3 +5,5 @@ snake.cabal
 dist/
 dist-newstyle/
 codex.tags
+
+TAGS

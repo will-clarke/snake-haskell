@@ -1,0 +1,12 @@
+* Snake written in Haskell
+
+No idea if this will ever work... at the moment we've got some basic stuff showing on a terminal :|
+
+*** How to run
+
+    - Make sure you've got [[https://www.haskellstack.org/][~stack~]] installed. Then:
+#+BEGIN_SRC sh
+git clone https://github.com/will-clarke/snake-haskell
+cd snake-haskell
+stack run
+#+END_SRC    

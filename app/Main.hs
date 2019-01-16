@@ -1,11 +1,11 @@
 module Main where
 
-import qualified Brick                      as B
-import qualified Brick.BChan                as BChan
-import qualified Brick.Widgets.Border       as Border
+import qualified Brick as B
+import qualified Brick.BChan as BChan
+import qualified Brick.Widgets.Border as Border
 import qualified Brick.Widgets.Border.Style as BorderStyle
-import qualified Brick.Widgets.Center       as Center
-import qualified Graphics.Vty               as V
+import qualified Brick.Widgets.Center as Center
+import qualified Graphics.Vty as V
 
 -- | Reflect which keys are being pressed
 data KeyPressed = KeyUp | KeyDown | KeyLeft | KeyRight | KeyNone deriving Show
@@ -37,8 +37,7 @@ drawHeader g =
 
 drawGame :: Game -> B.Widget()
 drawGame g =
-  Border.border $
-  Center.center $ stackedLines B.<=> B.str (show $ keyPressed g)
+  Border.border $ Center.center $ stackedLines B.<=> B.str (show $ keyPressed g)
 
 drawUI :: Game -> [B.Widget()]
 drawUI g =
@@ -72,6 +71,6 @@ app = B.App
   }
 
 main :: IO Game
-main = do
+main =
     B.customMain (V.mkVty V.defaultConfig) Nothing app (Game "text" KeyNone)
 

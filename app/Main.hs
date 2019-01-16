@@ -57,6 +57,7 @@ drawGame g =
     coolDisplayThing g = take (oscillatingN g) (infList '#')
 
 -- todo: what's the haskell way of doing this?
+-- It's *repeat*
 infList :: a -> [a]
 infList a = a : infList a
 

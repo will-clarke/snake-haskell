@@ -32,19 +32,24 @@ data Game = Game {
     keyPressed :: KeyPressed
 }
 
+drawHeader :: Game -> B.Widget Name
+drawHeader g =
+  Border.borderWithLabel
+    (B.str $ title g)
+    (B.str (show $ keyPressed g) B.<+>
+      B.padLeft B.Max (B.str "Lives: 0 --- lol"))
+
+drawGame :: Game -> B.Widget Name
+drawGame g =
+  Border.border $
+  Center.center $ stackedLines B.<=> B.str (show $ keyPressed g)
+
 drawUI :: Game -> [B.Widget Name]
 drawUI g =
-  [ B.withBorderStyle BorderStyle.unicodeRounded $
-      ((Border.borderWithLabel
-          (B.str $ title g)
-          ((B.str $ show $ keyPressed g) B.<+>
-           (B.padLeft B.Max (B.str "Lives: 0 --- lol")))) B.<=>
-      (Border.border
-       (Center.center (stackedLines B.<=> (B.str $ show $ keyPressed g)))))
-  ]
+  [B.withBorderStyle BorderStyle.unicodeRounded $ drawHeader g B.<=> drawGame g]
 
 progress :: Game -> Game
-progress g = Game ( 'x' : (title g) ) (keyPressed g)
+progress g = Game ( 'x' : title g ) (keyPressed g)
 
 handleEvent :: Game -> B.BrickEvent Name Tick -> B.EventM Name (B.Next Game)
 handleEvent g (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt g
@@ -59,7 +64,7 @@ runStep g KeyUp    = B.continue $ g { keyPressed = KeyUp }
 runStep g KeyDown  = B.continue $ g { keyPressed = KeyDown }
 runStep g KeyRight = B.continue $ g { keyPressed = KeyRight }
 runStep g KeyLeft  = B.continue $ g { keyPressed = KeyLeft }
-runStep g _        = B.continue $ g
+runStep g _        = B.continue g
 
 app :: B.App Game Tick Name
 app = B.App
@@ -67,11 +72,11 @@ app = B.App
   , B.appChooseCursor = B.neverShowCursor
   , B.appHandleEvent  = handleEvent
   , B.appStartEvent   = return
-  , B.appAttrMap      = const (B.attrMap (V.currentAttr) [])
+  , B.appAttrMap      = const (B.attrMap V.currentAttr [])
   }
 
 main :: IO Game
 main = do
     chan <- BChan.newBChan 10
-    B.customMain (V.mkVty V.defaultConfig) (Just chan) app $ (Game "text" KeyNone)
+    B.customMain (V.mkVty V.defaultConfig) (Just chan) app (Game "text" KeyNone)
 

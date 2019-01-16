@@ -1,22 +1,34 @@
 module Main where
 
-import qualified Brick as B
-import qualified Brick.BChan as BChan
-import qualified Brick.Widgets.Border as Border
+import qualified Brick                      as B
+import qualified Brick.BChan                as BChan
+import qualified Brick.Widgets.Border       as Border
 import qualified Brick.Widgets.Border.Style as BorderStyle
-import qualified Brick.Widgets.Center as Center
-import qualified Graphics.Vty as V
+import qualified Brick.Widgets.Center       as Center
+import qualified Graphics.Vty               as V
+import qualified Lib                        as Lib
 
 -- | Reflect which keys are being pressed
-data KeyPressed = KeyUp | KeyDown | KeyLeft | KeyRight | KeyNone deriving Show
+data KeyPressed = KeyUp | KeyDown | Keyieft | KeyRight | KeyNone deriving Show
 
 -- | Our main game state
 data Game = Game {
-    title      :: String,
-    keyPressed :: KeyPressed
+    title                :: String,
+    keyPressed           :: KeyPressed,
+    oscillatingN         :: Int,
+    oscillatingDirection :: Lib.Direction
 }
 
-firstLine :: B.Widget()
+newGame :: Game
+newGame =
+  Game
+    { title = "Super Funky Title"
+    , keyPressed = KeyNone
+    , oscillatingN = 0
+    , oscillatingDirection = Lib.L
+    }
+
+firstLine :: B.Widget ()
 firstLine = foldr (B.<+>) B.emptyWidget [B.str "h", B.str "e", B.str "y"]
 
 secondLine :: B.Widget()
@@ -37,14 +49,22 @@ drawHeader g =
 
 drawGame :: Game -> B.Widget()
 drawGame g =
-  Border.border $ Center.center $ stackedLines B.<=> B.str (show $ keyPressed g)
+  Border.border $
+  Center.center $
+  stackedLines B.<=> B.str (show $ keyPressed g) B.<=>
+  B.str (show $ oscillatingN g)
 
 drawUI :: Game -> [B.Widget()]
 drawUI g =
   [B.withBorderStyle BorderStyle.unicodeRounded $ drawHeader g B.<=> drawGame g]
 
 progress :: Game -> Game
-progress g = Game ( 'x' : title g ) (keyPressed g)
+  -- TODO: There must be a better way to update games.. Maybe look into lenses?
+  -- o_O
+progress g =
+  let (n, dir) =
+        Lib.oscillatingNumber ((oscillatingN g), (oscillatingDirection g))
+   in Game ('x' : title g) (keyPressed g) n dir
 
 handleEvent :: Game -> B.BrickEvent()() -> B.EventM() (B.Next Game)
 handleEvent g (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt g
@@ -72,5 +92,5 @@ app = B.App
 
 main :: IO Game
 main =
-    B.customMain (V.mkVty V.defaultConfig) Nothing app (Game "text" KeyNone)
+    B.customMain (V.mkVty V.defaultConfig) Nothing app newGame
 

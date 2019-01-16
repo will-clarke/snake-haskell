@@ -1,13 +1,13 @@
 module Lib
-    ( someFunc,
+    (
       oscillatingNumber,
-      Direction
+      Direction,
     ) where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
 
-data Direction = L | R
+data Direction
+  = L
+  | R
 
 oscillationLenght :: Int
 oscillationLenght = 15
@@ -24,7 +24,6 @@ decr :: Int -> Int
 decr n = n - 1
 
 oscillatingNumber :: Oscillation -> Oscillation
-
 oscillatingNumber (n, R)
   | n < (oscillationLenght + oscillationPadding) = (incr n, R)
   | otherwise = (decr n, L)

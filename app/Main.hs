@@ -1,11 +1,11 @@
 module Main where
 
-import qualified Brick as B
-import qualified Brick.BChan as BChan
-import qualified Brick.Widgets.Border as Border
-import qualified Brick.Widgets.Center as Center
+import qualified Brick                      as B
+import qualified Brick.BChan                as BChan
+import qualified Brick.Widgets.Border       as Border
 import qualified Brick.Widgets.Border.Style as BorderStyle
-import qualified Graphics.Vty as V
+import qualified Brick.Widgets.Center       as Center
+import qualified Graphics.Vty               as V
 
 -- | Ticks mark passing of time
 data Tick = Tick
@@ -28,19 +28,23 @@ stackedLines = foldr (B.<=>) B.emptyWidget [firstLine, secondLine, thirdLine]
 data KeyPressed = KeyUp | KeyDown | KeyLeft | KeyRight | KeyNone deriving Show
 
 data Game = Game {
-    theText :: String,
+    title      :: String,
     keyPressed :: KeyPressed
 }
 
 drawUI :: Game -> [B.Widget Name]
 drawUI g =
-  [B.withBorderStyle BorderStyle.unicodeRounded $
-  Border.borderWithLabel
-    (B.str $ theText g)
-    (Center.center (stackedLines B.<=> (B.str $ show $ keyPressed g)))]
+  [ B.withBorderStyle BorderStyle.unicodeRounded $
+      ((Border.borderWithLabel
+          (B.str $ title g)
+          ((B.str $ show $ keyPressed g) B.<+>
+           (B.padLeft B.Max (B.str "Lives: 0 --- lol")))) B.<=>
+      (Border.border
+       (Center.center (stackedLines B.<=> (B.str $ show $ keyPressed g)))))
+  ]
 
 progress :: Game -> Game
-progress g = Game ( 'x' : (theText g) ) (keyPressed g)
+progress g = Game ( 'x' : (title g) ) (keyPressed g)
 
 handleEvent :: Game -> B.BrickEvent Name Tick -> B.EventM Name (B.Next Game)
 handleEvent g (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt g
@@ -51,11 +55,11 @@ handleEvent g (B.VtyEvent (V.EvKey V.KRight [])) = runStep g KeyRight
 handleEvent g _ = runStep (progress g) KeyNone
 
 runStep :: Game -> KeyPressed -> B.EventM Name (B.Next Game)
-runStep g KeyUp = B.continue $ g { keyPressed = KeyUp }
-runStep g KeyDown = B.continue $ g { keyPressed = KeyDown }
+runStep g KeyUp    = B.continue $ g { keyPressed = KeyUp }
+runStep g KeyDown  = B.continue $ g { keyPressed = KeyDown }
 runStep g KeyRight = B.continue $ g { keyPressed = KeyRight }
-runStep g KeyLeft = B.continue $ g { keyPressed = KeyLeft }
-runStep g _ = B.continue $ g
+runStep g KeyLeft  = B.continue $ g { keyPressed = KeyLeft }
+runStep g _        = B.continue $ g
 
 app :: B.App Game Tick Name
 app = B.App

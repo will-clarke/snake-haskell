@@ -9,7 +9,7 @@ import qualified Graphics.Vty               as V
 import qualified Lib                        as Lib
 
 -- | Reflect which keys are being pressed
-data KeyPressed = KeyUp | KeyDown | Keyieft | KeyRight | KeyNone deriving Show
+data KeyPressed = KeyUp | KeyDown | KeyLeft | KeyRight | KeyNone deriving Show
 
 -- | Our main game state
 data Game = Game {
@@ -52,7 +52,13 @@ drawGame g =
   Border.border $
   Center.center $
   stackedLines B.<=> B.str (show $ keyPressed g) B.<=>
-  B.str (show $ oscillatingN g)
+  (B.str $ coolDisplayThing g)
+  where
+    coolDisplayThing g = take (oscillatingN g) (infList '#')
+
+-- todo: what's the haskell way of doing this?
+infList :: a -> [a]
+infList a = a : infList a
 
 drawUI :: Game -> [B.Widget()]
 drawUI g =

@@ -1,7 +1,7 @@
 module Lib
     (
       oscillatingNumber,
-      Direction,
+      Direction(..),
     ) where
 
 

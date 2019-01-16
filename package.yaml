@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.7 && < 5
 - brick >= 0.46
 - HUnit
+- vty
 
 library:
   source-dirs: src

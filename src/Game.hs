@@ -6,7 +6,7 @@ module Game
 
 import qualified Brick        as B
 import qualified Graphics.Vty as V
-import qualified Lib
+import qualified Pointless
 import qualified SnakeIO
 
 -- | Our main game state
@@ -14,7 +14,7 @@ data State = State {
     title                :: String,
     keyPressed           :: SnakeIO.KeyPressed,
     oscillatingN         :: Int,
-    oscillatingDirection :: Lib.Direction
+    oscillatingDirection :: Pointless.Direction
 }
 
 newState :: State
@@ -23,7 +23,7 @@ newState =
     { title = "Super Funky Title"
     , keyPressed = SnakeIO.KeyNone
     , oscillatingN = 1
-    , oscillatingDirection = Lib.L
+    , oscillatingDirection = Pointless.L
     }
 
 progress :: State -> State
@@ -31,7 +31,7 @@ progress :: State -> State
   -- o_O
 progress g =
   let (n, dir) =
-        Lib.oscillatingNumber (oscillatingN g, oscillatingDirection g)
+        Pointless.oscillatingNumber (oscillatingN g, oscillatingDirection g)
    in State ('x' : title g) (keyPressed g) n dir
 
 -- TODO: Can we move this to the UI lib?

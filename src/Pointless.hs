@@ -1,9 +1,8 @@
-module Lib
+module Pointless
     (
       oscillatingNumber,
       Direction(..),
     ) where
-
 
 data Direction
   = L

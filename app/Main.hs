@@ -1,9 +1,9 @@
 module Main where
 
 import qualified Brick as B
-import qualified Game  as Game
-import qualified Lib   as Lib
-import qualified UI    as UI
+import qualified Game
+import Pointless()
+import qualified UI
 
 app :: B.App Game.State()()
 app = B.App

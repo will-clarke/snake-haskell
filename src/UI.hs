@@ -5,11 +5,11 @@ module UI
   ) where
 
 import qualified Brick                      as B
-import qualified Brick.BChan                as BChan
+import Brick.BChan()
 import qualified Brick.Widgets.Border       as Border
 import qualified Brick.Widgets.Border.Style as BorderStyle
 import qualified Brick.Widgets.Center       as Center
-import qualified Game                       as Game
+import qualified Game
 import qualified Graphics.Vty               as V
 
 
@@ -36,10 +36,9 @@ drawHeader g =
 drawGame :: Game.State -> B.Widget()
 drawGame g =
   Border.border $
-  (Center.center $ stackedLines B.<=> B.str (show $ Game.keyPressed g)) B.<=>
-  (Center.center (B.str $ coolDisplayThing g))
+  Center.center stackedLines B.<=> Center.center (B.str $ coolDisplayThing g)
   where
-    coolDisplayThing g = take (Game.oscillatingN g) (repeat '#')
+    coolDisplayThing game = replicate (Game.oscillatingN game) '#'
 
 draw :: Game.State -> [B.Widget()]
 draw g =

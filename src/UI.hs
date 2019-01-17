@@ -1,0 +1,43 @@
+module UI
+  ( draw
+  ) where
+
+import qualified Brick                      as B
+import qualified Brick.BChan                as BChan
+import qualified Brick.Widgets.Border       as Border
+import qualified Brick.Widgets.Border.Style as BorderStyle
+import qualified Brick.Widgets.Center       as Center
+import qualified Game                       as Game
+
+
+
+firstLine :: B.Widget ()
+firstLine = foldr (B.<+>) B.emptyWidget [B.str "h", B.str "e", B.str "y"]
+
+secondLine :: B.Widget()
+secondLine = foldr (B.<+>) B.emptyWidget [B.str "y", B.str "o"]
+
+thirdLine :: B.Widget()
+thirdLine = foldr (B.<+>) B.emptyWidget [B.str "h", B.str "a", B.str " ", B.str "h", B.str "a"]
+
+stackedLines :: B.Widget()
+stackedLines = foldr (B.<=>) B.emptyWidget [firstLine, secondLine, thirdLine]
+
+drawHeader :: Game.State -> B.Widget()
+drawHeader g =
+  Border.borderWithLabel
+    (B.str $ Game.title g)
+    (B.str (show $ Game.keyPressed g) B.<+>
+      B.padLeft B.Max (B.str "Lives: 0 --- lol"))
+
+drawGame :: Game.State -> B.Widget()
+drawGame g =
+  Border.border $
+  (Center.center $ stackedLines B.<=> B.str (show $ Game.keyPressed g)) B.<=>
+  (Center.center (B.str $ coolDisplayThing g))
+  where
+    coolDisplayThing g = take (Game.oscillatingN g) (repeat '#')
+
+draw :: Game.State -> [B.Widget()]
+draw g =
+  [B.withBorderStyle BorderStyle.unicodeRounded $ drawHeader g B.<=> drawGame g]

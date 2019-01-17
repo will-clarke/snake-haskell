@@ -1,5 +1,7 @@
 module UI
-  ( draw
+  ( draw,
+    emptyAttrMap,
+    defaultVty
   ) where
 
 import qualified Brick                      as B
@@ -8,6 +10,7 @@ import qualified Brick.Widgets.Border       as Border
 import qualified Brick.Widgets.Border.Style as BorderStyle
 import qualified Brick.Widgets.Center       as Center
 import qualified Game                       as Game
+import qualified Graphics.Vty               as V
 
 
 
@@ -41,3 +44,9 @@ drawGame g =
 draw :: Game.State -> [B.Widget()]
 draw g =
   [B.withBorderStyle BorderStyle.unicodeRounded $ drawHeader g B.<=> drawGame g]
+
+emptyAttrMap :: a -> B.AttrMap
+emptyAttrMap = const (B.attrMap V.currentAttr [])
+
+defaultVty :: IO V.Vty
+defaultVty = V.mkVty V.defaultConfig

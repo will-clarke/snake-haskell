@@ -1,25 +1,15 @@
 module Game.State
-  ( State(..)
-  , newState
+  ( newState
   ) where
 
-import qualified SnakeIO
+import qualified Types
 import qualified Pointless
 
-
--- | Our main game state
-data State = State {
-    title                :: String,
-    keyPressed           :: SnakeIO.KeyPressed,
-    oscillatingN         :: Int,
-    oscillatingDirection :: Pointless.Direction
-}
-
-newState :: State
+newState :: Types.State
 newState =
-  State
-    { title = "Super Funky Title"
-    , keyPressed = SnakeIO.KeyNone
-    , oscillatingN = 1
-    , oscillatingDirection = Pointless.L
+  Types.State
+    { Types.title = "Super Funky Title"
+    , Types.keyPressed = Types.KeyNone
+    , Types.oscillatingN = 1
+    , Types.oscillatingDirection = Pointless.L
     }

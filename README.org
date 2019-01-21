@@ -10,3 +10,19 @@ git clone https://github.com/will-clarke/snake-haskell
 cd snake-haskell
 stack run
 #+END_SRC    
+
+
+Some notes about how I'm implementing this:
+- Worth having two typeclasses - ~Tickable~ & ~Drawable~?
+
+#+BEGIN_SRC haskell
+class Drawable a where
+    coords -> [Coordinates]
+    icon -> Char  
+  
+class Tickable state a where
+    tick -> a -> state - > a
+#+END_SRC
+No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
+
+- [ ] Find out how to get screen dimensions from Brick.

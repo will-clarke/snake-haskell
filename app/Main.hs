@@ -16,6 +16,4 @@ app = B.App
   }
 
 main :: IO Types.State
-main =
-    B.customMain UI.defaultVty Nothing app S.newState
-
+main = B.customMain UI.defaultVty Nothing app S.newState

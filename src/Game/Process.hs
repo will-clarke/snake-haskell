@@ -25,7 +25,7 @@ progress g =
         , Types.snake = updatedSnake
         , Types.keyPressed = keyPressed
         -- , Types.food
-        -- , Types.bounds
+        -- , Types.bounds ---- IS IT POSSIBLE TO EXTRACT THIS INFO FROM THE MONAD???
         -- , Types.score
         } -- <- these are the fields I wanna update
 
@@ -38,8 +38,8 @@ runStep g _              = B.continue g
 
 handleEvent :: Types.State -> B.BrickEvent () () -> B.EventM () (B.Next Types.State)
 handleEvent g (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt g
-handleEvent g (B.VtyEvent (V.EvKey V.KUp [])) = runStep g Types.KeyUp
-handleEvent g (B.VtyEvent (V.EvKey V.KDown [])) = runStep g Types.KeyDown
-handleEvent g (B.VtyEvent (V.EvKey V.KLeft [])) = runStep g Types.KeyLeft
-handleEvent g (B.VtyEvent (V.EvKey V.KRight [])) = runStep g Types.KeyRight
+handleEvent g (B.VtyEvent (V.EvKey V.KUp [])) = runStep (progress g) Types.KeyUp
+handleEvent g (B.VtyEvent (V.EvKey V.KDown [])) = runStep (progress g) Types.KeyDown
+handleEvent g (B.VtyEvent (V.EvKey V.KLeft [])) = runStep (progress g) Types.KeyLeft
+handleEvent g (B.VtyEvent (V.EvKey V.KRight [])) = runStep (progress g) Types.KeyRight
 handleEvent g _ = runStep (progress g) Types.KeyNone

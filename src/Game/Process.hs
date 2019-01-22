@@ -42,4 +42,8 @@ handleEvent g (B.VtyEvent (V.EvKey V.KUp [])) = runStep (progress g) Types.KeyUp
 handleEvent g (B.VtyEvent (V.EvKey V.KDown [])) = runStep (progress g) Types.KeyDown
 handleEvent g (B.VtyEvent (V.EvKey V.KLeft [])) = runStep (progress g) Types.KeyLeft
 handleEvent g (B.VtyEvent (V.EvKey V.KRight [])) = runStep (progress g) Types.KeyRight
+  -- TODO: get these few working!
+handleEvent g (B.VtyEvent (V.EvResize w h)) = runStep (progress g) Types.KeyRight
+handleEvent g (B.VtyEvent (V.EvLostFocus)) = runStep (progress g) Types.KeyRight
+handleEvent g (B.VtyEvent (V.EvGainedFocus)) = runStep (progress g) Types.KeyRight
 handleEvent g _ = runStep (progress g) Types.KeyNone

@@ -1,21 +1,21 @@
-module Snake() where
+module Snake
+  ( Drawable(..)
+  , Tickable(..)
+  ) where
 
--- import Types
+import qualified Types as T
+import qualified Pointless
 
+class Drawable a where
+  coords :: a -> [T.Coordinate]
+  icon :: a -> Char
 
--- slither -> State -> State
--- .. or should we be more specific? Eg.
--- Snake -> Direction -> [Food] -> Bounds -> (Snake, Score, [Food]), etc.. ?
+class Tickable a where
+  tick :: a -> a
 
+instance Drawable T.Snake where
+  icon _ = 'X'
+  coords (T.Snake snake) = snake -- or T.getSegments snake
 
--- updateState / Tick
--- |
--- V
--- slither :: snake -> bounds -> direction -> Maybe snake
--- updateScore :: snake -> [food] -> score
--- restockFood :: snake -> [food] -> [food]
--- hasDied :: snake -> bounds -> boolean
--- screenToShow :: bool -> screen
-
-
--- type Screen = GameOver | Playing
+instance Tickable T.Snake where
+  tick state = state

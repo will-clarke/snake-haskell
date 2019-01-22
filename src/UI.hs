@@ -38,7 +38,7 @@ drawHeader g =
 
 
 -- Example of how to find the screen size... :|
-getSize :: Widget()
+getSize :: B.Widget()
 getSize =
   B.Widget B.Fixed B.Fixed $ do
     c <- B.getContext

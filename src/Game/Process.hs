@@ -10,12 +10,16 @@ import qualified Pointless
 import qualified Types
 
 progress :: Types.State -> Types.State
-  -- TODO: There must be a better way to update games.. Maybe look into lenses?
-  -- o_O
 progress g =
   let (n, dir) =
-        Pointless.oscillatingNumber (Types.oscillatingN g, Types.oscillatingDirection g)
-   in Types.State ('x' : Types.title g) (Types.keyPressed g) n dir
+        Pointless.oscillatingNumber
+          (Types.oscillatingN g, Types.oscillatingDirection g)
+  -- This is some weird way of updating..... {original} {field = updated}
+   in Types.exState -- <- this is the {original} example state
+        { Types.title = 'x' : Types.title g
+        , Types.oscillatingN = n
+        , Types.oscillatingDirection = dir
+        } -- <- these are the fields I wanna update
 
 runStep :: Types.State -> Types.KeyPressed -> B.EventM() (B.Next Types.State)
 runStep g Types.KeyUp    = B.continue $ g { Types.keyPressed = Types.KeyUp }

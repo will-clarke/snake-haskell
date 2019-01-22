@@ -17,11 +17,11 @@ Some notes about how I'm implementing this:
 
 #+BEGIN_SRC haskell
 class Drawable a where
-    coords -> [Coordinates]
-    icon -> Char  
+    coords :: [Coordinates]
+    icon :: Char  
   
-class Tickable state a where
-    tick -> a -> state - > a
+class Tickable a where
+    tick :: a - > a
 #+END_SRC
 No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 

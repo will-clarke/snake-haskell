@@ -8,9 +8,12 @@ module Types
   , exState
   , exFood
   , exSnake
+  , Name(..)
   ) where
 
 import qualified Pointless
+
+data Name = FooBox deriving (Eq, Ord)
 
 -- | Our main game state
 data State = State {

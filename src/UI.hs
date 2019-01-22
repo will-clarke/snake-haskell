@@ -13,7 +13,7 @@ import qualified Graphics.Vty               as V
 import           Lens.Micro                 ((^.))
 import qualified Types
 
-drawHeader :: Types.State -> B.Widget()
+drawHeader :: Types.State -> B.Widget Types.Name
 drawHeader g =
   Border.borderWithLabel
     (B.str $ Types.title g)
@@ -22,13 +22,13 @@ drawHeader g =
 
 
 -- Example of how to find the screen size... :|
-getSize :: B.Widget()
+getSize :: B.Widget Types.Name
 getSize =
   B.Widget B.Fixed B.Fixed $ do
     c <- B.getContext
-    B.render $ B.str $ show ((c ^. B.availWidthL), (c ^. B.availHeightL))
+    B.render $ B.str $ show (c ^. B.availWidthL, c ^. B.availHeightL)
 
-drawGame :: Types.State -> B.Widget()
+drawGame :: Types.State -> B.Widget Types.Name
 drawGame g =
   Border.border $
   Center.center (B.str $ coolDisplayThing g)
@@ -37,7 +37,7 @@ drawGame g =
   where
     coolDisplayThing game = replicate (Types.oscillatingN game) '#'
 
-draw :: Types.State -> [B.Widget()]
+draw :: Types.State -> [B.Widget Types.Name]
 draw g =
   [B.withBorderStyle BorderStyle.unicodeRounded $ drawHeader g B.<=> drawGame g]
 

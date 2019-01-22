@@ -29,14 +29,14 @@ progress g =
         -- , Types.score
         } -- <- these are the fields I wanna update
 
-runStep :: Types.State -> Types.KeyPressed -> B.EventM() (B.Next Types.State)
+runStep :: Types.State -> Types.KeyPressed -> B.EventM Types.Name (B.Next Types.State)
 runStep g Types.KeyUp    = B.continue $ g { Types.keyPressed = Types.KeyUp }
 runStep g Types.KeyDown  = B.continue $ g { Types.keyPressed = Types.KeyDown }
 runStep g Types.KeyRight = B.continue $ g { Types.keyPressed = Types.KeyRight }
 runStep g Types.KeyLeft  = B.continue $ g { Types.keyPressed = Types.KeyLeft }
 runStep g _              = B.continue g
 
-handleEvent :: Types.State -> B.BrickEvent () () -> B.EventM () (B.Next Types.State)
+handleEvent :: Types.State -> B.BrickEvent Types.Name () -> B.EventM Types.Name (B.Next Types.State)
 handleEvent g (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt g
 handleEvent g (B.VtyEvent (V.EvKey V.KUp [])) = runStep (progress g) Types.KeyUp
 handleEvent g (B.VtyEvent (V.EvKey V.KDown [])) = runStep (progress g) Types.KeyDown

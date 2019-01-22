@@ -47,7 +47,9 @@ getSize =
 drawGame :: Types.State -> B.Widget()
 drawGame g =
   Border.border $
-  Center.center stackedLines B.<=> Center.center (B.str $ coolDisplayThing g) B.<=> getSize
+  Center.center stackedLines B.<=> Center.center (B.str $ coolDisplayThing g)
+  B.<=> getSize
+  B.<=> (B.str $ show $ Types.snake g)
   where
     coolDisplayThing game = replicate (Types.oscillatingN game) '#'
 

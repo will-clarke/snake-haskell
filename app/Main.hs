@@ -2,7 +2,6 @@ module Main where
 
 import qualified Brick        as B
 import qualified Game.Process as Process
-import qualified Game.State   as S
 import qualified Types
 import qualified UI
 
@@ -16,4 +15,4 @@ app = B.App
   }
 
 main :: IO Types.State
-main = B.customMain UI.defaultVty Nothing app S.newState
+main = B.customMain UI.defaultVty Nothing app Types.exState

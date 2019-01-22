@@ -22,26 +22,36 @@ data State = State {
     food                 :: Food,
     snake                :: Snake,
     bounds               :: Bounds
-}
+} deriving Show
 
 -- | Reflect which keys are being pressed
-data KeyPressed = KeyUp | KeyDown | KeyLeft | KeyRight | KeyNone deriving Show
+data KeyPressed
+  = KeyUp
+  | KeyDown
+  | KeyLeft
+  | KeyRight
+  | KeyNone
+  deriving (Show)
 
-newtype Snake = Snake { getSegments :: [Coordinate] }
+newtype Snake = Snake
+  { getSegments :: [Coordinate]
+  } deriving (Show)
 
 -- s = Snake { getSegments = [Coordinate{x = 10, y = 100}]}
 
-newtype Food = Food { getFood :: [Coordinate] }
+newtype Food = Food
+  { getFood :: [Coordinate]
+  } deriving (Show)
 
 data Coordinate = Coordinate
   { x :: Int
   , y :: Int
-  }
+  } deriving Show
 
 data Bounds = Bounds
   { maxHeight :: Int
   , maxWidth  :: Int
-  }
+  } deriving (Show)
 
 
 -- example snake for mucking around with

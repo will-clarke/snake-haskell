@@ -6,7 +6,7 @@ module Pointless
 
 data Direction
   = L
-  | R
+  | R deriving Show
 
 oscillationLenght :: Int
 oscillationLenght = 15

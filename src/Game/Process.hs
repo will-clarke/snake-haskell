@@ -8,17 +8,25 @@ import qualified Brick        as B
 import qualified Graphics.Vty as V
 import qualified Pointless
 import qualified Types
+import qualified Snake
 
 progress :: Types.State -> Types.State
 progress g =
   let (n, dir) =
         Pointless.oscillatingNumber
           (Types.oscillatingN g, Types.oscillatingDirection g)
+      keyPressed = Types.keyPressed g
+      updatedSnake = Snake.tick g
   -- This is some weird way of updating..... {original} {field = updated}
    in Types.exState -- <- this is the {original} example state
         { Types.title = 'x' : Types.title g
         , Types.oscillatingN = n
         , Types.oscillatingDirection = dir
+        , Types.snake = updatedSnake
+        , Types.keyPressed = keyPressed
+        -- , Types.food
+        -- , Types.bounds
+        -- , Types.score
         } -- <- these are the fields I wanna update
 
 runStep :: Types.State -> Types.KeyPressed -> B.EventM() (B.Next Types.State)
@@ -27,7 +35,6 @@ runStep g Types.KeyDown  = B.continue $ g { Types.keyPressed = Types.KeyDown }
 runStep g Types.KeyRight = B.continue $ g { Types.keyPressed = Types.KeyRight }
 runStep g Types.KeyLeft  = B.continue $ g { Types.keyPressed = Types.KeyLeft }
 runStep g _              = B.continue g
-
 
 handleEvent :: Types.State -> B.BrickEvent () () -> B.EventM () (B.Next Types.State)
 handleEvent g (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt g

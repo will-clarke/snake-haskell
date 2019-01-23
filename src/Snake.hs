@@ -16,6 +16,10 @@ instance Drawable T.Snake where
   icon _ = 'X'
   coords (T.Snake snake) = snake -- or T.getSegments snake
 
+instance Drawable T.Food where
+  icon _ = '@'
+  coords (T.Food food) = food
+
 instance Tickable T.Snake where
   tick = moveSnake
 

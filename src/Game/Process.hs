@@ -24,6 +24,7 @@ progress state =
         -- , Types.score
         } -- <- these are the fields I wanna update
 
+
 runStep :: Types.State -> Types.KeyPressed -> B.EventM Types.Name (B.Next Types.State)
 runStep state Types.KeyUp    = B.continue $ state { Types.keyPressed = Types.KeyUp }
 runStep state Types.KeyDown  = B.continue $ state { Types.keyPressed = Types.KeyDown }
@@ -31,7 +32,7 @@ runStep state Types.KeyRight = B.continue $ state { Types.keyPressed = Types.Key
 runStep state Types.KeyLeft  = B.continue $ state { Types.keyPressed = Types.KeyLeft }
 runStep state _              = B.continue state
 
-handleEvent :: Types.State -> B.BrickEvent Types.Name () -> B.EventM Types.Name (B.Next Types.State)
+handleEvent :: Types.State -> B.BrickEvent Types.Name Types.Tick -> B.EventM Types.Name (B.Next Types.State)
 handleEvent state (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt state
   -- TODO: Sort out this hack --- key up != key down! Flip the vertical orintation in the draw function.
 handleEvent state (B.VtyEvent (V.EvKey V.KUp [])) = runStep (progress state) Types.KeyDown

@@ -9,7 +9,10 @@ module Types
   , exFood
   , exSnake
   , Name(..)
+  , Tick(..)
   ) where
+
+data Tick = Tick
 
 data Name = FooBox deriving (Eq, Ord)
 

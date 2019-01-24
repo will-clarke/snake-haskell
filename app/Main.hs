@@ -6,7 +6,7 @@ import qualified Game.Process as Process
 import qualified Types
 import qualified UI
 
-app :: B.App Types.State () Types.Name
+app :: B.App Types.State Types.Tick Types.Name
 
 app = B.App
   { B.appDraw         = UI.draw
@@ -17,7 +17,7 @@ app = B.App
   }
 
   -- this startEvent thing to try to work out the size of the window didn't really work :|
--- startEvent :: Types.State -> B.EventM Types.Name Types.State
+-- startEvent :: Types.State -> B.EventM Types.Name Types.Tick Types.State
 -- startEvent s = do
 --   mExtent <- Brick.Main.lookupExtent Types.FooBox
 --   return s {Types.bounds = boundsFromExtent mExtent}

@@ -1,4 +1,4 @@
-module UI
+module Draw
   ( draw,
     emptyAttrMap,
     defaultVty

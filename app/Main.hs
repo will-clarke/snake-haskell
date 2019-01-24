@@ -3,17 +3,17 @@ module Main where
 import qualified Brick      as B
 import           Brick.Main ()
 import qualified Types
-import qualified UI
+import qualified Draw
 import qualified Update
 
 app :: B.App Types.State Types.Tick Types.Name
 
 app = B.App
-  { B.appDraw         = UI.draw
+  { B.appDraw         = Draw.draw
   , B.appChooseCursor = B.neverShowCursor
   , B.appHandleEvent  = Update.handleEvent
   , B.appStartEvent   = return
-  , B.appAttrMap      = UI.emptyAttrMap
+  , B.appAttrMap      = Draw.emptyAttrMap
   }
 
   -- this startEvent thing to try to work out the size of the window didn't really work :|
@@ -29,4 +29,4 @@ app = B.App
 --           Types.Bounds {Types.maxWidth = width, Types.maxHeight = height}
 
 main :: IO Types.State
-main = B.customMain UI.defaultVty Nothing app Types.exState
+main = B.customMain Draw.defaultVty Nothing app Types.exState

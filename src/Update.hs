@@ -1,4 +1,4 @@
-module Game.Process
+module Update
   ( runStep
   , progress
 , handleEvent

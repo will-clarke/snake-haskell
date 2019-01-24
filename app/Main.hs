@@ -1,17 +1,17 @@
 module Main where
 
-import qualified Brick        as B
-import qualified Brick.Main
-import qualified Game.Process as Process
+import qualified Brick      as B
+import           Brick.Main ()
 import qualified Types
 import qualified UI
+import qualified Update
 
 app :: B.App Types.State Types.Tick Types.Name
 
 app = B.App
   { B.appDraw         = UI.draw
   , B.appChooseCursor = B.neverShowCursor
-  , B.appHandleEvent  = Process.handleEvent
+  , B.appHandleEvent  = Update.handleEvent
   , B.appStartEvent   = return
   , B.appAttrMap      = UI.emptyAttrMap
   }

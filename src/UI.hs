@@ -32,8 +32,8 @@ getSize =
     c <- B.getContext
     B.render $ B.str $ show (c ^. B.availWidthL, c ^. B.availHeightL)
 
-drawGame :: Types.State -> B.Widget Types.Name
-drawGame state =
+drawGameUI :: Types.State -> B.Widget Types.Name
+drawGameUI state =
   (Center.center $ Border.border $ B.str (realDrawGame state)) B.<=>
   B.str (show $ Types.snake state)
 
@@ -51,7 +51,6 @@ realDrawGame state =
     defaultGrid = emptyGrid bounds
 
 addCoordsAndIconToString :: [String] -> ([Types.Coordinate], Char) -> [String]
-  -- TODO: Work on this!
 addCoordsAndIconToString previousString (coords, char) =
    foldr (updateString char) previousString coords
 
@@ -66,7 +65,7 @@ emptyGrid (Types.Bounds width height) =
 
 draw :: Types.State -> [B.Widget Types.Name]
 draw g =
-  [B.withBorderStyle BorderStyle.unicodeRounded $ drawHeader g B.<=> drawGame g]
+  [B.withBorderStyle BorderStyle.unicodeRounded $ drawHeader g B.<=> drawGameUI g]
 
 emptyAttrMap :: a -> B.AttrMap
 emptyAttrMap = const (B.attrMap V.currentAttr [])

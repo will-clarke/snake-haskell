@@ -33,8 +33,9 @@ runStep state _              = B.continue state
 
 handleEvent :: Types.State -> B.BrickEvent Types.Name () -> B.EventM Types.Name (B.Next Types.State)
 handleEvent state (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt state
-handleEvent state (B.VtyEvent (V.EvKey V.KUp [])) = runStep (progress state) Types.KeyUp
-handleEvent state (B.VtyEvent (V.EvKey V.KDown [])) = runStep (progress state) Types.KeyDown
+  -- TODO: Sort out this hack --- key up != key down! Flip the vertical orintation in the draw function.
+handleEvent state (B.VtyEvent (V.EvKey V.KUp [])) = runStep (progress state) Types.KeyDown
+handleEvent state (B.VtyEvent (V.EvKey V.KDown [])) = runStep (progress state) Types.KeyUp
 handleEvent state (B.VtyEvent (V.EvKey V.KLeft [])) = runStep (progress state) Types.KeyLeft
 handleEvent state (B.VtyEvent (V.EvKey V.KRight [])) = runStep (progress state) Types.KeyRight
 handleEvent state (B.VtyEvent (V.EvResize w h)) =

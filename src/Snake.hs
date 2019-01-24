@@ -30,7 +30,13 @@ moveSnake state =
    in slither snake direction
 
 slither :: T.Snake -> T.KeyPressed -> T.Snake
-slither (T.Snake s) key = T.Snake (nextHeadCoords (head s) key : s)
+slither (T.Snake snake) key =
+  T.Snake (nextHeadCoords (head snake) key : restOfSnake snake)
+  where
+    restOfSnake s =
+      if length s >= 10
+        then init s
+        else s
 
 nextHeadCoords :: T.Coordinate -> T.KeyPressed -> T.Coordinate
 nextHeadCoords T.Coordinate{T.x = x, T.y = y} T.KeyUp = T.Coordinate{T.x = x, T.y = y + 1}
@@ -38,10 +44,3 @@ nextHeadCoords T.Coordinate{T.x = x, T.y = y} T.KeyDown = T.Coordinate{T.x = x, 
 nextHeadCoords T.Coordinate{T.x = x, T.y = y} T.KeyLeft = T.Coordinate{T.x = x - 1, T.y = y}
 nextHeadCoords T.Coordinate{T.x = x, T.y = y} T.KeyRight = T.Coordinate{T.x = x + 1, T.y = y}
 nextHeadCoords coordinates T.KeyNone = coordinates
-
--- snakeHead :: T.Snake -> T.Coordinate
--- snakeHead (T.Snake s) = head s
-
--- snakeTail :: T.Snake -> [T.Coordinate]
--- snakeTail (T.Snake s) = tail s
-

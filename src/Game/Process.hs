@@ -6,22 +6,17 @@ module Game.Process
 
 import qualified Brick        as B
 import qualified Graphics.Vty as V
-import qualified Pointless
-import qualified Types
 import qualified Snake
+import qualified Types
 
 progress :: Types.State -> Types.State
-progress g =
-  let (n, dir) =
-        Pointless.oscillatingNumber
-          (Types.oscillatingN g, Types.oscillatingDirection g)
-      keyPressed = Types.keyPressed g
-      updatedSnake = Snake.tick g
+progress state =
+  let keyPressed = Types.keyPressed state
+      updatedSnake = Snake.tick state
+      newTitle = 'x' : Types.title state
   -- This is some weird way of updating..... {original} {field = updated}
    in Types.exState -- <- this is the {original} example state
-        { Types.title = 'x' : Types.title g
-        , Types.oscillatingN = n
-        , Types.oscillatingDirection = dir
+        { Types.title = newTitle
         , Types.snake = updatedSnake
         , Types.keyPressed = keyPressed
         -- , Types.food
@@ -30,20 +25,22 @@ progress g =
         } -- <- these are the fields I wanna update
 
 runStep :: Types.State -> Types.KeyPressed -> B.EventM Types.Name (B.Next Types.State)
-runStep g Types.KeyUp    = B.continue $ g { Types.keyPressed = Types.KeyUp }
-runStep g Types.KeyDown  = B.continue $ g { Types.keyPressed = Types.KeyDown }
-runStep g Types.KeyRight = B.continue $ g { Types.keyPressed = Types.KeyRight }
-runStep g Types.KeyLeft  = B.continue $ g { Types.keyPressed = Types.KeyLeft }
-runStep g _              = B.continue g
+runStep state Types.KeyUp    = B.continue $ state { Types.keyPressed = Types.KeyUp }
+runStep state Types.KeyDown  = B.continue $ state { Types.keyPressed = Types.KeyDown }
+runStep state Types.KeyRight = B.continue $ state { Types.keyPressed = Types.KeyRight }
+runStep state Types.KeyLeft  = B.continue $ state { Types.keyPressed = Types.KeyLeft }
+runStep state _              = B.continue state
 
 handleEvent :: Types.State -> B.BrickEvent Types.Name () -> B.EventM Types.Name (B.Next Types.State)
-handleEvent g (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt g
-handleEvent g (B.VtyEvent (V.EvKey V.KUp [])) = runStep (progress g) Types.KeyUp
-handleEvent g (B.VtyEvent (V.EvKey V.KDown [])) = runStep (progress g) Types.KeyDown
-handleEvent g (B.VtyEvent (V.EvKey V.KLeft [])) = runStep (progress g) Types.KeyLeft
-handleEvent g (B.VtyEvent (V.EvKey V.KRight [])) = runStep (progress g) Types.KeyRight
-  -- TODO: get these few working!
-handleEvent g (B.VtyEvent (V.EvResize w h)) = runStep (progress g) Types.KeyRight
-handleEvent g (B.VtyEvent (V.EvLostFocus)) = runStep (progress g) Types.KeyRight
-handleEvent g (B.VtyEvent (V.EvGainedFocus)) = runStep (progress g) Types.KeyRight
-handleEvent g _ = runStep (progress g) Types.KeyNone
+handleEvent state (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt state
+handleEvent state (B.VtyEvent (V.EvKey V.KUp [])) = runStep (progress state) Types.KeyUp
+handleEvent state (B.VtyEvent (V.EvKey V.KDown [])) = runStep (progress state) Types.KeyDown
+handleEvent state (B.VtyEvent (V.EvKey V.KLeft [])) = runStep (progress state) Types.KeyLeft
+handleEvent state (B.VtyEvent (V.EvKey V.KRight [])) = runStep (progress state) Types.KeyRight
+handleEvent state (B.VtyEvent (V.EvResize w h)) =
+  runStep
+    (progress (state {Types.bounds = Types.Bounds w h}))
+    (Types.keyPressed state)
+handleEvent state (B.VtyEvent V.EvLostFocus) = runStep (progress state) Types.KeyRight
+handleEvent state (B.VtyEvent V.EvGainedFocus) = runStep (progress state) Types.KeyRight
+handleEvent state _ = runStep (progress state) Types.KeyNone

@@ -34,16 +34,8 @@ getSize =
 
 drawGame :: Types.State -> B.Widget Types.Name
 drawGame state =
-  Border.border $
-  B.reportExtent Types.FooBox $
-  Center.center (B.str $ coolDisplayThing state)
-  B.<=> getSize
-  B.<=> B.str (realDrawGame state)
-  B.<=> B.str "Hey\nWow\nThis\nis\ncool"
-  B.<=> B.str (show $ Types.snake state)
-  where
-    coolDisplayThing game = replicate (Types.oscillatingN game) '#'
-
+  (Center.center $ Border.border $ B.str (realDrawGame state)) B.<=>
+  B.str (show $ Types.snake state)
 
 realDrawGame :: Types.State -> String
 realDrawGame state =
@@ -54,7 +46,7 @@ realDrawGame state =
   -- We are having to do this stupid tuple as we can't just create a polymorphic list of snakes & food
     thingsToDraw :: [([Types.Coordinate], Char)]
     thingsToDraw =
-      [(drawableTuples $ Types.snake state), (drawableTuples $ Types.food state)]
+      [drawableTuples $ Types.snake state, drawableTuples $ Types.food state]
     bounds = Types.bounds state
     defaultGrid = emptyGrid bounds
 
@@ -64,17 +56,13 @@ addCoordsAndIconToString previousString (coords, char) =
    foldr (updateString char) previousString coords
 
 updateString :: Char -> Types.Coordinate -> [String] -> [String]
-updateString icon (Types.Coordinate x y) previousStrings =
-  replace2D (const icon) (x, y) previousStrings
+updateString icon (Types.Coordinate y x) =
+  replace2D (const icon) (x, y)
 
 emptyGrid :: Types.Bounds -> [String]
-emptyGrid (Types.Bounds height width) =
+emptyGrid (Types.Bounds width height) =
   let row = replicate width ' '
   in replicate height row
-
-
-
-
 
 draw :: Types.State -> [B.Widget Types.Name]
 draw g =

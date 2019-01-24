@@ -12,23 +12,21 @@ app = B.App
   { B.appDraw         = UI.draw
   , B.appChooseCursor = B.neverShowCursor
   , B.appHandleEvent  = Process.handleEvent
-  , B.appStartEvent   = startEvent
+  , B.appStartEvent   = return
   , B.appAttrMap      = UI.emptyAttrMap
   }
 
-startEvent :: Types.State -> B.EventM Types.Name Types.State
-startEvent s = do
-  mExtent <- Brick.Main.lookupExtent Types.FooBox
-  return s {Types.bounds = boundsFromExtent mExtent}
-  where
-    boundsFromExtent extent =
-      case extent of
-        Nothing -> Types.Bounds {Types.maxWidth = 20, Types.maxHeight = 10}
-        Just (B.Extent _ _ (width, height) _) ->
-          Types.Bounds {Types.maxWidth = width, Types.maxHeight = height}
-
--- omg :: a -> B.EventM()Types.State
--- omg a = return a
+  -- this startEvent thing to try to work out the size of the window didn't really work :|
+-- startEvent :: Types.State -> B.EventM Types.Name Types.State
+-- startEvent s = do
+--   mExtent <- Brick.Main.lookupExtent Types.FooBox
+--   return s {Types.bounds = boundsFromExtent mExtent}
+--   where
+--     boundsFromExtent extent =
+--       case extent of
+--         Nothing -> Types.Bounds {Types.maxWidth = 20, Types.maxHeight = 10}
+--         Just (B.Extent _ _ (width, height) _) ->
+--           Types.Bounds {Types.maxWidth = width, Types.maxHeight = height}
 
 main :: IO Types.State
 main = B.customMain UI.defaultVty Nothing app Types.exState

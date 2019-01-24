@@ -11,16 +11,12 @@ module Types
   , Name(..)
   ) where
 
-import qualified Pointless
-
 data Name = FooBox deriving (Eq, Ord)
 
 -- | Our main game state
 data State = State {
     title                :: String,
     keyPressed           :: KeyPressed,
-    oscillatingN         :: Int,
-    oscillatingDirection :: Pointless.Direction,
     score                :: Int,
     food                 :: Food,
     snake                :: Snake,
@@ -52,14 +48,14 @@ data Coordinate = Coordinate
   } deriving Show
 
 data Bounds = Bounds
-  { maxHeight :: Int
-  , maxWidth  :: Int
+  { maxWidth :: Int
+  , maxHeight :: Int
   } deriving (Show)
 
 
 -- example snake for mucking around with
 exSnake :: Snake
-exSnake = Snake { getSegments = [Coordinate{x = 5, y = 5}]}
+exSnake = Snake { getSegments = [Coordinate{x = 30, y = 15}]}
 
 exFood :: Food
 exFood = Food { getFood = [Coordinate{x = 5, y = 6}]}
@@ -69,10 +65,8 @@ exState =
   State
     { title = "Hey"
     , keyPressed = KeyUp
-    , oscillatingN = 5
-    , oscillatingDirection = Pointless.L
     , score = 10
     , food = exFood
     , snake = exSnake
-    , bounds = Bounds {maxHeight = 10, maxWidth = 10}
+    , bounds = Bounds {maxHeight = 20, maxWidth = 60}
     }

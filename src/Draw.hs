@@ -13,6 +13,7 @@ import qualified Graphics.Vty               as V
 import           Lens.Micro                 ((^.))
 import qualified Snake
 import qualified Types
+import qualified Typeclasses
 
 drawHeader :: Types.State -> B.Widget Types.Name
 drawHeader g =
@@ -41,8 +42,8 @@ realDrawGame :: Types.State -> String
 realDrawGame state =
   unlines $ foldl addCoordsAndIconToString defaultGrid thingsToDraw
   where
-    drawableTuples :: Snake.Drawable a => a -> ([Types.Coordinate], Char)
-    drawableTuples a = (Snake.coords a, Snake.icon a)
+    drawableTuples :: Typeclasses.Drawable a => a -> ([Types.Coordinate], Char)
+    drawableTuples a = (Typeclasses.coords a, Typeclasses.icon a)
   -- We are having to do this stupid tuple as we can't just create a polymorphic list of snakes & food
     thingsToDraw :: [([Types.Coordinate], Char)]
     thingsToDraw =

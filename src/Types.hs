@@ -1,16 +1,15 @@
 module Types
   ( State(..)
+  , Food(..)
+  , Snake(..)
   , KeyPressed(..)
   , Coordinate(..)
-  , Snake(..)
-  , Food(..)
   , Bounds(..)
-  , exState
-  , exFood
-  , exSnake
   , Name(..)
   , Tick(..)
   ) where
+
+-- import qualified Snake
 
 data Tick = Tick
 
@@ -26,6 +25,10 @@ data State = State {
     bounds               :: Bounds
 } deriving Show
 
+newtype Snake = Snake
+  { getSegments :: [Types.Coordinate]
+  } deriving (Show)
+
 -- | Reflect which keys are being pressed
 data KeyPressed
   = KeyUp
@@ -34,10 +37,6 @@ data KeyPressed
   | KeyRight
   | KeyNone
   deriving (Show)
-
-newtype Snake = Snake
-  { getSegments :: [Coordinate]
-  } deriving (Show)
 
 -- s = Snake { getSegments = [Coordinate{x = 10, y = 100}]}
 
@@ -54,22 +53,3 @@ data Bounds = Bounds
   { maxWidth :: Int
   , maxHeight :: Int
   } deriving (Show)
-
-
--- example snake for mucking around with
-exSnake :: Snake
-exSnake = Snake { getSegments = [Coordinate{x = 30, y = 15}]}
-
-exFood :: Food
-exFood = Food { getFood = [Coordinate{x = 5, y = 6}]}
-
-exState :: State
-exState =
-  State
-    { title = "Hey"
-    , keyPressed = KeyUp
-    , score = 10
-    , food = exFood
-    , snake = exSnake
-    , bounds = Bounds {maxHeight = 20, maxWidth = 60}
-    }

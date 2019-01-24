@@ -8,14 +8,16 @@ import qualified Brick        as B
 import qualified Graphics.Vty as V
 import qualified Snake
 import qualified Types
+import qualified Typeclasses
+import qualified State
 
 progress :: Types.State -> Types.State
 progress state =
   let keyPressed = Types.keyPressed state
-      updatedSnake = Snake.tick state
+      updatedSnake = Typeclasses.tick state
       newTitle = 'x' : Types.title state
   -- This is some weird way of updating..... {original} {field = updated}
-   in Types.exState -- <- this is the {original} example state
+   in State.exState -- <- this is the {original} example state
         { Types.title = newTitle
         , Types.snake = updatedSnake
         , Types.keyPressed = keyPressed

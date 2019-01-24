@@ -1,27 +1,13 @@
 module Snake
-  ( Drawable(..)
-  , Tickable(..)
+  ( exSnake
+  , moveSnake
   ) where
 
-import qualified Types as T
+import qualified Types       as T
 
-class Drawable a where
-  coords :: a -> [T.Coordinate]
-  icon :: a -> Char
-
-class Tickable a where
-  tick :: T.State -> a
-
-instance Drawable T.Snake where
-  icon _ = 'X'
-  coords (T.Snake snake) = snake -- or T.getSegments snake
-
-instance Drawable T.Food where
-  icon _ = '@'
-  coords (T.Food food) = food
-
-instance Tickable T.Snake where
-  tick = moveSnake
+-- example snake for mucking around with
+exSnake :: T.Snake
+exSnake = T.Snake { T.getSegments = [T.Coordinate{T.x = 30, T.y = 15}]}
 
 moveSnake :: T.State -> T.Snake
 moveSnake state =

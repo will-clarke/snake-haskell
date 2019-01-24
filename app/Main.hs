@@ -5,6 +5,7 @@ import           Brick.Main ()
 import qualified Types
 import qualified Draw
 import qualified Update
+import qualified State
 
 app :: B.App Types.State Types.Tick Types.Name
 
@@ -29,4 +30,4 @@ app = B.App
 --           Types.Bounds {Types.maxWidth = width, Types.maxHeight = height}
 
 main :: IO Types.State
-main = B.customMain Draw.defaultVty Nothing app Types.exState
+main = B.customMain Draw.defaultVty Nothing app State.exState

@@ -1,11 +1,14 @@
 module Main where
 
-import qualified Brick      as B
-import           Brick.Main ()
-import qualified Types
+import qualified Brick       as B
+import qualified Brick.BChan
+import           Brick.Main  ()
 import qualified Draw
-import qualified Update
 import qualified State
+import qualified Types
+import qualified Update
+import qualified Control.Monad
+import qualified Control.Concurrent
 
 app :: B.App Types.State Types.Tick Types.Name
 
@@ -17,17 +20,24 @@ app = B.App
   , B.appAttrMap      = Draw.emptyAttrMap
   }
 
-  -- this startEvent thing to try to work out the size of the window didn't really work :|
--- startEvent :: Types.State -> B.EventM Types.Name Types.Tick Types.State
--- startEvent s = do
---   mExtent <- Brick.Main.lookupExtent Types.FooBox
---   return s {Types.bounds = boundsFromExtent mExtent}
---   where
---     boundsFromExtent extent =
---       case extent of
---         Nothing -> Types.Bounds {Types.maxWidth = 20, Types.maxHeight = 10}
---         Just (B.Extent _ _ (width, height) _) ->
---           Types.Bounds {Types.maxWidth = width, Types.maxHeight = height}
+
+-- playGame lvl mp = do
+--   let delay = levelToDelay lvl
+--   chan <- newBChan 10
+--   void . forkIO $ forever $ do
+--     writeBChan chan Tick
+--     threadDelay delay
+--   initialGame <- initGame lvl
+--   ui <- customMain (V.mkVty V.defaultConfig) (Just chan) app $ UI
+
+
 
 main :: IO Types.State
-main = B.customMain Draw.defaultVty Nothing app State.exState
+main = do
+  let delay = 100000
+  chan <- Brick.BChan.newBChan 10
+  Control.Monad.void . Control.Concurrent.forkIO $
+    Control.Monad.forever $ do
+      Brick.BChan.writeBChan chan Types.Tick
+      Control.Concurrent.threadDelay delay
+  B.customMain Draw.defaultVty (Just chan) app State.exState

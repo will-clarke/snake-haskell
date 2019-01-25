@@ -26,3 +26,7 @@ class Tickable a where
 No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 
 - [ ] Find out how to get screen dimensions from Brick.
+- [ ] Add attributes to make it pretty
+- [ ] Don't allow snakes to turn on 180 degrees
+- [ ] Allow Food to be eatable
+- [ ] Make food increment the score

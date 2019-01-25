@@ -2,11 +2,12 @@ module Types
   ( State(..)
   , Food(..)
   , Snake(..)
-  , KeyPressed(..)
+  , Direction(..)
   , Coordinate(..)
   , Bounds(..)
   , Name(..)
   , Tick(..)
+  , KeyPressed(..)
   ) where
 
 -- import qualified Snake
@@ -17,19 +18,27 @@ data Name = FooBox deriving (Eq, Ord)
 
 -- | Our main game state
 data State = State {
-    title                :: String,
-    keyPressed           :: KeyPressed,
-    score                :: Int,
-    food                 :: Food,
-    snake                :: Snake,
-    bounds               :: Bounds
+    title             :: String,
+    keyPressed        :: KeyPressed,
+    direction         :: Direction,
+    previousDirection :: Direction,
+    score             :: Int,
+    food              :: Food,
+    snake             :: Snake,
+    bounds            :: Bounds
 } deriving Show
 
 newtype Snake = Snake
   { getSegments :: [Types.Coordinate]
   } deriving (Show)
 
--- | Reflect which keys are being pressed
+data Direction
+  = North
+  | South
+  | West
+  | East
+  deriving (Show)
+
 data KeyPressed
   = KeyUp
   | KeyDown
@@ -37,8 +46,6 @@ data KeyPressed
   | KeyRight
   | KeyNone
   deriving (Show)
-
--- s = Snake { getSegments = [Coordinate{x = 10, y = 100}]}
 
 newtype Food = Food
   { getFood :: [Coordinate]
@@ -50,6 +57,6 @@ data Coordinate = Coordinate
   } deriving Show
 
 data Bounds = Bounds
-  { maxWidth :: Int
+  { maxWidth  :: Int
   , maxHeight :: Int
   } deriving (Show)

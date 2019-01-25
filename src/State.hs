@@ -10,7 +10,9 @@ exState :: T.State
 exState =
   T.State
     { T.title = "Hey"
-    , T.keyPressed = T.KeyDown
+    , T.direction = T.South
+    , T.previousDirection = T.South
+    , T.keyPressed = T.KeyNone
     , T.score = 10
     , T.food = Food.exFood
     , T.snake = Snake.exSnake

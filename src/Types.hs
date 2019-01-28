@@ -10,7 +10,7 @@ module Types
   , KeyPressed(..)
   ) where
 
--- import qualified Snake
+import System.Random
 
 data Tick = Tick
 
@@ -25,7 +25,8 @@ data State = State {
     score             :: Int,
     food              :: Food,
     snake             :: Snake,
-    bounds            :: Bounds
+    bounds            :: Bounds,
+    randomGenerator   :: System.Random.StdGen
 } deriving Show
 
 newtype Snake = Snake

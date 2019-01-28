@@ -25,6 +25,7 @@ dependencies:
 - hspec
 - QuickCheck
 - microlens
+- random
 
 library:
   source-dirs: src

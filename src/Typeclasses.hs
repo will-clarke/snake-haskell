@@ -5,6 +5,7 @@ module Typeclasses
 
 import qualified Types
 import qualified Snake
+import qualified Food
 
 class Drawable a where
   coords :: a -> [Types.Coordinate]
@@ -24,3 +25,5 @@ instance Typeclasses.Drawable Types.Snake where
 instance Typeclasses.Tickable Types.Snake where
   tick = Snake.moveSnake
 
+instance Typeclasses.Tickable Types.Food where
+  tick = Food.reseed

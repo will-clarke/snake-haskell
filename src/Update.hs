@@ -15,9 +15,12 @@ tick :: T.State -> T.State
 tick state =
   let keyPressed = T.keyPressed state
       updatedSnake = Typeclasses.tick state
+      updatedFood = Typeclasses.tick state
       newTitle = 'x' : T.title state
       newBounds = T.bounds state
-      -- newScore  = Food.calculateScore
+      food = T.food state
+      snake = T.snake state
+      newScore  = Food.calculateScore (T.score state) snake food
   -- This is some weird way of updating..... {original} {field = updated}
    in State.exState -- <- this is the {original} example state
         { T.title = newTitle
@@ -25,9 +28,9 @@ tick state =
         , T.keyPressed = keyPressed
         , T.direction = directionFromKeyPress keyPressed
         , T.previousDirection = T.direction state
-        -- , T.food
+        , T.food = updatedFood
         , T.bounds = newBounds
-        , T.score = T.score state + 1
+        , T.score = newScore
         } -- <- these are the fields I wanna update
 
 directionFromKeyPress :: T.KeyPressed -> T.Direction

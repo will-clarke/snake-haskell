@@ -54,7 +54,7 @@ newtype Food = Food
 data Coordinate = Coordinate
   { x :: Int
   , y :: Int
-  } deriving Show
+  } deriving (Eq, Show)
 
 data Bounds = Bounds
   { maxWidth  :: Int

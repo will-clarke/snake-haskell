@@ -25,7 +25,7 @@ tick state =
         , T.previousDirection = T.direction state
         -- , T.food
         , T.bounds = newBounds
-        -- , T.score
+        , T.score = T.score state + 1
         } -- <- these are the fields I wanna update
 
 directionFromKeyPress :: T.KeyPressed -> T.Direction
@@ -45,8 +45,8 @@ handleEvent state (B.VtyEvent (V.EvKey V.KLeft [])) =  B.continue $ state { T.ke
 handleEvent state (B.VtyEvent (V.EvKey V.KRight [])) =  B.continue $ state { T.keyPressed = T.KeyRight }
 handleEvent state (B.VtyEvent (V.EvResize w h)) = B.continue $ state { T.bounds = T.Bounds w h }
   -- TODO: implement pausing & resuming
-handleEvent state (B.VtyEvent V.EvLostFocus) =  B.continue $ state
-handleEvent state (B.VtyEvent V.EvGainedFocus) = B.continue $ state
-handleEvent state (B.VtyEvent (V.EvKey (V.KChar ' ') [])) =  B.continue $ (tick state)
-handleEvent state (B.AppEvent T.Tick) =  B.continue $ (tick state)
-handleEvent state _ = B.continue $ state
+handleEvent state (B.VtyEvent V.EvLostFocus) =  B.continue state
+handleEvent state (B.VtyEvent V.EvGainedFocus) = B.continue state
+handleEvent state (B.VtyEvent (V.EvKey (V.KChar ' ') [])) =  B.continue (tick state)
+handleEvent state (B.AppEvent T.Tick) =  B.continue (tick state)
+handleEvent state _ = B.continue state

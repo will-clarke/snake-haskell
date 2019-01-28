@@ -8,6 +8,7 @@ import qualified Graphics.Vty as V
 import           Snake        ()
 import qualified State
 import qualified Typeclasses
+import qualified Food
 import qualified Types as T
 
 tick :: T.State -> T.State
@@ -16,6 +17,7 @@ tick state =
       updatedSnake = Typeclasses.tick state
       newTitle = 'x' : T.title state
       newBounds = T.bounds state
+      -- newScore  = Food.calculateScore
   -- This is some weird way of updating..... {original} {field = updated}
    in State.exState -- <- this is the {original} example state
         { T.title = newTitle

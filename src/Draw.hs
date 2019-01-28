@@ -11,7 +11,6 @@ import qualified Brick.Widgets.Border.Style as BorderStyle
 import qualified Brick.Widgets.Center       as Center
 import qualified Graphics.Vty               as V
 import           Lens.Micro                 ((^.))
-import qualified Snake
 import qualified Types
 import qualified Typeclasses
 

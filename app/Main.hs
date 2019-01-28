@@ -20,18 +20,6 @@ app = B.App
   , B.appAttrMap      = Draw.emptyAttrMap
   }
 
-
--- playGame lvl mp = do
---   let delay = levelToDelay lvl
---   chan <- newBChan 10
---   void . forkIO $ forever $ do
---     writeBChan chan Tick
---     threadDelay delay
---   initialGame <- initGame lvl
---   ui <- customMain (V.mkVty V.defaultConfig) (Just chan) app $ UI
-
-
-
 main :: IO Types.State
 main = do
   let delay = 100000

@@ -5,6 +5,7 @@ module Snake
 
 import qualified Data.List as L
 import qualified Types     as T
+import qualified Food
 
 -- example snake for mucking around with
 exSnake :: T.Snake
@@ -16,7 +17,7 @@ moveSnake state =
       food = T.food state
       snakeCoords = T.getSegments snake
       direction = T.direction state
-      isEating = snakeHeadOnFood (head snakeCoords) food
+      isEating = Food.isFoodAt (head snakeCoords) food
       restOfSnake =
         if isEating
           then snakeCoords
@@ -24,8 +25,8 @@ moveSnake state =
    in T.Snake (nextHeadCoords (head snakeCoords) direction : restOfSnake)
 
 
-snakeHeadOnFood :: T.Coordinate -> T.Food -> Bool
-snakeHeadOnFood snakeHead food = any (\coord -> coord == snakeHead) $ T.getFood food
+-- snakeHeadOnFood :: T.Coordinate -> T.Food -> Bool
+-- snakeHeadOnFood snakeHead food = any (\coord -> coord == snakeHead) $ T.getFood food
 
 nextHeadCoords :: T.Coordinate -> T.Direction -> T.Coordinate
 nextHeadCoords T.Coordinate{T.x = x, T.y = y} T.North = T.Coordinate{T.x = x, T.y = y + 1}

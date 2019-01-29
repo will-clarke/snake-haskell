@@ -1,5 +1,5 @@
 module Food
-  ( exFood
+  ( initialFood
   , snakeEating
   , calculateScore
   , update
@@ -8,8 +8,8 @@ module Food
 import qualified Model       as M
 import qualified System.Random
 
-exFood :: M.Food
-exFood = M.Food { M.getFood = [M.Coordinate{M.x = 5, M.y = 6}]}
+initialFood :: M.Food
+initialFood = M.Food { M.getFood = [M.Coordinate{M.x = 5, M.y = 6}]}
 
 calculateScore :: Int -> M.Snake -> M.Food -> Int
 calculateScore oldScore snake food =

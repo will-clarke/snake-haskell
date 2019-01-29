@@ -1,13 +1,13 @@
 module Snake
-  ( exSnake
+  ( initialSnake
   , moveSnake
   ) where
 
 import qualified Food
-import qualified Model     as M
+import qualified Model as M
 
-exSnake :: M.Snake
-exSnake = M.Snake { M.getSegments = [M.Coordinate{M.x = 30, M.y = 15},M.Coordinate{M.x = 31, M.y = 15},M.Coordinate{M.x = 32, M.y = 15} ]}
+initialSnake :: M.Snake
+initialSnake = M.Snake { M.getSegments = [M.Coordinate{M.x = 30, M.y = 15},M.Coordinate{M.x = 31, M.y = 15},M.Coordinate{M.x = 32, M.y = 15} ]}
 
 moveSnake :: M.State -> M.Snake
 moveSnake state =
@@ -35,13 +35,13 @@ moveSnake state =
 
 nextHeadCoords :: M.Coordinate -> M.Direction -> M.Direction -> M.Coordinate
 nextHeadCoords c  M.North M.South = moveSouth c
-nextHeadCoords c  M.North _ = moveNorth c
-nextHeadCoords c  M.East M.West = moveWest c
-nextHeadCoords c  M.East _ = moveEast c
+nextHeadCoords c  M.North _       = moveNorth c
+nextHeadCoords c  M.East M.West   = moveWest c
+nextHeadCoords c  M.East _        = moveEast c
 nextHeadCoords c  M.South M.North = moveNorth c
-nextHeadCoords c  M.South _ = moveSouth c
-nextHeadCoords c  M.West M.East = moveEast c
-nextHeadCoords c  M.West _ = moveWest c
+nextHeadCoords c  M.South _       = moveSouth c
+nextHeadCoords c  M.West M.East   = moveEast c
+nextHeadCoords c  M.West _        = moveWest c
 
 moveSouth :: M.Coordinate -> M.Coordinate
 moveSouth (M.Coordinate x y) = M.Coordinate x (y - 1)

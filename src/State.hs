@@ -1,5 +1,5 @@
 module State (
-             exState
+             initialState
              )where
 
 import qualified Model as M
@@ -7,15 +7,15 @@ import qualified Snake
 import qualified System.Random
 import qualified Food
 
-exState :: M.State
-exState =
+initialState :: M.State
+initialState =
   M.State
-    { M.title = "Some title"
+    { M.title = ""
     , M.direction = M.North
     , M.previousDirection = M.North
     , M.score = 0
-    , M.food = Food.exFood
-    , M.snake = Snake.exSnake
+    , M.food = Food.initialFood
+    , M.snake = Snake.initialSnake
     , M.bounds = M.Bounds {M.maxHeight = 20, M.maxWidth = 60}
     , M.randomGenerator = newGenerator
     }

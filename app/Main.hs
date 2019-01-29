@@ -28,4 +28,4 @@ main = do
     Control.Monad.forever $ do
       Brick.BChan.writeBChan chan Model.Tick
       Control.Concurrent.threadDelay delay
-  B.customMain Draw.defaultVty (Just chan) app State.exState
+  B.customMain Draw.defaultVty (Just chan) app State.initialState

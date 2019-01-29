@@ -38,4 +38,5 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [ ] rename model
 - [ ] implement pausing / resuming
 - [ ] Make the game faster as you eat more fruit
+- [ ] move stdgen into food
 

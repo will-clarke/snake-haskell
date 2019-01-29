@@ -5,12 +5,12 @@ module Typeclasses
 
 import qualified Types
 import qualified Snake
-import qualified Food
 
 class Drawable a where
   coords :: a -> [Types.Coordinate]
   icon :: a -> Char
 
+  -- as we can only `tick` snake, I'm not convinced it's worth having as a typeclass
 class Tickable a where
   tick :: Types.State -> a
 
@@ -24,6 +24,3 @@ instance Typeclasses.Drawable Types.Snake where
 
 instance Typeclasses.Tickable Types.Snake where
   tick = Snake.moveSnake
-
-instance Typeclasses.Tickable Types.Food where
-  tick = Food.reseed

@@ -21,7 +21,7 @@ drawHeader g =
     (B.str (" " ++ show (Types.keyPressed g)) B.<+>
      B.str "   " B.<+>
      getSize B.<+>
-     (B.str ("[" ++ show (Types.bounds g) ++ "]")) B.<+>
+     B.str ("[" ++ show (Types.bounds g) ++ "]") B.<+>
      B.padLeft B.Max (B.str ("Score: " ++ show (Types.score g) ++ " ")))
 
 
@@ -34,7 +34,7 @@ getSize =
 
 drawGameUI :: Types.State -> B.Widget Types.Name
 drawGameUI state =
-  (Center.center $ Border.border $ B.str (realDrawGame state)) B.<=>
+  Center.center (Border.border $ B.str (realDrawGame state)) B.<=>
   B.str (show $ Types.snake state)
 
 realDrawGame :: Types.State -> String

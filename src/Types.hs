@@ -10,7 +10,7 @@ module Types
   , KeyPressed(..)
   ) where
 
-import System.Random
+import qualified System.Random
 
 data Tick = Tick
 
@@ -19,12 +19,12 @@ data Name = FooBox deriving (Eq, Ord)
 -- | Our main game state
 data State = State {
     title             :: String,
+    snake             :: Snake,
+    food              :: Food,
     keyPressed        :: KeyPressed,
     direction         :: Direction,
     previousDirection :: Direction,
     score             :: Int,
-    food              :: Food,
-    snake             :: Snake,
     bounds            :: Bounds,
     randomGenerator   :: System.Random.StdGen
 } deriving Show

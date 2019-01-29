@@ -12,29 +12,32 @@ import qualified Types        as T
 
 tick :: T.State -> T.State
 tick state =
-  let keyPressed = T.keyPressed state
-      updatedSnake = Typeclasses.tick state
+  let newState =
+        state
+          { T.direction = directionFromKeyPress keyPressed
+          , T.previousDirection = T.direction state
+          }
+      keyPressed = T.keyPressed state
+      updatedSnake = Typeclasses.tick newState
       (updatedFood, updatedStdGen) = Food.update state
       newBounds = T.bounds state
       food = T.food state
       snake = T.snake state
       newScore = Food.calculateScore (T.score state) snake food
-      newTitle = case newScore of
-        0 -> "Welcome to Snake!!!!1!"
-        1 -> "Nice"
-        2 -> "Keep On going"
-        3 -> "You're winning"
-        _ -> "You're god-like"
-        -- if newScore > 2
-        --   then "Well done!"
-        --   else T.title state
+      newTitle =
+        case newScore of
+          0 -> "Welcome to Snake!!!!1!"
+          1 -> "Nice"
+          2 -> "Keep On going"
+          3 -> "You're winning"
+          _ -> "You're god-like"
    in T.State
         { T.title = newTitle
         , T.snake = updatedSnake
         , T.food = updatedFood
         , T.keyPressed = keyPressed
-        , T.direction = directionFromKeyPress keyPressed
-        , T.previousDirection = T.direction state
+        , T.direction = T.direction newState
+        , T.previousDirection = T.previousDirection newState
         , T.score = newScore
         , T.bounds = newBounds
         , T.randomGenerator = updatedStdGen

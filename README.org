@@ -31,4 +31,9 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [X] Allow Food to be eatable
 - [X] Make food increment the score
 - [ ] Start snake moving left to right or something
-- [ ] Reseed food after it's eaten
+- [X] Reseed food after it's eaten
+- [ ] command line -- pass in initial seed. Optparse-applicative. Maybe different game modes (eg. just left-right)
+- [ ] loading screen!
+- [ ] remove keypress
+- [ ] rename model
+

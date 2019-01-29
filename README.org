@@ -27,7 +27,7 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 
 - [ ] Find out how to get screen dimensions from Brick.
 - [ ] Add attributes to make it pretty
-- [ ] Don't allow snakes to turn on 180 degrees
+- [X] Don't allow snakes to turn on 180 degrees
 - [X] Allow Food to be eatable
 - [X] Make food increment the score
 - [ ] Start snake moving left to right or something

@@ -4,53 +4,53 @@ module Snake
   ) where
 
 import qualified Food
-import qualified Types     as T
+import qualified Model     as M
 
-exSnake :: T.Snake
-exSnake = T.Snake { T.getSegments = [T.Coordinate{T.x = 30, T.y = 15},T.Coordinate{T.x = 31, T.y = 15},T.Coordinate{T.x = 32, T.y = 15} ]}
+exSnake :: M.Snake
+exSnake = M.Snake { M.getSegments = [M.Coordinate{M.x = 30, M.y = 15},M.Coordinate{M.x = 31, M.y = 15},M.Coordinate{M.x = 32, M.y = 15} ]}
 
-moveSnake :: T.State -> T.Snake
+moveSnake :: M.State -> M.Snake
 moveSnake state =
-  let snake = T.snake state
-      food = T.food state
-      snakeCoords = T.getSegments snake
-      direction = T.direction state
-      previousDirection = T.previousDirection state
+  let snake = M.snake state
+      food = M.food state
+      snakeCoords = M.getSegments snake
+      direction = M.direction state
+      previousDirection = M.previousDirection state
       isEating = Food.snakeEating snake food
       restOfSnake =
         if isEating
           then snakeCoords
           else init snakeCoords
-   in T.Snake (nextHeadCoords (head snakeCoords) direction previousDirection : restOfSnake)
+   in M.Snake (nextHeadCoords (head snakeCoords) direction previousDirection : restOfSnake)
 
--- nextHeadCoords :: T.Coordinate -> T.Direction -> T.Direction -> T.Coordinate
--- nextHeadCoords T.Coordinate{T.x = x, T.y = y} T.North T.South = T.Coordinate{T.x = 10, T.y = 10}
--- nextHeadCoords T.Coordinate{T.x = x, T.y = y} T.North _ = T.Coordinate{T.x = x, T.y = y + 1}
--- -- nextHeadCoords coords T.South T.North = coords
--- nextHeadCoords T.Coordinate{T.x = x, T.y = y} T.South _ = T.Coordinate{T.x = x, T.y = y - 1}
--- -- nextHeadCoords coords T.West T.East = coords
--- nextHeadCoords T.Coordinate{T.x = x, T.y = y} T.West _ = T.Coordinate{T.x = x - 1, T.y = y}
--- -- nextHeadCoords coords T.East T.West = coords
--- nextHeadCoords T.Coordinate{T.x = x, T.y = y} T.East _ = T.Coordinate{T.x = x + 1, T.y = y}
+-- nextHeadCoords :: M.Coordinate -> M.Direction -> M.Direction -> M.Coordinate
+-- nextHeadCoords M.Coordinate{M.x = x, M.y = y} M.North M.South = M.Coordinate{M.x = 10, M.y = 10}
+-- nextHeadCoords M.Coordinate{M.x = x, M.y = y} M.North _ = M.Coordinate{M.x = x, M.y = y + 1}
+-- -- nextHeadCoords coords M.South M.North = coords
+-- nextHeadCoords M.Coordinate{M.x = x, M.y = y} M.South _ = M.Coordinate{M.x = x, M.y = y - 1}
+-- -- nextHeadCoords coords M.West M.East = coords
+-- nextHeadCoords M.Coordinate{M.x = x, M.y = y} M.West _ = M.Coordinate{M.x = x - 1, M.y = y}
+-- -- nextHeadCoords coords M.East M.West = coords
+-- nextHeadCoords M.Coordinate{M.x = x, M.y = y} M.East _ = M.Coordinate{M.x = x + 1, M.y = y}
 
-nextHeadCoords :: T.Coordinate -> T.Direction -> T.Direction -> T.Coordinate
-nextHeadCoords c  T.North T.South = moveSouth c
-nextHeadCoords c  T.North _ = moveNorth c
-nextHeadCoords c  T.East T.West = moveWest c
-nextHeadCoords c  T.East _ = moveEast c
-nextHeadCoords c  T.South T.North = moveNorth c
-nextHeadCoords c  T.South _ = moveSouth c
-nextHeadCoords c  T.West T.East = moveEast c
-nextHeadCoords c  T.West _ = moveWest c
+nextHeadCoords :: M.Coordinate -> M.Direction -> M.Direction -> M.Coordinate
+nextHeadCoords c  M.North M.South = moveSouth c
+nextHeadCoords c  M.North _ = moveNorth c
+nextHeadCoords c  M.East M.West = moveWest c
+nextHeadCoords c  M.East _ = moveEast c
+nextHeadCoords c  M.South M.North = moveNorth c
+nextHeadCoords c  M.South _ = moveSouth c
+nextHeadCoords c  M.West M.East = moveEast c
+nextHeadCoords c  M.West _ = moveWest c
 
-moveSouth :: T.Coordinate -> T.Coordinate
-moveSouth (T.Coordinate x y) = T.Coordinate x (y - 1)
+moveSouth :: M.Coordinate -> M.Coordinate
+moveSouth (M.Coordinate x y) = M.Coordinate x (y - 1)
 
-moveNorth :: T.Coordinate -> T.Coordinate
-moveNorth (T.Coordinate x y) = T.Coordinate x (y + 1)
+moveNorth :: M.Coordinate -> M.Coordinate
+moveNorth (M.Coordinate x y) = M.Coordinate x (y + 1)
 
-moveEast :: T.Coordinate -> T.Coordinate
-moveEast (T.Coordinate x y) = T.Coordinate (x + 1) y
+moveEast :: M.Coordinate -> M.Coordinate
+moveEast (M.Coordinate x y) = M.Coordinate (x + 1) y
 
-moveWest :: T.Coordinate -> T.Coordinate
-moveWest (T.Coordinate x y) = T.Coordinate (x - 1) y
+moveWest :: M.Coordinate -> M.Coordinate
+moveWest (M.Coordinate x y) = M.Coordinate (x - 1) y

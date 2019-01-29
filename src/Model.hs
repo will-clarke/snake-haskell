@@ -1,4 +1,4 @@
-module Types
+module Model
   ( State(..)
   , Food(..)
   , Snake(..)
@@ -28,7 +28,7 @@ data State = State {
 } deriving Show
 
 newtype Snake = Snake
-  { getSegments :: [Types.Coordinate]
+  { getSegments :: [Model.Coordinate]
   } deriving (Show)
 
 data Direction

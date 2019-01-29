@@ -11,56 +11,56 @@ import qualified Brick.Widgets.Border.Style as BorderStyle
 import qualified Brick.Widgets.Center       as Center
 import qualified Graphics.Vty               as V
 -- import           Lens.Micro                 ((^.))
-import qualified Types
+import qualified Model
 import qualified Typeclasses
 
-drawHeader :: Types.State -> B.Widget Types.Name
+drawHeader :: Model.State -> B.Widget Model.Name
 drawHeader state =
   Border.borderWithLabel
-    (B.str $ Types.title state)
-    (B.str (show (Types.direction state, Types.previousDirection state)) B.<+>
-     B.padLeft B.Max (B.str ("Score: " ++ show (Types.score state) ++ " ")))
+    (B.str $ Model.title state)
+    (B.str (show (Model.direction state, Model.previousDirection state)) B.<+>
+     B.padLeft B.Max (B.str ("Score: " ++ show (Model.score state) ++ " ")))
 
 -- Example of how to find the screen size... :|
--- getSize :: B.Widget Types.Name
+-- getSize :: B.Widget Model.Name
 -- getSize =
 --   B.Widget B.Fixed B.Fixed $ do
 --     c <- B.getContext
 --     B.render $ B.str $ show (c ^. B.availWidthL, c ^. B.availHeightL)
 
-drawGameUI :: Types.State -> B.Widget Types.Name
+drawGameUI :: Model.State -> B.Widget Model.Name
 drawGameUI state =
   Center.center (Border.border $ B.str (realDrawGame state))
-  -- B.<=> B.str (show $ Types.snake state)
+  -- B.<=> B.str (show $ Model.snake state)
 
-realDrawGame :: Types.State -> String
+realDrawGame :: Model.State -> String
 realDrawGame state =
   -- can we improve this? reverse $ foldl.. would foldr work?
   unlines $ reverse $ foldl addCoordsAndIconToString defaultGrid thingsToDraw
   where
-    drawableTuples :: Typeclasses.Drawable a => a -> ([Types.Coordinate], Char)
+    drawableTuples :: Typeclasses.Drawable a => a -> ([Model.Coordinate], Char)
     drawableTuples a = (Typeclasses.coords a, Typeclasses.icon a)
   -- We are having to do this stupid tuple as we can't just create a polymorphic list of snakes & food
-    thingsToDraw :: [([Types.Coordinate], Char)]
+    thingsToDraw :: [([Model.Coordinate], Char)]
     thingsToDraw =
-      [drawableTuples $ Types.snake state, drawableTuples $ Types.food state]
-    bounds = Types.bounds state
+      [drawableTuples $ Model.snake state, drawableTuples $ Model.food state]
+    bounds = Model.bounds state
     defaultGrid = emptyGrid bounds
 
-addCoordsAndIconToString :: [String] -> ([Types.Coordinate], Char) -> [String]
+addCoordsAndIconToString :: [String] -> ([Model.Coordinate], Char) -> [String]
 addCoordsAndIconToString previousString (coords, char) =
    foldr (updateString char) previousString coords
 
-updateString :: Char -> Types.Coordinate -> [String] -> [String]
-updateString icon (Types.Coordinate y x) =
+updateString :: Char -> Model.Coordinate -> [String] -> [String]
+updateString icon (Model.Coordinate y x) =
   replace2D (const icon) (x, y)
 
-emptyGrid :: Types.Bounds -> [String]
-emptyGrid (Types.Bounds width height) =
+emptyGrid :: Model.Bounds -> [String]
+emptyGrid (Model.Bounds width height) =
   let row = replicate width ' '
   in replicate height row
 
-draw :: Types.State -> [B.Widget Types.Name]
+draw :: Model.State -> [B.Widget Model.Name]
 draw state =
   [B.withBorderStyle BorderStyle.unicodeRounded $ drawHeader state B.<=> drawGameUI state]
 

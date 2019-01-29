@@ -5,13 +5,13 @@ module Food
   , update
   ) where
 
-import qualified Types       as T
+import qualified Model       as M
 import qualified System.Random
 
-exFood :: T.Food
-exFood = T.Food { T.getFood = [T.Coordinate{T.x = 5, T.y = 6}]}
+exFood :: M.Food
+exFood = M.Food { M.getFood = [M.Coordinate{M.x = 5, M.y = 6}]}
 
-calculateScore :: Int -> T.Snake -> T.Food -> Int
+calculateScore :: Int -> M.Snake -> M.Food -> Int
 calculateScore oldScore snake food =
   if eating
     then oldScore + 1
@@ -19,35 +19,35 @@ calculateScore oldScore snake food =
   where
     eating = snakeEating snake food
 
-isFoodAt :: T.Coordinate -> T.Food -> Bool
-isFoodAt coord food = elem coord $ T.getFood food
+isFoodAt :: M.Coordinate -> M.Food -> Bool
+isFoodAt coord food = elem coord $ M.getFood food
 
-snakeEating :: T.Snake -> T.Food -> Bool
-snakeEating s = isFoodAt (head $ T.getSegments s)
+snakeEating :: M.Snake -> M.Food -> Bool
+snakeEating s = isFoodAt (head $ M.getSegments s)
 
 -- What happens when we tick food...
-update :: T.State -> (T.Food, System.Random.StdGen)
+update :: M.State -> (M.Food, System.Random.StdGen)
 update state =
-  let currentFood = T.food state
-      snake = T.snake state
+  let currentFood = M.food state
+      snake = M.snake state
       eating = snakeEating snake currentFood
-      extractFoodAndRNG :: T.State -> (T.Food, System.Random.StdGen)
-      extractFoodAndRNG s = (T.food s, T.randomGenerator s)
+      extractFoodAndRNG :: M.State -> (M.Food, System.Random.StdGen)
+      extractFoodAndRNG s = (M.food s, M.randomGenerator s)
    in if eating
         then generateRandomFood state
         else extractFoodAndRNG state
 
-pure :: [T.Coordinate] -> T.Food
-pure = T.Food
+pure :: [M.Coordinate] -> M.Food
+pure = M.Food
 
-generateRandomFood :: T.State -> (T.Food, System.Random.StdGen)
+generateRandomFood :: M.State -> (M.Food, System.Random.StdGen)
 generateRandomFood state =
-  let rng = T.randomGenerator state :: System.Random.StdGen
+  let rng = M.randomGenerator state :: System.Random.StdGen
       (randX, rng2) = System.Random.random rng :: (Int, System.Random.StdGen)
       (randY, rng3) = System.Random.random rng2 :: (Int, System.Random.StdGen)
-      width = T.maxWidth $ T.bounds state
-      height = T.maxHeight $ T.bounds state
+      width = M.maxWidth $ M.bounds state
+      height = M.maxHeight $ M.bounds state
       randWidth = randX `mod` width
       randHeight = randY `mod` height
-      newFood = Food.pure [T.Coordinate randWidth randHeight]
+      newFood = Food.pure [M.Coordinate randWidth randHeight]
    in (newFood, rng3)

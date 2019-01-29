@@ -3,24 +3,24 @@ module Typeclasses
   , Tickable(..)
   ) where
 
-import qualified Types
+import qualified Model
 import qualified Snake
 
 class Drawable a where
-  coords :: a -> [Types.Coordinate]
+  coords :: a -> [Model.Coordinate]
   icon :: a -> Char
 
   -- as we can only `tick` snake, I'm not convinced it's worth having as a typeclass
 class Tickable a where
-  tick :: Types.State -> a
+  tick :: Model.State -> a
 
-instance Typeclasses.Drawable Types.Food where
+instance Typeclasses.Drawable Model.Food where
   icon _ = '@'
-  coords (Types.Food food) = food
+  coords (Model.Food food) = food
 
-instance Typeclasses.Drawable Types.Snake where
+instance Typeclasses.Drawable Model.Snake where
   icon _ = 'X'
-  coords (Types.Snake snake) = snake -- or T.getSegments snake
+  coords (Model.Snake snake) = snake -- or T.getSegments snake
 
-instance Typeclasses.Tickable Types.Snake where
+instance Typeclasses.Tickable Model.Snake where
   tick = Snake.moveSnake

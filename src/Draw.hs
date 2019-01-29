@@ -39,7 +39,8 @@ drawGameUI state =
 
 realDrawGame :: Types.State -> String
 realDrawGame state =
-  unlines $ foldl addCoordsAndIconToString defaultGrid thingsToDraw
+  -- can we improve this? reverse $ foldl.. would foldr work?
+  unlines $ reverse $ foldl addCoordsAndIconToString defaultGrid thingsToDraw
   where
     drawableTuples :: Typeclasses.Drawable a => a -> ([Types.Coordinate], Char)
     drawableTuples a = (Typeclasses.coords a, Typeclasses.icon a)

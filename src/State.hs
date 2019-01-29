@@ -10,7 +10,7 @@ import qualified Food
 exState :: T.State
 exState =
   T.State
-    { T.title = "Hey"
+    { T.title = "Some title"
     , T.direction = T.North
     , T.previousDirection = T.North
     , T.keyPressed = T.KeyUp

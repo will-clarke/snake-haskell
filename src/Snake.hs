@@ -36,8 +36,11 @@ moveSnake state =
 nextHeadCoords :: T.Coordinate -> T.Direction -> T.Direction -> T.Coordinate
 nextHeadCoords c  T.North T.South = moveSouth c
 nextHeadCoords c  T.North _ = moveNorth c
+nextHeadCoords c  T.East T.West = moveWest c
 nextHeadCoords c  T.East _ = moveEast c
+nextHeadCoords c  T.South T.North = moveNorth c
 nextHeadCoords c  T.South _ = moveSouth c
+nextHeadCoords c  T.West T.East = moveEast c
 nextHeadCoords c  T.West _ = moveWest c
 
 moveSouth :: T.Coordinate -> T.Coordinate

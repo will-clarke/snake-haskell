@@ -18,11 +18,7 @@ drawHeader :: Types.State -> B.Widget Types.Name
 drawHeader state =
   Border.borderWithLabel
     (B.str $ Types.title state)
-    (B.str (" " ++ show (Types.keyPressed state)) B.<+>
-    B.str (show (Types.direction state, Types.previousDirection state)) B.<+>
-     -- B.str "   " B.<+>
-     -- getSize B.<+>
-     -- B.str ("[" ++ show (Types.bounds state) ++ "]") B.<+>
+    (B.str (show (Types.direction state, Types.previousDirection state)) B.<+>
      B.padLeft B.Max (B.str ("Score: " ++ show (Types.score state) ++ " ")))
 
 -- Example of how to find the screen size... :|

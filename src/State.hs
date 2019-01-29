@@ -13,7 +13,6 @@ exState =
     { T.title = "Some title"
     , T.direction = T.North
     , T.previousDirection = T.North
-    , T.keyPressed = T.KeyUp
     , T.score = 0
     , T.food = Food.exFood
     , T.snake = Snake.exSnake

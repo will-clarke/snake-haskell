@@ -7,7 +7,6 @@ module Types
   , Bounds(..)
   , Name(..)
   , Tick(..)
-  , KeyPressed(..)
   ) where
 
 import qualified System.Random
@@ -21,7 +20,6 @@ data State = State {
     title             :: String,
     snake             :: Snake,
     food              :: Food,
-    keyPressed        :: KeyPressed,
     direction         :: Direction,
     previousDirection :: Direction,
     score             :: Int,
@@ -38,15 +36,7 @@ data Direction
   | South
   | West
   | East
-  deriving (Show)
-
-data KeyPressed
-  = KeyUp
-  | KeyDown
-  | KeyLeft
-  | KeyRight
-  | KeyNone
-  deriving (Show)
+  deriving (Eq, Show)
 
 newtype Food = Food
   { getFood :: [Coordinate]

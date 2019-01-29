@@ -25,7 +25,7 @@ class Tickable a where
 #+END_SRC
 No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 
-- [ ] Find out how to get screen dimensions from Brick.
+- [ ] Find out how to get screen dimensions from Brick. This could be tricky / monad-y
 - [ ] Add attributes to make it pretty
 - [X] Don't allow snakes to turn on 180 degrees
 - [X] Allow Food to be eatable
@@ -36,4 +36,6 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [ ] loading screen!
 - [X] remove keypress
 - [ ] rename model
+- [ ] implement pausing / resuming
+- [ ] Make the game faster as you eat more fruit
 

@@ -39,13 +39,11 @@ tick state =
 
 handleEvent :: M.State -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handleEvent state (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt state
-  -- TODO: Sort out this hack --- key up != key down! Flip the vertical orintation in the draw function.
 handleEvent state (B.VtyEvent (V.EvKey V.KUp [])) = B.continue $ updateStateDirection state M.North
 handleEvent state (B.VtyEvent (V.EvKey V.KDown [])) =  B.continue $ updateStateDirection state M.South
 handleEvent state (B.VtyEvent (V.EvKey V.KLeft [])) =  B.continue $ updateStateDirection state M.West
 handleEvent state (B.VtyEvent (V.EvKey V.KRight [])) =  B.continue $ updateStateDirection state M.East
 handleEvent state (B.VtyEvent (V.EvResize w h)) = B.continue $ state { M.bounds = M.Bounds w h }
-  -- TODO: implement pausing & resuming
 handleEvent state (B.VtyEvent V.EvLostFocus) =  B.continue state
 handleEvent state (B.VtyEvent V.EvGainedFocus) = B.continue state
 handleEvent state (B.VtyEvent (V.EvKey (V.KChar ' ') [])) =  B.continue (tick state)
@@ -55,7 +53,6 @@ handleEvent state _ = B.continue state
 updateStateDirection :: M.State -> M.Direction -> M.State
 updateStateDirection state direction = state {M.direction = newDirection direction oldDirection}
   where oldDirection = M.previousDirection state
-
 
 newDirection :: M.Direction -> M.Direction -> M.Direction
 newDirection M.North M.South = M.South

@@ -10,32 +10,32 @@ import qualified Brick.Widgets.Border       as Border
 import qualified Brick.Widgets.Border.Style as BorderStyle
 import qualified Brick.Widgets.Center       as Center
 import qualified Graphics.Vty               as V
-import           Lens.Micro                 ((^.))
+-- import           Lens.Micro                 ((^.))
 import qualified Types
 import qualified Typeclasses
 
 drawHeader :: Types.State -> B.Widget Types.Name
-drawHeader g =
+drawHeader state =
   Border.borderWithLabel
-    (B.str $ Types.title g)
-    (B.str (" " ++ show (Types.keyPressed g)) B.<+>
-     B.str "   " B.<+>
-     getSize B.<+>
-     B.str ("[" ++ show (Types.bounds g) ++ "]") B.<+>
-     B.padLeft B.Max (B.str ("Score: " ++ show (Types.score g) ++ " ")))
-
+    (B.str $ Types.title state)
+    (B.str (" " ++ show (Types.keyPressed state)) B.<+>
+    B.str (show (Types.direction state, Types.previousDirection state)) B.<+>
+     -- B.str "   " B.<+>
+     -- getSize B.<+>
+     -- B.str ("[" ++ show (Types.bounds state) ++ "]") B.<+>
+     B.padLeft B.Max (B.str ("Score: " ++ show (Types.score state) ++ " ")))
 
 -- Example of how to find the screen size... :|
-getSize :: B.Widget Types.Name
-getSize =
-  B.Widget B.Fixed B.Fixed $ do
-    c <- B.getContext
-    B.render $ B.str $ show (c ^. B.availWidthL, c ^. B.availHeightL)
+-- getSize :: B.Widget Types.Name
+-- getSize =
+--   B.Widget B.Fixed B.Fixed $ do
+--     c <- B.getContext
+--     B.render $ B.str $ show (c ^. B.availWidthL, c ^. B.availHeightL)
 
 drawGameUI :: Types.State -> B.Widget Types.Name
 drawGameUI state =
-  Center.center (Border.border $ B.str (realDrawGame state)) B.<=>
-  B.str (show $ Types.snake state)
+  Center.center (Border.border $ B.str (realDrawGame state))
+  -- B.<=> B.str (show $ Types.snake state)
 
 realDrawGame :: Types.State -> String
 realDrawGame state =
@@ -64,8 +64,8 @@ emptyGrid (Types.Bounds width height) =
   in replicate height row
 
 draw :: Types.State -> [B.Widget Types.Name]
-draw g =
-  [B.withBorderStyle BorderStyle.unicodeRounded $ drawHeader g B.<=> drawGameUI g]
+draw state =
+  [B.withBorderStyle BorderStyle.unicodeRounded $ drawHeader state B.<=> drawGameUI state]
 
 emptyAttrMap :: a -> B.AttrMap
 emptyAttrMap = const (B.attrMap V.currentAttr [])

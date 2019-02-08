@@ -14,7 +14,7 @@ tick :: M.State -> M.State
 tick state =
   let
       updatedSnake = Typeclasses.tick state
-      (updatedFood, updatedStdGen) = Food.update state
+      updatedFood = Food.update state
       newBounds = M.bounds state
       food = M.food state
       snake = M.snake state
@@ -34,7 +34,6 @@ tick state =
         , M.previousDirection = M.direction state
         , M.score = newScore
         , M.bounds = newBounds
-        , M.randomGenerator = updatedStdGen
         }
 
 handleEvent :: M.State -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)

@@ -31,7 +31,7 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [ ] loading screen!
 - [ ] implement pausing / resuming
 - [ ] Make the game faster as you eat more fruit
-- [ ] move stdgen into food
+- [X] move stdgen into food
 - [ ] make it so you can't move further from the boundary
 - [ ] add an endgame screen
 - [ ] add a pre-game screen

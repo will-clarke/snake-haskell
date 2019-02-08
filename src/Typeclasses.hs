@@ -16,7 +16,7 @@ class Tickable a where
 
 instance Typeclasses.Drawable Model.Food where
   icon _ = '@'
-  coords (Model.Food food) = food
+  coords (Model.Food food _) = food
 
 instance Typeclasses.Drawable Model.Snake where
   icon _ = 'X'

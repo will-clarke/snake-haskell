@@ -23,29 +23,26 @@ snakeEating :: M.Snake -> M.Food -> Bool
 snakeEating s = isFoodAt (head $ M.getSegments s)
 
 -- What happens when we tick food...
-update :: M.State -> (M.Food, System.Random.StdGen)
+update :: M.State -> M.Food
 update state =
   let currentFood = M.food state
       snake = M.snake state
-      stdGen = M.randomGenerator state
       bounds = M.bounds state
       eating = snakeEating snake currentFood
-      extractFoodAndRNG :: M.State -> (M.Food, System.Random.StdGen)
-      extractFoodAndRNG s = (M.food s, M.randomGenerator s)
+      food = M.food state
+      foodRNG = M.getRNG food
    in if eating
-        then generateRandomFood stdGen bounds
-        else extractFoodAndRNG state
+        then generateRandomFood foodRNG bounds
+        else food
 
-pure :: [M.Coordinate] -> M.Food
-pure = M.Food
-
-generateRandomFood :: System.Random.StdGen -> M.Bounds -> (M.Food, System.Random.StdGen)
+generateRandomFood :: System.Random.StdGen -> M.Bounds -> M.Food
 generateRandomFood rng bounds =
   let (randX, rng2) = System.Random.random rng :: (Int, System.Random.StdGen)
       (randY, rng3) = System.Random.random rng2 :: (Int, System.Random.StdGen)
-      width = M.maxWidth $ bounds
-      height = M.maxHeight $ bounds
+      M.Bounds width height = bounds
+      -- width = M.maxWidth bounds
+      -- height = M.maxHeight bounds
       randWidth = randX `mod` width
       randHeight = randY `mod` height
-      newFood = Food.pure [M.Coordinate randWidth randHeight]
-   in (newFood, rng3)
+      newCoords = [M.Coordinate randWidth randHeight]
+   in M.Food newCoords rng3

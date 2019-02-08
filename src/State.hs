@@ -17,8 +17,7 @@ initialState seed bounds =
     , M.food = food
     , M.snake = Snake.initialSnake
     , M.bounds = bounds
-    , M.randomGenerator = nextStdGen
     }
   where
     rng = System.Random.mkStdGen seed
-    (food, nextStdGen) = Food.generateRandomFood rng bounds
+    food = Food.generateRandomFood rng bounds

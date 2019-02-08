@@ -24,8 +24,7 @@ data State = State {
     direction         :: Direction,
     previousDirection :: Direction,
     score             :: Int,
-    bounds            :: Bounds,
-    randomGenerator   :: System.Random.StdGen
+    bounds            :: Bounds
 } deriving Show
 
 data Game = StartScreen | Playing State | GameOver Int
@@ -41,8 +40,9 @@ data Direction
   | East
   deriving (Eq, Show)
 
-newtype Food = Food
-  { getFood :: [Coordinate]
+data Food = Food
+  { getFood :: [Coordinate],
+    getRNG :: System.Random.StdGen
   } deriving (Show)
 
 data Coordinate = Coordinate

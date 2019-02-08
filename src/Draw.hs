@@ -20,7 +20,6 @@ drawHeader state =
   Border.borderWithLabel
     (B.str $ Model.title state)
     (B.str (show (Model.direction state, Model.previousDirection state)) B.<+>
-    (B.str (show (fst (System.Random.next $ Model.randomGenerator state)))) B.<+>
      B.padLeft B.Max (B.str ("Score: " ++ show (Model.score state) ++ " ")))
 
 -- Example of how to find the screen size... :|

@@ -6,16 +6,15 @@ module Update
 import qualified Brick        as B
 import qualified Food
 import qualified Graphics.Vty as V
+import qualified Model        as M
 import           Snake        ()
 import qualified Typeclasses
-import qualified Model        as M
 
 tick :: M.State -> M.State
 tick state =
   let
       updatedSnake = Typeclasses.tick state
       updatedFood = Food.update state
-      newBounds = M.bounds state
       food = M.food state
       snake = M.snake state
       newScore = Food.calculateScore (M.score state) snake food
@@ -33,7 +32,8 @@ tick state =
         , M.direction = M.direction state
         , M.previousDirection = M.direction state
         , M.score = newScore
-        , M.bounds = newBounds
+        , M.bounds = M.bounds state
+        , M.graphics = M.graphics state
         }
 
 handleEvent :: M.State -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
@@ -55,11 +55,11 @@ updateStateDirection state direction = state {M.direction = newDirection directi
 
 newDirection :: M.Direction -> M.Direction -> M.Direction
 newDirection M.North M.South = M.South
-newDirection M.North _ = M.North
-newDirection M.South M.North= M.North
-newDirection M.South _ = M.South
-newDirection M.East M.West = M.West
-newDirection M.East _ = M.East
-newDirection M.West M.East = M.East
-newDirection M.West _ = M.West
+newDirection M.North _       = M.North
+newDirection M.South M.North=M.North
+newDirection M.South _       = M.South
+newDirection M.East M.West   = M.West
+newDirection M.East _        = M.East
+newDirection M.West M.East   = M.East
+newDirection M.West _        = M.West
 

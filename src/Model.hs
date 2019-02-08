@@ -8,6 +8,7 @@ module Model
   , Name(..)
   , Tick(..)
   , Game(..)
+  , Graphics(..)
   ) where
 
 import qualified System.Random
@@ -24,8 +25,11 @@ data State = State {
     direction         :: Direction,
     previousDirection :: Direction,
     score             :: Int,
-    bounds            :: Bounds
+    bounds            :: Bounds,
+    graphics :: Graphics
 } deriving Show
+
+data Graphics = Simple | Complex deriving (Show)
 
 data Game = StartScreen | Playing State | GameOver Int
 

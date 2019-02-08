@@ -17,6 +17,7 @@ initialState seed bounds =
     , M.food = food
     , M.snake = Snake.initialSnake
     , M.bounds = bounds
+    , M.graphics = M.Simple
     }
   where
     rng = System.Random.mkStdGen seed

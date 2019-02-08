@@ -26,18 +26,20 @@ class Tickable a where
 No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 
 - [ ] Find out how to get screen dimensions from Brick. This could be tricky / monad-y
+- [ ] (related to below): allow command line args to toggle between simple / complex graphics
 - [ ] Add attributes to make it pretty
 - [ ] Start snake moving left to right or something
 - [ ] loading screen!
 - [ ] implement pausing / resuming
 - [ ] Make the game faster as you eat more fruit
-- [X] move stdgen into food
 - [ ] make it so you can't move further from the boundary
 - [ ] add an endgame screen
 - [ ] add a pre-game screen
 - [ ] high scores stored locally?
 - [ ] high scores stored on a server somewhere?????
+- [ ] (prerequisite of below): store a continually increasing integer - the "tick" of the game
 - [ ] record a list of all the keystrokes??? We could even replay this later on....
+- [X] move stdgen into food
 - [X] rename model
 - [X] remove keypress
 - [X] Don't allow snakes to turn on 180 degrees

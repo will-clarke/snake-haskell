@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Main where
 
 import qualified Brick                   as B
@@ -73,9 +71,9 @@ theMap :: Brick.AttrMap.AttrMap
 theMap =
   Brick.AttrMap.attrMap
     globalDefault
-    [ ("foundFull", V.white `B.on` V.green)
-    , ("foundFgOnly", B.fg V.red)
-    , ("general", V.yellow `B.on` V.black)
-    , ("general" <> "specific", B.fg V.cyan)
-    , ("linked", B.fg V.yellow `V.withURL` "http://www.google.com/")
+    [ (Brick.AttrMap.attrName "foundFull", V.white `B.on` V.green)
+    , (Brick.AttrMap.attrName "foundFgOnly", B.fg V.red)
+    , (Brick.AttrMap.attrName "general", V.yellow `B.on` V.black)
+    , (Brick.AttrMap.attrName "general" <> Brick.AttrMap.attrName "specific", B.fg V.cyan)
+    -- , (Brick.AttrMap.attrName "linked", B.fg V.yellow `V.withURL` "http://www.google.com/")
     ]

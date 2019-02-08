@@ -5,7 +5,6 @@ import qualified Brick.AttrMap
 import qualified Brick.BChan
 import           Brick.Main              ()
 import qualified Brick.Util
-import qualified Control.Applicative     as A
 import qualified Control.Concurrent
 import qualified Control.Monad
 import qualified Data.Semigroup
@@ -15,7 +14,6 @@ import qualified Graphics.Vty.Attributes as Attrs
 import qualified Model
 import qualified Options.Applicative     as O
 import qualified State
-import qualified System.Random
 import qualified Update
 
 app :: B.App Model.State Model.Tick Model.Name

@@ -1,15 +1,21 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Main where
 
-import qualified Brick               as B
+import qualified Brick                   as B
+import qualified Brick.AttrMap
 import qualified Brick.BChan
-import           Brick.Main          ()
-import qualified Control.Applicative as A
+import           Brick.Main              ()
+import qualified Brick.Util
+import qualified Control.Applicative     as A
 import qualified Control.Concurrent
 import qualified Control.Monad
 import qualified Data.Semigroup
 import qualified Draw
+import qualified Graphics.Vty            as V
+import qualified Graphics.Vty.Attributes as Attrs
 import qualified Model
-import qualified Options.Applicative as O
+import qualified Options.Applicative     as O
 import qualified State
 import qualified System.Random
 import qualified Update
@@ -57,3 +63,19 @@ parsedOptions = Options <$> O.option O.auto
    Data.Semigroup.<> O.short 's'
    Data.Semigroup.<> O.metavar "INT"
   )
+
+
+globalDefault :: Attrs.Attr
+globalDefault = V.white `Brick.Util.on` V.blue
+
+-- /Users/wmmc/.stack/indices/Hackage/packages/vty/5.25.1/vty-5.25.1/src/Graphics/Vty/Attributes.hs
+theMap :: Brick.AttrMap.AttrMap
+theMap =
+  Brick.AttrMap.attrMap
+    globalDefault
+    [ ("foundFull", V.white `B.on` V.green)
+    , ("foundFgOnly", B.fg V.red)
+    , ("general", V.yellow `B.on` V.black)
+    , ("general" <> "specific", B.fg V.cyan)
+    , ("linked", B.fg V.yellow `V.withURL` "http://www.google.com/")
+    ]

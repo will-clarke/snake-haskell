@@ -27,15 +27,8 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 
 - [ ] Find out how to get screen dimensions from Brick. This could be tricky / monad-y
 - [ ] Add attributes to make it pretty
-- [X] Don't allow snakes to turn on 180 degrees
-- [X] Allow Food to be eatable
-- [X] Make food increment the score
 - [ ] Start snake moving left to right or something
-- [X] Reseed food after it's eaten
-- [ ] command line -- pass in initial seed. Optparse-applicative. Maybe different game modes (eg. just left-right)
 - [ ] loading screen!
-- [X] remove keypress
-- [ ] rename model
 - [ ] implement pausing / resuming
 - [ ] Make the game faster as you eat more fruit
 - [ ] move stdgen into food
@@ -45,6 +38,12 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [ ] high scores stored locally?
 - [ ] high scores stored on a server somewhere?????
 - [ ] record a list of all the keystrokes??? We could even replay this later on....
-- [X] allow seed to be passed in & CLI args used
+- [X] rename model
+- [X] remove keypress
+- [X] Don't allow snakes to turn on 180 degrees
+- [X] Reseed food after it's eaten
+- [X] Allow Food to be eatable
+- [X] Make food increment the score
+- [X] command line -- pass in initial seed. Optparse-applicative. Maybe different game modes (eg. just left-right)
 
 

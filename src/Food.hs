@@ -8,12 +8,6 @@ module Food
 import qualified Model       as M
 import qualified System.Random
 
--- initialFood :: System.Random.StdGen -> (M.Food, System.Random.StdGen)
--- initialFood rng =
---   let coordinates = 
-
---   M.Food { M.getFood = [M.Coordinate{M.x = 5, M.y = 6}]}
-
 calculateScore :: Int -> M.Snake -> M.Food -> Int
 calculateScore oldScore snake food =
   if eating

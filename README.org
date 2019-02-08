@@ -45,5 +45,6 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [ ] high scores stored locally?
 - [ ] high scores stored on a server somewhere?????
 - [ ] record a list of all the keystrokes??? We could even replay this later on....
+- [X] allow seed to be passed in & CLI args used
 
 

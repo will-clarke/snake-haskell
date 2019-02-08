@@ -7,6 +7,7 @@ module Model
   , Bounds(..)
   , Name(..)
   , Tick(..)
+  , Game(..)
   ) where
 
 import qualified System.Random
@@ -26,6 +27,8 @@ data State = State {
     bounds            :: Bounds,
     randomGenerator   :: System.Random.StdGen
 } deriving Show
+
+data Game = StartScreen | Playing State | GameOver Int
 
 newtype Snake = Snake
   { getSegments :: [Model.Coordinate]

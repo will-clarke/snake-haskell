@@ -2,23 +2,23 @@ module State (
              initialState
              )where
 
-import qualified Model as M
+import qualified Food
+import qualified Model         as M
 import qualified Snake
 import qualified System.Random
-import qualified Food
 
-initialState :: M.State
-initialState =
+initialState :: Int -> M.Bounds -> M.State
+initialState seed bounds =
   M.State
     { M.title = ""
     , M.direction = M.North
     , M.previousDirection = M.North
     , M.score = 0
-    , M.food = Food.initialFood
+    , M.food = food
     , M.snake = Snake.initialSnake
-    , M.bounds = M.Bounds {M.maxHeight = 20, M.maxWidth = 60}
-    , M.randomGenerator = newGenerator
+    , M.bounds = bounds
+    , M.randomGenerator = nextStdGen
     }
-
-newGenerator :: System.Random.StdGen
-newGenerator = System.Random.mkStdGen 42
+  where
+    rng = System.Random.mkStdGen seed
+    (food, nextStdGen) = Food.generateRandomFood rng bounds

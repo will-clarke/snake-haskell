@@ -13,12 +13,14 @@ import qualified Graphics.Vty               as V
 -- import           Lens.Micro                 ((^.))
 import qualified Model
 import qualified Typeclasses
+import qualified System.Random
 
 drawHeader :: Model.State -> B.Widget Model.Name
 drawHeader state =
   Border.borderWithLabel
     (B.str $ Model.title state)
     (B.str (show (Model.direction state, Model.previousDirection state)) B.<+>
+    (B.str (show (fst (System.Random.next $ Model.randomGenerator state)))) B.<+>
      B.padLeft B.Max (B.str ("Score: " ++ show (Model.score state) ++ " ")))
 
 -- Example of how to find the screen size... :|

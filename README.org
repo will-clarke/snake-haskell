@@ -39,4 +39,11 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [ ] implement pausing / resuming
 - [ ] Make the game faster as you eat more fruit
 - [ ] move stdgen into food
+- [ ] make it so you can't move further from the boundary
+- [ ] add an endgame screen
+- [ ] add a pre-game screen
+- [ ] high scores stored locally?
+- [ ] high scores stored on a server somewhere?????
+- [ ] record a list of all the keystrokes??? We could even replay this later on....
+
 

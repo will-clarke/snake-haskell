@@ -1,7 +1,7 @@
 module Draw
-  ( draw,
-    emptyAttrMap,
-    defaultVty
+  ( draw
+  , emptyAttrMap
+  , defaultVty
   ) where
 
 import qualified Brick                      as B
@@ -10,8 +10,10 @@ import           Brick.BChan                ()
 import qualified Brick.Widgets.Border       as Border
 import qualified Brick.Widgets.Border.Style as BorderStyle
 import qualified Brick.Widgets.Center       as Center
+import qualified Data.List
 import qualified Graphics.Vty               as V
 import qualified Model
+import qualified Typeclasses
 
 drawHeader :: Model.State -> B.Widget Model.Name
 drawHeader state =
@@ -31,14 +33,13 @@ drawHeader state =
 --     B.render $ B.str $ show (c ^. B.availWidthL, c ^. B.availHeightL)
 
 drawGame :: Model.State -> B.Widget Model.Name
-drawGame _state = foldl (B.<=>) B.emptyWidget lines
-  where lines = [B.str ("hey") B.<=> B.str ("wassup")]
+drawGame state = foldl (B.<=>) B.emptyWidget (concat $ Data.List.transpose $ widgetRows state)
   -- -- can we improve this? reverse $ foldl.. would foldr work?
-  -- foldl addCoordsAndIconToString defaultGrid thingsToDraw
+  -- foldl addCoordWidgetToString defaultGrid thingsToDraw
   -- where
   --   drawableTuples :: Typeclasses.Drawable a => a -> ([Model.Coordinate], Char)
   -- -- todo: this will break things. We want to sort this out. We're currently in the process of making snakes draw & food drawing return a widget rather than a char.
-  --   drawableTuples a = (Typeclasses.coords a, Typeclasses.icon a)
+  --   drawableTuples a = (Typeclasses.coords a, Typeclasses.widget a)
   -- -- We are having to do this stupid tuple as we can't just create a polymorphic list of snakes & food
   --   thingsToDraw :: [([Model.Coordinate], Char)]
   --   thingsToDraw =
@@ -46,19 +47,44 @@ drawGame _state = foldl (B.<=>) B.emptyWidget lines
   --   bounds = Model.bounds state
   --   defaultGrid = emptyGrid bounds
 
--- widgetRows
+widgetRows :: Model.State -> [[B.Widget Model.Name]]
+widgetRows state = foldr updateWidgets defaultGrid $ drawableEntities state
+  where bounds = Model.bounds state
+        defaultGrid = emptyGrid bounds
 
-addCoordsAndIconToString :: [String] -> ([Model.Coordinate], Char) -> [String]
-addCoordsAndIconToString previousString (coords, char) =
-   foldr (updateString char) previousString coords
+drawableEntities :: Model.State -> [CoordWidget]
+drawableEntities state = [toCoordWidgets snake, toCoordWidgets food]
+  where
+    snake = Model.snake state
+    food = Model.food state
 
-updateString :: Char -> Model.Coordinate -> [String] -> [String]
-updateString icon (Model.Coordinate y x) =
-  replace2D (const icon) (x, y)
+-- CoordWidget is an abstract implementation of `Drawable`s
+data CoordWidget = CoordWidget
+  { coords :: [Model.Coordinate]
+  , widget :: B.Widget Model.Name
+  }
 
-emptyGrid :: Model.Bounds -> [String]
+toCoordWidgets :: Typeclasses.Drawable d => d -> CoordWidget
+toCoordWidgets d =
+  CoordWidget {coords = Typeclasses.coords d, widget = Typeclasses.widget d}
+
+-- addCoordWidgetToString :: [String] -> ([Model.Coordinate], Char) -> [String]
+-- addCoordWidgetToString previousString (coords, char) =
+--    foldr (updateWidgets char) previousString coords
+
+updateWidgets :: CoordWidget -> [[B.Widget Model.Name]] -> [[B.Widget Model.Name]]
+updateWidgets (CoordWidget coords_ widget_) previousWidgets =
+  foldr
+    (updateWidget widget_)
+    previousWidgets
+    coords_
+
+updateWidget :: B.Widget Model.Name -> Model.Coordinate -> [[B.Widget Model.Name]] -> [[B.Widget Model.Name]]
+updateWidget widget_ (Model.Coordinate y x) = replace2D (const widget_) (x, y)
+
+emptyGrid :: Model.Bounds -> [[B.Widget Model.Name]]
 emptyGrid (Model.Bounds width height) =
-  let row = replicate width ' '
+  let row = replicate width (B.str " ")
   in replicate height row
 
 draw :: Model.State -> [B.Widget Model.Name]

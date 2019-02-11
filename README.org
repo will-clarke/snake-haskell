@@ -18,7 +18,7 @@ Some notes about how I'm implementing this:
 #+BEGIN_SRC haskell
 class Drawable a where
     coords :: [Coordinates]
-    icon :: Char  
+    widget :: Char
   
 class Tickable a where
     tick :: a - > a

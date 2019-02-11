@@ -27,7 +27,11 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 
 - [ ] Find out how to get screen dimensions from Brick. This could be tricky / monad-y
 - [ ] (related to below): allow command line args to toggle between simple / complex graphics
-- [ ] Add attributes to make it pretty
+- [ ] changing background colours depending on the level
+- [X] Add attributes to make it pretty
+- [ ] Colour in the snake
+- [ ] Colour in the Food
+- [ ] Actually make pretty attributes pretty
 - [ ] Start snake moving left to right or something
 - [ ] loading screen!
 - [ ] implement pausing / resuming

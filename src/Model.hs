@@ -15,6 +15,7 @@ import qualified System.Random
 
 data Tick = Tick
 
+-- TOOD: what's this doing again????
 data Name = FooBox deriving (Eq, Ord)
 
 -- | Our main game state

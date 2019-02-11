@@ -5,22 +5,23 @@ module Draw
   ) where
 
 import qualified Brick                      as B
+import qualified Brick.AttrMap
 import           Brick.BChan                ()
 import qualified Brick.Widgets.Border       as Border
 import qualified Brick.Widgets.Border.Style as BorderStyle
 import qualified Brick.Widgets.Center       as Center
 import qualified Graphics.Vty               as V
--- import           Lens.Micro                 ((^.))
 import qualified Model
-import qualified Typeclasses
-import qualified System.Random
 
 drawHeader :: Model.State -> B.Widget Model.Name
 drawHeader state =
   Border.borderWithLabel
-    (B.str $ Model.title state)
-    (B.str (show (Model.direction state, Model.previousDirection state)) B.<+>
+    (B.withAttr foundFgOnly $ B.str $ Model.title state)
+    (B.withAttr foundFull $B.str (show (Model.direction state, Model.previousDirection state)) B.<+>
      B.padLeft B.Max (B.str ("Score: " ++ show (Model.score state) ++ " ")))
+  where foundFull = Brick.AttrMap.attrName "foundFull"
+        foundFgOnly = Brick.AttrMap.attrName "foundFgOnly"
+        -- general = Brick.AttrMap.attrName "general"
 
 -- Example of how to find the screen size... :|
 -- getSize :: B.Widget Model.Name
@@ -29,24 +30,23 @@ drawHeader state =
 --     c <- B.getContext
 --     B.render $ B.str $ show (c ^. B.availWidthL, c ^. B.availHeightL)
 
-drawGameUI :: Model.State -> B.Widget Model.Name
-drawGameUI state =
-  Center.center (Border.border $ B.str (realDrawGame state))
-  -- B.<=> B.str (show $ Model.snake state)
+drawGame :: Model.State -> B.Widget Model.Name
+drawGame _state = foldl (B.<=>) B.emptyWidget lines
+  where lines = [B.str ("hey") B.<=> B.str ("wassup")]
+  -- -- can we improve this? reverse $ foldl.. would foldr work?
+  -- foldl addCoordsAndIconToString defaultGrid thingsToDraw
+  -- where
+  --   drawableTuples :: Typeclasses.Drawable a => a -> ([Model.Coordinate], Char)
+  -- -- todo: this will break things. We want to sort this out. We're currently in the process of making snakes draw & food drawing return a widget rather than a char.
+  --   drawableTuples a = (Typeclasses.coords a, Typeclasses.icon a)
+  -- -- We are having to do this stupid tuple as we can't just create a polymorphic list of snakes & food
+  --   thingsToDraw :: [([Model.Coordinate], Char)]
+  --   thingsToDraw =
+  --     [drawableTuples $ Model.snake state, drawableTuples $ Model.food state]
+  --   bounds = Model.bounds state
+  --   defaultGrid = emptyGrid bounds
 
-realDrawGame :: Model.State -> String
-realDrawGame state =
-  -- can we improve this? reverse $ foldl.. would foldr work?
-  unlines $ reverse $ foldl addCoordsAndIconToString defaultGrid thingsToDraw
-  where
-    drawableTuples :: Typeclasses.Drawable a => a -> ([Model.Coordinate], Char)
-    drawableTuples a = (Typeclasses.coords a, Typeclasses.icon a)
-  -- We are having to do this stupid tuple as we can't just create a polymorphic list of snakes & food
-    thingsToDraw :: [([Model.Coordinate], Char)]
-    thingsToDraw =
-      [drawableTuples $ Model.snake state, drawableTuples $ Model.food state]
-    bounds = Model.bounds state
-    defaultGrid = emptyGrid bounds
+-- widgetRows
 
 addCoordsAndIconToString :: [String] -> ([Model.Coordinate], Char) -> [String]
 addCoordsAndIconToString previousString (coords, char) =
@@ -63,7 +63,9 @@ emptyGrid (Model.Bounds width height) =
 
 draw :: Model.State -> [B.Widget Model.Name]
 draw state =
-  [B.withBorderStyle BorderStyle.unicodeRounded $ drawHeader state B.<=> drawGameUI state]
+  [ B.withBorderStyle BorderStyle.unicodeRounded $
+    drawHeader state B.<=> Center.center (Border.border $ drawGame state)
+  ]
 
 emptyAttrMap :: a -> B.AttrMap
 emptyAttrMap = const (B.attrMap V.currentAttr [])
@@ -81,3 +83,4 @@ replace _ _ []     = []
 
 replace2D :: (a -> a) -> (Int, Int) -> [[a]] -> [[a]]
 replace2D f (x, y) = replace (replace f y) x
+

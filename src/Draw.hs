@@ -10,7 +10,6 @@ import           Brick.BChan                ()
 import qualified Brick.Widgets.Border       as Border
 import qualified Brick.Widgets.Border.Style as BorderStyle
 import qualified Brick.Widgets.Center       as Center
-import qualified Data.List
 import qualified Graphics.Vty               as V
 import qualified Model
 import qualified Typeclasses
@@ -33,7 +32,13 @@ drawHeader state =
 --     B.render $ B.str $ show (c ^. B.availWidthL, c ^. B.availHeightL)
 
 drawGame :: Model.State -> B.Widget Model.Name
-drawGame state = foldl (B.<=>) B.emptyWidget (concat $ Data.List.transpose $ widgetRows state)
+-- drawGame state = foldl (B.<=>) B.emptyWidget (foldl (B.<+>) B.emptyWidget $ widgetRows state)
+
+drawGame state =
+  foldl
+    (B.<=>)
+    B.emptyWidget
+    (map (foldl (B.<+>) B.emptyWidget) $ widgetRows state)
   -- -- can we improve this? reverse $ foldl.. would foldr work?
   -- foldl addCoordWidgetToString defaultGrid thingsToDraw
   -- where

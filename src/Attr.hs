@@ -3,6 +3,7 @@ module Attr
   , food
   , snakeBody
   , arena
+  , boring
   ) where
 
 import qualified Brick                   as B
@@ -18,10 +19,11 @@ defaultMap :: Brick.AttrMap.AttrMap
 defaultMap =
   Brick.AttrMap.attrMap
     globalDefault
-    [ (food, V.red `B.on` V.blue)
+    [ (food, V.red `B.on` V.brightBlue)
     , (snakeBody, V.black `B.on` V.brightYellow)
     , (snakeHead, V.brightGreen `B.on` V.brightCyan)
     , (arena, V.white `B.on` V.green)
+    , (boring, V.white `B.on` V.black)
 
     , (Brick.AttrMap.attrName "foundFull", V.white `B.on` V.green)
     , (Brick.AttrMap.attrName "foundFgOnly", B.fg V.red)
@@ -43,3 +45,6 @@ snakeHead = Brick.AttrMap.attrName "snakeHead"
 
 arena:: Brick.AttrMap.AttrName
 arena = Brick.AttrMap.attrName "arena"
+
+boring:: Brick.AttrMap.AttrName
+boring = Brick.AttrMap.attrName "boring"

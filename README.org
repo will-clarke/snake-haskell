@@ -31,9 +31,9 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [ ] (related to below): allow command line args to toggle between simple / complex graphics
 - [ ] changing background colours depending on the level
 - [X] Add attributes to make it pretty
-- [ ] Colour in the snake
-- [ ] Colour in the Food
-- [ ] Actually make pretty attributes pretty
+- [X] Colour in the snake
+- [X] Colour in the Food
+- [X] Actually make pretty attributes pretty
 - [ ] Start snake moving left to right or something
 - [ ] loading screen!
 - [ ] implement pausing / resuming

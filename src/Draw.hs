@@ -4,6 +4,7 @@ module Draw
   , defaultVty
   ) where
 
+import qualified Attr
 import qualified Brick                      as B
 import qualified Brick.AttrMap
 import           Brick.BChan                ()
@@ -71,7 +72,7 @@ updateWidget widget_ (Model.Coordinate y x) = replace2D (const widget_) (x, y)
 
 emptyGrid :: Model.Bounds -> [[B.Widget Model.Name]]
 emptyGrid (Model.Bounds width height) =
-  let row = replicate width (B.str " ")
+  let row = replicate width (B.withAttr Attr.arena $ B.str " ")
   in replicate height row
 
 draw :: Model.State -> [B.Widget Model.Name]

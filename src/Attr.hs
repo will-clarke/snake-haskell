@@ -1,4 +1,9 @@
-module Attr (defaultMap, food, snakeBody) where
+module Attr
+  ( defaultMap
+  , food
+  , snakeBody
+  , arena
+  ) where
 
 import qualified Brick                   as B
 import qualified Brick.AttrMap
@@ -13,9 +18,11 @@ defaultMap :: Brick.AttrMap.AttrMap
 defaultMap =
   Brick.AttrMap.attrMap
     globalDefault
-    [ (food, V.red `B.on` V.brightMagenta)
-    , (snakeBody, V.black `B.on` V.yellow)
+    [ (food, V.red `B.on` V.blue)
+    , (snakeBody, V.black `B.on` V.brightYellow)
     , (snakeHead, V.brightGreen `B.on` V.brightCyan)
+    , (arena, V.white `B.on` V.green)
+
     , (Brick.AttrMap.attrName "foundFull", V.white `B.on` V.green)
     , (Brick.AttrMap.attrName "foundFgOnly", B.fg V.red)
     , (Brick.AttrMap.attrName "general", V.yellow `B.on` V.black)
@@ -30,5 +37,9 @@ food = Brick.AttrMap.attrName "food"
 snakeBody :: Brick.AttrMap.AttrName
 snakeBody = Brick.AttrMap.attrName "snakeBody"
 
+-- TODO: Implement this colour!
 snakeHead:: Brick.AttrMap.AttrName
 snakeHead = Brick.AttrMap.attrName "snakeHead"
+
+arena:: Brick.AttrMap.AttrName
+arena = Brick.AttrMap.attrName "arena"

@@ -25,6 +25,7 @@ class Tickable a where
 #+END_SRC
 No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 
+- [ ] Make head of snake a different colour
 - [ ] parsing -- some DSL for styling / add a map
 - [ ] Find out how to get screen dimensions from Brick. This could be tricky / monad-y
 - [ ] (related to below): allow command line args to toggle between simple / complex graphics

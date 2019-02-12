@@ -7,8 +7,8 @@ import qualified Model         as M
 import qualified Snake
 import qualified System.Random
 
-initialState :: Int -> M.Bounds -> M.State
-initialState seed bounds =
+initialState :: Int -> M.Bounds -> M.Graphics -> M.State
+initialState seed bounds graphics =
   M.State
     { M.title = ""
     , M.direction = M.North
@@ -17,7 +17,7 @@ initialState seed bounds =
     , M.food = food
     , M.snake = Snake.initialSnake
     , M.bounds = bounds
-    , M.graphics = M.Simple
+    , M.graphics = graphics
     }
   where
     rng = System.Random.mkStdGen seed

@@ -25,16 +25,16 @@ app = B.App
 main :: IO Model.State
 main = do
   let delay = 100000
-  (Options seed _) <- O.execParser fullopts
+  (Options seed graphics) <- O.execParser fullopts
   chan <- Brick.BChan.newBChan 10
   Control.Monad.void . Control.Concurrent.forkIO $
     Control.Monad.forever $ do
       Brick.BChan.writeBChan chan Model.Tick
       Control.Concurrent.threadDelay delay
-  B.customMain Draw.defaultVty (Just chan) app $ startingState seed
+  B.customMain Draw.defaultVty (Just chan) app $ startingState seed graphics
 
-startingState :: Int -> Model.State
-startingState seed = State.initialState seed bounds
+startingState :: Int -> Model.Graphics -> Model.State
+startingState seed graphics = State.initialState seed bounds graphics
   where
     bounds = Model.Bounds {Model.maxHeight = 20, Model.maxWidth = 60}
 

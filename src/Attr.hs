@@ -13,8 +13,9 @@ defaultMap :: Brick.AttrMap.AttrMap
 defaultMap =
   Brick.AttrMap.attrMap
     globalDefault
-    [ (food, V.red `B.on` V.black)
-    , (snakeBody, V.blue `B.on` V.black)
+    [ (food, V.red `B.on` V.brightMagenta)
+    , (snakeBody, V.black `B.on` V.yellow)
+    , (snakeHead, V.brightGreen `B.on` V.brightCyan)
     , (Brick.AttrMap.attrName "foundFull", V.white `B.on` V.green)
     , (Brick.AttrMap.attrName "foundFgOnly", B.fg V.red)
     , (Brick.AttrMap.attrName "general", V.yellow `B.on` V.black)
@@ -28,3 +29,6 @@ food = Brick.AttrMap.attrName "food"
 
 snakeBody :: Brick.AttrMap.AttrName
 snakeBody = Brick.AttrMap.attrName "snakeBody"
+
+snakeHead:: Brick.AttrMap.AttrName
+snakeHead = Brick.AttrMap.attrName "snakeHead"

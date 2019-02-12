@@ -27,10 +27,17 @@ data State = State {
     previousDirection :: Direction,
     score             :: Int,
     bounds            :: Bounds,
-    graphics :: Graphics
+    graphics          :: Graphics
 } deriving Show
 
-data Graphics = Simple | Complex deriving (Show)
+data Graphics = Simple | Complex deriving (Show, Read)
+-- NB. Read should only really deal with valid Haskell :|
+-- instance Read Graphics where
+--   readsPrec _ string =
+--     case string of
+--      "simple" -> return (Simple, [])
+--      "complex" -> return (Complex, [])
+--      _ -> error $ "Cannot parse " ++ string
 
 data Game = StartScreen | Playing State | GameOver Int
 
@@ -47,7 +54,7 @@ data Direction
 
 data Food = Food
   { getFood :: [Coordinate],
-    getRNG :: System.Random.StdGen
+    getRNG  :: System.Random.StdGen
   } deriving (Show)
 
 data Coordinate = Coordinate

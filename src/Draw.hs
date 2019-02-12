@@ -32,25 +32,11 @@ drawHeader state =
 --     B.render $ B.str $ show (c ^. B.availWidthL, c ^. B.availHeightL)
 
 drawGame :: Model.State -> B.Widget Model.Name
--- drawGame state = foldl (B.<=>) B.emptyWidget (foldl (B.<+>) B.emptyWidget $ widgetRows state)
-
 drawGame state =
   foldl
     (B.<=>)
     B.emptyWidget
-    (map (foldl (B.<+>) B.emptyWidget) $ widgetRows state)
-  -- -- can we improve this? reverse $ foldl.. would foldr work?
-  -- foldl addCoordWidgetToString defaultGrid thingsToDraw
-  -- where
-  --   drawableTuples :: Typeclasses.Drawable a => a -> ([Model.Coordinate], Char)
-  -- -- todo: this will break things. We want to sort this out. We're currently in the process of making snakes draw & food drawing return a widget rather than a char.
-  --   drawableTuples a = (Typeclasses.coords a, Typeclasses.widget a)
-  -- -- We are having to do this stupid tuple as we can't just create a polymorphic list of snakes & food
-  --   thingsToDraw :: [([Model.Coordinate], Char)]
-  --   thingsToDraw =
-  --     [drawableTuples $ Model.snake state, drawableTuples $ Model.food state]
-  --   bounds = Model.bounds state
-  --   defaultGrid = emptyGrid bounds
+    (reverse $ map (foldr (B.<+>) B.emptyWidget) $ widgetRows state)
 
 widgetRows :: Model.State -> [[B.Widget Model.Name]]
 widgetRows state = foldr updateWidgets defaultGrid $ drawableEntities state
@@ -72,10 +58,6 @@ data CoordWidget = CoordWidget
 toCoordWidgets :: Typeclasses.Drawable d => d -> CoordWidget
 toCoordWidgets d =
   CoordWidget {coords = Typeclasses.coords d, widget = Typeclasses.widget d}
-
--- addCoordWidgetToString :: [String] -> ([Model.Coordinate], Char) -> [String]
--- addCoordWidgetToString previousString (coords, char) =
---    foldr (updateWidgets char) previousString coords
 
 updateWidgets :: CoordWidget -> [[B.Widget Model.Name]] -> [[B.Widget Model.Name]]
 updateWidgets (CoordWidget coords_ widget_) previousWidgets =

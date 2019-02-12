@@ -25,6 +25,7 @@ class Tickable a where
 #+END_SRC
 No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 
+- [ ] parsing -- some DSL for styling / add a map
 - [ ] Find out how to get screen dimensions from Brick. This could be tricky / monad-y
 - [ ] (related to below): allow command line args to toggle between simple / complex graphics
 - [ ] changing background colours depending on the level
@@ -54,3 +55,9 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [X] command line -- pass in initial seed. Optparse-applicative. Maybe different game modes (eg. just left-right)
 
 
+Next projects ideas:
+
+- Parse "One hundred and twenty eight" into 128
+- Parse cron
+- Invent regular expression language
+- Invent L-System turtle thing

@@ -78,12 +78,10 @@ emptyGrid (Model.Bounds width height) =
 draw :: Model.State -> [B.Widget Model.Name]
 draw state =
   let graphics = Model.graphics state
-      gameWidget =
-        B.withBorderStyle BorderStyle.unicodeRounded $
-        drawHeader state B.<=> Center.center (Border.border $ drawGame state)
+      gameWidget = drawHeader state B.<=> Center.center (Border.border $ drawGame state)
    in case graphics of
-        Model.Simple -> [B.forceAttr Attr.boring gameWidget]
-        Model.Complex -> [gameWidget]
+        Model.Simple -> [B.withBorderStyle BorderStyle.ascii $ B.forceAttr Attr.boring gameWidget]
+        Model.Complex -> [B.withBorderStyle BorderStyle.unicodeRounded gameWidget]
 
 emptyAttrMap :: a -> B.AttrMap
 emptyAttrMap = const (B.attrMap V.currentAttr [])

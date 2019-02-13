@@ -23,13 +23,13 @@ snakeEating :: M.Snake -> M.Food -> Bool
 snakeEating s = isFoodAt (head $ M.getSegments s)
 
 -- What happens when we tick food...
-update :: M.State -> M.Food
-update state =
-  let currentFood = M.food state
-      snake = M.snake state
-      bounds = M.bounds state
+update :: M.Game -> M.Food
+update game =
+  let currentFood = M.food game
+      snake = M.snake game
+      bounds = M.bounds game
       eating = snakeEating snake currentFood
-      food = M.food state
+      food = M.food game
       foodRNG = M.getRNG food
    in if eating
         then generateRandomFood foodRNG bounds

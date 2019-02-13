@@ -15,12 +15,12 @@ import qualified Graphics.Vty               as V
 import qualified Model
 import qualified Typeclasses
 
-drawHeader :: Model.State -> B.Widget Model.Name
-drawHeader state =
+drawHeader :: Model.Game -> B.Widget Model.Name
+drawHeader game =
   Border.borderWithLabel
-    (B.withAttr foundFgOnly $ B.str $ Model.title state)
-    (B.withAttr foundFull $B.str (show (Model.direction state, Model.previousDirection state)) B.<+>
-     B.padLeft B.Max (B.str ("Score: " ++ show (Model.score state) ++ " ")))
+    (B.withAttr foundFgOnly $ B.str $ Model.title game)
+    (B.withAttr foundFull $B.str (show (Model.direction game, Model.previousDirection game)) B.<+>
+     B.padLeft B.Max (B.str ("Score: " ++ show (Model.score game) ++ " ")))
   where foundFull = Brick.AttrMap.attrName "foundFull"
         foundFgOnly = Brick.AttrMap.attrName "foundFgOnly"
         -- general = Brick.AttrMap.attrName "general"
@@ -32,23 +32,23 @@ drawHeader state =
 --     c <- B.getContext
 --     B.render $ B.str $ show (c ^. B.availWidthL, c ^. B.availHeightL)
 
-drawGame :: Model.State -> B.Widget Model.Name
-drawGame state =
+drawGame :: Model.Game -> B.Widget Model.Name
+drawGame game =
   foldl
     (B.<=>)
     B.emptyWidget
-    (reverse $ map (foldr (B.<+>) B.emptyWidget) $ widgetRows state)
+    (reverse $ map (foldr (B.<+>) B.emptyWidget) $ widgetRows game)
 
-widgetRows :: Model.State -> [[B.Widget Model.Name]]
-widgetRows state = foldr updateWidgets defaultGrid $ drawableEntities state
-  where bounds = Model.bounds state
+widgetRows :: Model.Game -> [[B.Widget Model.Name]]
+widgetRows game = foldr updateWidgets defaultGrid $ drawableEntities game
+  where bounds = Model.bounds game
         defaultGrid = emptyGrid bounds
 
-drawableEntities :: Model.State -> [CoordWidget]
-drawableEntities state = [toCoordWidgets snake, toCoordWidgets food]
+drawableEntities :: Model.Game -> [CoordWidget]
+drawableEntities game = [toCoordWidgets snake, toCoordWidgets food]
   where
-    snake = Model.snake state
-    food = Model.food state
+    snake = Model.snake game
+    food = Model.food game
 
 -- CoordWidget is an abstract implementation of `Drawable`s
 data CoordWidget = CoordWidget
@@ -75,10 +75,10 @@ emptyGrid (Model.Bounds width height) =
   let row = replicate width (B.withAttr Attr.arena $ B.str " ")
   in replicate height row
 
-draw :: Model.State -> [B.Widget Model.Name]
-draw state =
-  let graphics = Model.graphics state
-      gameWidget = drawHeader state B.<=> Center.center (Border.border $ drawGame state)
+draw :: Model.Game -> [B.Widget Model.Name]
+draw game =
+  let graphics = Model.graphics game
+      gameWidget = drawHeader game B.<=> Center.center (Border.border $ drawGame game)
    in case graphics of
         Model.Simple -> [B.withBorderStyle BorderStyle.ascii $ B.forceAttr Attr.boring gameWidget]
         Model.Complex -> [B.withBorderStyle BorderStyle.unicodeRounded gameWidget]

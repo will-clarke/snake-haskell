@@ -10,14 +10,14 @@ import qualified Model        as M
 import           Snake        ()
 import qualified Typeclasses
 
-tick :: M.State -> M.State
-tick state =
+tick :: M.Game -> M.Game
+tick game =
   let
-      updatedSnake = Typeclasses.tick state
-      updatedFood = Food.update state
-      food = M.food state
-      snake = M.snake state
-      newScore = Food.calculateScore (M.score state) snake food
+      updatedSnake = Typeclasses.tick game
+      updatedFood = Food.update game
+      food = M.food game
+      snake = M.snake game
+      newScore = Food.calculateScore (M.score game) snake food
       newTitle =
         case newScore of
           0 -> "Welcome to Snake!!!!1!"
@@ -25,33 +25,33 @@ tick state =
           2 -> "Keep On going"
           3 -> "You're winning"
           _ -> "You're god-like"
-   in M.State
+   in M.Game
         { M.title = newTitle
         , M.snake = updatedSnake
         , M.food = updatedFood
-        , M.direction = M.direction state
-        , M.previousDirection = M.direction state
+        , M.direction = M.direction game
+        , M.previousDirection = M.direction game
         , M.score = newScore
-        , M.bounds = M.bounds state
-        , M.graphics = M.graphics state
+        , M.bounds = M.bounds game
+        , M.graphics = M.graphics game
         }
 
-handleEvent :: M.State -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
-handleEvent state (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt state
-handleEvent state (B.VtyEvent (V.EvKey V.KUp [])) = B.continue $ updateStateDirection state M.North
-handleEvent state (B.VtyEvent (V.EvKey V.KDown [])) =  B.continue $ updateStateDirection state M.South
-handleEvent state (B.VtyEvent (V.EvKey V.KLeft [])) =  B.continue $ updateStateDirection state M.West
-handleEvent state (B.VtyEvent (V.EvKey V.KRight [])) =  B.continue $ updateStateDirection state M.East
-handleEvent state (B.VtyEvent (V.EvResize w h)) = B.continue $ state { M.bounds = M.Bounds w h }
-handleEvent state (B.VtyEvent V.EvLostFocus) =  B.continue state
-handleEvent state (B.VtyEvent V.EvGainedFocus) = B.continue state
-handleEvent state (B.VtyEvent (V.EvKey (V.KChar ' ') [])) =  B.continue (tick state)
-handleEvent state (B.AppEvent M.Tick) =  B.continue (tick state)
-handleEvent state _ = B.continue state
+handleEvent :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.Game)
+handleEvent game (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt game
+handleEvent game (B.VtyEvent (V.EvKey V.KUp [])) = B.continue $ updateGameDirection game M.North
+handleEvent game (B.VtyEvent (V.EvKey V.KDown [])) =  B.continue $ updateGameDirection game M.South
+handleEvent game (B.VtyEvent (V.EvKey V.KLeft [])) =  B.continue $ updateGameDirection game M.West
+handleEvent game (B.VtyEvent (V.EvKey V.KRight [])) =  B.continue $ updateGameDirection game M.East
+handleEvent game (B.VtyEvent (V.EvResize w h)) = B.continue $ game { M.bounds = M.Bounds w h }
+handleEvent game (B.VtyEvent V.EvLostFocus) =  B.continue game
+handleEvent game (B.VtyEvent V.EvGainedFocus) = B.continue game
+handleEvent game (B.VtyEvent (V.EvKey (V.KChar ' ') [])) =  B.continue (tick game)
+handleEvent game (B.AppEvent M.Tick) =  B.continue (tick game)
+handleEvent game _ = B.continue game
 
-updateStateDirection :: M.State -> M.Direction -> M.State
-updateStateDirection state direction = state {M.direction = newDirection direction oldDirection}
-  where oldDirection = M.previousDirection state
+updateGameDirection :: M.Game -> M.Direction -> M.Game
+updateGameDirection game direction = game {M.direction = newDirection direction oldDirection}
+  where oldDirection = M.previousDirection game
 
 newDirection :: M.Direction -> M.Direction -> M.Direction
 newDirection M.North M.South = M.South

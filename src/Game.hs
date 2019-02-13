@@ -1,5 +1,5 @@
-module State (
-             initialState
+module Game (
+             initialGame
              )where
 
 import qualified Food
@@ -7,9 +7,9 @@ import qualified Model         as M
 import qualified Snake
 import qualified System.Random
 
-initialState :: Int -> M.Bounds -> M.Graphics -> M.State
-initialState seed bounds graphics =
-  M.State
+initialGame :: Int -> M.Bounds -> M.Graphics -> M.Game
+initialGame seed bounds graphics =
+  M.Game
     { M.title = ""
     , M.direction = M.North
     , M.previousDirection = M.North

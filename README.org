@@ -28,12 +28,7 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [ ] Make head of snake a different colour
 - [ ] parsing -- some DSL for styling / add a map
 - [ ] Find out how to get screen dimensions from Brick. This could be tricky / monad-y
-- [ ] (related to below): allow command line args to toggle between simple / complex graphics
 - [ ] changing background colours depending on the level
-- [X] Add attributes to make it pretty
-- [X] Colour in the snake
-- [X] Colour in the Food
-- [X] Actually make pretty attributes pretty
 - [ ] Start snake moving left to right or something
 - [ ] loading screen!
 - [ ] implement pausing / resuming
@@ -46,6 +41,11 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [ ] (prerequisite of below): store a continually increasing integer - the "tick" of the game
 - [ ] record a list of all the keystrokes??? We could even replay this later on....
 - [ ] backwards mode: keys do the opposite of what you expect (/ something totally random)
+- [X] (related to below): allow command line args to toggle between simple / complex graphics
+- [X] Add attributes to make it pretty
+- [X] Colour in the snake
+- [X] Colour in the Food
+- [X] Actually make pretty attributes pretty
 - [X] move stdgen into food
 - [X] rename model
 - [X] remove keypress

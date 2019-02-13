@@ -1,5 +1,5 @@
 module Model
-  ( State(..)
+  ( Game(..)
   , Food(..)
   , Snake(..)
   , Direction(..)
@@ -7,7 +7,7 @@ module Model
   , Bounds(..)
   , Name(..)
   , Tick(..)
-  , Game(..)
+  , State(..)
   , Graphics(..)
   ) where
 
@@ -18,8 +18,8 @@ data Tick = Tick
 -- TOOD: what's this doing again????
 data Name = FooBox deriving (Eq, Ord)
 
--- | Our main game state
-data State = State {
+-- | Our main game game
+data Game = Game {
     title             :: String,
     snake             :: Snake,
     food              :: Food,
@@ -39,7 +39,7 @@ data Graphics = Simple | Complex deriving (Show, Read)
 --      "complex" -> return (Complex, [])
 --      _ -> error $ "Cannot parse " ++ string
 
-data Game = StartScreen | Playing State | GameOver Int
+data State = StartScreen | Playing Game | GameOver Int
 
 newtype Snake = Snake
   { getSegments :: [Model.Coordinate]

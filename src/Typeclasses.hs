@@ -14,7 +14,7 @@ class Drawable a where
 
   -- as we can only `tick` snake, I'm not convinced it's worth having as a typeclass
 class Tickable a where
-  tick :: Model.State -> a
+  tick :: Model.Game -> a
 
 instance Typeclasses.Drawable Model.Food where
   widget _ = Brick.withAttr Attr.food $ Brick.str "@"

@@ -9,13 +9,13 @@ import qualified Model as M
 initialSnake :: M.Snake
 initialSnake = M.Snake { M.getSegments = [M.Coordinate{M.x = 30, M.y = 15},M.Coordinate{M.x = 31, M.y = 15},M.Coordinate{M.x = 32, M.y = 15} ]}
 
-moveSnake :: M.State -> M.Snake
-moveSnake state =
-  let snake = M.snake state
-      food = M.food state
+moveSnake :: M.Game -> M.Snake
+moveSnake game =
+  let snake = M.snake game
+      food = M.food game
       snakeCoords = M.getSegments snake
-      direction = M.direction state
-      previousDirection = M.previousDirection state
+      direction = M.direction game
+      previousDirection = M.previousDirection game
       isEating = Food.snakeEating snake food
       restOfSnake =
         if isEating

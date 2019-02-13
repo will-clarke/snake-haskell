@@ -40,7 +40,7 @@ data Graphics = Simple | Complex deriving (Show, Read)
 --      "complex" -> return (Complex, [])
 --      _ -> error $ "Cannot parse " ++ string
 
-data State = StartScreen Options | Playing Game | GameOver Int
+data State = StartScreen Options | Playing Game | Paused Game | GameOver Int
 
 data Options = Options
   { startSeed     :: Int

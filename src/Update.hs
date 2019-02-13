@@ -57,9 +57,11 @@ handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KUp [])) = B.continue $ M.Pl
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KDown [])) =  B.continue $ M.Playing $ updateGameDirection game M.South
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KLeft [])) =  B.continue $ M.Playing $ updateGameDirection game M.West
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KRight [])) =  B.continue $ M.Playing $ updateGameDirection game M.East
-handleEvent (M.Playing game) (B.VtyEvent (V.EvResize w h)) = B.continue $ M.Playing $ game { M.bounds = M.Bounds w h }
-handleEvent (M.Playing game) (B.VtyEvent V.EvLostFocus) =  B.continue $ M.Playing game
-handleEvent (M.Playing game) (B.VtyEvent V.EvGainedFocus) = B.continue $ M.Playing game
+handleEvent (M.Playing game) (B.VtyEvent (V.EvResize w h)) = B.continue $ M.Paused game
+  -- B.continue $ M.Playing $ game { M.bounds = M.Bounds w h }
+handleEvent (M.Playing game) (B.VtyEvent V.EvLostFocus) =  B.continue $ M.Paused game
+handleEvent (M.Playing game) (B.VtyEvent V.EvGainedFocus) = B.continue $ M.Paused game
+handleEvent (M.Playing game) (B.VtyEvent (V.EvKey (V.KChar 'p') [])) = B.continue $ M.Paused game
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey (V.KChar ' ') [])) =  B.continue (M.Playing $ tick game)
 handleEvent (M.Playing game) (B.AppEvent M.Tick) =  B.continue (M.Playing $ tick game)
 handleEvent (M.Playing game) _ = B.continue $ M.Playing game
@@ -70,6 +72,9 @@ handleEvent (M.StartScreen (M.Options seed bounds graphics)) _ = B.continue $ M.
 
 handleEvent (M.GameOver score') (B.AppEvent M.Tick) = B.continue $ M.GameOver score'
 handleEvent (M.GameOver score') _ = B.halt $ M.GameOver score'
+
+handleEvent (M.Paused game) (B.AppEvent M.Tick) = B.continue $ M.Paused game
+handleEvent (M.Paused game) _ = B.continue $ M.Playing game
 
 
 updateGameDirection :: M.Game -> M.Direction -> M.Game

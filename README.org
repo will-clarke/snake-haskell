@@ -25,21 +25,22 @@ class Tickable a where
 #+END_SRC
 No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 
-- [ ] Make head of snake a different colour
-- [ ] parsing -- some DSL for styling / add a map
-- [ ] Find out how to get screen dimensions from Brick. This could be tricky / monad-y
-- [ ] changing background colours depending on the level
+- [ ] implement pausing / resuming on screen blur / focus
+- [ ] start snake in the middle
 - [ ] Start snake moving left to right or something
-- [ ] implement pausing / resuming
 - [ ] Make the game faster as you eat more fruit
-- [X] make it so you can't move further from the boundary
-- [X] add an endgame screen
-- [X] add a pre-game screen
+- [ ] changing background colours depending on the level ----- DO WE EVEN WANT THIS?
+- [ ] Find out how to get screen dimensions from Brick. This could be tricky / monad-y
 - [ ] high scores stored locally?
 - [ ] high scores stored on a server somewhere?????
 - [ ] (prerequisite of below): store a continually increasing integer - the "tick" of the game
 - [ ] record a list of all the keystrokes??? We could even replay this later on....
 - [ ] backwards mode: keys do the opposite of what you expect (/ something totally random)
+- [ ] parsing -- some DSL for styling / add a map
+- [X] make it so you can't move further from the boundary
+- [X] add an endgame screen
+- [X] add a pre-game screen
+- [X] Make head of snake a different colour
 - [X] (related to below): allow command line args to toggle between simple / complex graphics
 - [X] Add attributes to make it pretty
 - [X] Colour in the snake

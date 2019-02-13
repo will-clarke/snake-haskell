@@ -83,6 +83,7 @@ draw (Model.Playing game) =
         Model.Simple -> [B.withBorderStyle BorderStyle.ascii $ B.forceAttr Attr.boring gameWidget]
         Model.Complex -> [B.withBorderStyle BorderStyle.unicodeRounded gameWidget]
 draw (Model.StartScreen _options) = [Center.center (Border.border $ B.str "Welcome")]
+draw (Model.Paused _game) = [Center.center (Border.border $ B.str "** PAUSED **")]
 draw (Model.GameOver score) =
   [Center.center (Border.border $ B.str $ "You lost ;(\n\n score = " ++ show score)]
 

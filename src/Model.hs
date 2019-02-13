@@ -28,7 +28,8 @@ data Game = Game {
     previousDirection :: Direction,
     score             :: Int,
     bounds            :: Bounds,
-    graphics          :: Graphics
+    graphics          :: Graphics,
+    alive             :: Bool
 } deriving Show
 
 data Graphics = Simple | Complex deriving (Show, Read)
@@ -43,9 +44,9 @@ data Graphics = Simple | Complex deriving (Show, Read)
 data State = StartScreen Options | Playing Game | GameOver Int
 
 data Options = Options
-  { startSeed :: Int
-  , startBounds :: Model.Bounds
-  , startGraphics  :: Model.Graphics
+  { startSeed     :: Int
+  , startBounds   :: Model.Bounds
+  , startGraphics :: Model.Graphics
   } deriving (Show)
 
 

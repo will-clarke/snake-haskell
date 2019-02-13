@@ -30,12 +30,11 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [ ] Find out how to get screen dimensions from Brick. This could be tricky / monad-y
 - [ ] changing background colours depending on the level
 - [ ] Start snake moving left to right or something
-- [ ] loading screen!
 - [ ] implement pausing / resuming
 - [ ] Make the game faster as you eat more fruit
 - [ ] make it so you can't move further from the boundary
 - [ ] add an endgame screen
-- [ ] add a pre-game screen
+- [X] add a pre-game screen
 - [ ] high scores stored locally?
 - [ ] high scores stored on a server somewhere?????
 - [ ] (prerequisite of below): store a continually increasing integer - the "tick" of the game

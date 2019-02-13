@@ -84,7 +84,7 @@ draw (Model.Playing game) =
         Model.Complex -> [B.withBorderStyle BorderStyle.unicodeRounded gameWidget]
 draw (Model.StartScreen _options) = [Center.center (Border.border $ B.str "Welcome")]
 draw (Model.GameOver score) =
-  [Center.center (Border.border $ B.str $ "You lost - score = " ++ show score)]
+  [Center.center (Border.border $ B.str $ "You lost ;(\n\n score = " ++ show score)]
 
 emptyAttrMap :: a -> B.AttrMap
 emptyAttrMap = const (B.attrMap V.currentAttr [])

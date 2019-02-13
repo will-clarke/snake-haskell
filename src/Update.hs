@@ -19,6 +19,7 @@ tick game =
       food = M.food game
       snake = M.snake game
       newScore = Food.calculateScore (M.score game) snake food
+      alive = not $ dead game
       newTitle =
         case newScore of
           0 -> "Welcome to Snake!!!!1!"
@@ -35,11 +36,16 @@ tick game =
         , M.score = newScore
         , M.bounds = M.bounds game
         , M.graphics = M.graphics game
+        , M.alive = alive
         }
+
+dead :: M.Game -> Bool
+dead game = True
 
 --- TODO: Refactor this horrific mess :|
 handleEvent :: M.State -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.Playing game
+handleEvent (M.Playing game) _ = B.continue $ M.GameOver $ M.score game
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KUp [])) = B.continue $ M.Playing $ updateGameDirection game M.North
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KDown [])) =  B.continue $ M.Playing $ updateGameDirection game M.South
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KLeft [])) =  B.continue $ M.Playing $ updateGameDirection game M.West
@@ -55,10 +61,10 @@ handleEvent (M.StartScreen options) (B.AppEvent M.Tick) = B.continue $ M.StartSc
 handleEvent (M.StartScreen options) (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.StartScreen options
 handleEvent (M.StartScreen (M.Options seed bounds graphics)) _ = B.continue $ M.Playing (Game.initialGame seed bounds graphics)
 
-handleEvent (M.GameOver score') _ = B.continue $ M.GameOver score' -- TODO: get these working
+handleEvent (M.GameOver score') (B.AppEvent M.Tick) = B.continue $ M.GameOver score'
+handleEvent (M.GameOver score') _ = B.halt $ M.GameOver score'
 
 
-  
 updateGameDirection :: M.Game -> M.Direction -> M.Game
 updateGameDirection game direction = game {M.direction = newDirection direction oldDirection}
   where oldDirection = M.previousDirection game

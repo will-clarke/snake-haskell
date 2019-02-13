@@ -18,7 +18,6 @@ initialGame seed bounds graphics =
     , M.snake = Snake.initialSnake
     , M.bounds = bounds
     , M.graphics = graphics
-    , M.alive = True
     }
   where
     rng = System.Random.mkStdGen seed

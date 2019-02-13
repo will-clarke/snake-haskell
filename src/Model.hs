@@ -28,8 +28,7 @@ data Game = Game {
     previousDirection :: Direction,
     score             :: Int,
     bounds            :: Bounds,
-    graphics          :: Graphics,
-    alive             :: Bool
+    graphics          :: Graphics
 } deriving Show
 
 data Graphics = Simple | Complex deriving (Show, Read)

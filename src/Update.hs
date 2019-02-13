@@ -19,14 +19,13 @@ tick game =
       food = M.food game
       snake = M.snake game
       newScore = Food.calculateScore (M.score game) snake food
-      alive = not $ dead game
       newTitle =
         case newScore of
           0 -> "Welcome to Snake!!!!1!"
           1 -> "Nice"
           2 -> "Keep On going"
           3 -> "You're winning"
-          _ -> "You're god-like"
+          _ -> "You're super awesome :D"
    in M.Game
         { M.title = newTitle
         , M.snake = updatedSnake
@@ -36,16 +35,24 @@ tick game =
         , M.score = newScore
         , M.bounds = M.bounds game
         , M.graphics = M.graphics game
-        , M.alive = alive
         }
 
 dead :: M.Game -> Bool
-dead game = True
+dead game =
+  let snake = M.snake game
+      (snakeHead:snakeTail) = M.getSegments snake
+      x = M.x snakeHead
+      y = M.y snakeHead
+      bounds= M.bounds game
+      maxWidth = M.maxWidth bounds
+      maxHeight = M.maxHeight bounds
+      headIsOnBody = elem snakeHead snakeTail
+   in or [x < 0, y < 0, x > (maxWidth - 1), y > (maxHeight - 1), headIsOnBody]
 
 --- TODO: Refactor this horrific mess :|
 handleEvent :: M.State -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.Playing game
-handleEvent (M.Playing game) _ = B.continue $ M.GameOver $ M.score game
+handleEvent (M.Playing game) _ | (dead game) = B.continue $ M.GameOver $ M.score game
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KUp [])) = B.continue $ M.Playing $ updateGameDirection game M.North
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KDown [])) =  B.continue $ M.Playing $ updateGameDirection game M.South
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KLeft [])) =  B.continue $ M.Playing $ updateGameDirection game M.West

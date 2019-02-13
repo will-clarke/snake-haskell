@@ -75,13 +75,16 @@ emptyGrid (Model.Bounds width height) =
   let row = replicate width (B.withAttr Attr.arena $ B.str " ")
   in replicate height row
 
-draw :: Model.Game -> [B.Widget Model.Name]
-draw game =
+draw :: Model.State -> [B.Widget Model.Name]
+draw (Model.Playing game) =
   let graphics = Model.graphics game
       gameWidget = drawHeader game B.<=> Center.center (Border.border $ drawGame game)
    in case graphics of
         Model.Simple -> [B.withBorderStyle BorderStyle.ascii $ B.forceAttr Attr.boring gameWidget]
         Model.Complex -> [B.withBorderStyle BorderStyle.unicodeRounded gameWidget]
+draw (Model.StartScreen _options) = [Center.center (Border.border $ B.str "Welcome")]
+draw (Model.GameOver score) =
+  [Center.center (Border.border $ B.str $ "You lost - score = " ++ show score)]
 
 emptyAttrMap :: a -> B.AttrMap
 emptyAttrMap = const (B.attrMap V.currentAttr [])

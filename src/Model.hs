@@ -9,6 +9,7 @@ module Model
   , Tick(..)
   , State(..)
   , Graphics(..)
+  , Options(..)
   ) where
 
 import qualified System.Random
@@ -39,7 +40,14 @@ data Graphics = Simple | Complex deriving (Show, Read)
 --      "complex" -> return (Complex, [])
 --      _ -> error $ "Cannot parse " ++ string
 
-data State = StartScreen | Playing Game | GameOver Int
+data State = StartScreen Options | Playing Game | GameOver Int
+
+data Options = Options
+  { startSeed :: Int
+  , startBounds :: Model.Bounds
+  , startGraphics  :: Model.Graphics
+  } deriving (Show)
+
 
 newtype Snake = Snake
   { getSegments :: [Model.Coordinate]
@@ -65,4 +73,4 @@ data Coordinate = Coordinate
 data Bounds = Bounds
   { maxWidth  :: Int
   , maxHeight :: Int
-  } deriving (Show)
+  } deriving (Show, Read)

@@ -32,8 +32,8 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 - [ ] Start snake moving left to right or something
 - [ ] implement pausing / resuming
 - [ ] Make the game faster as you eat more fruit
-- [ ] make it so you can't move further from the boundary
-- [ ] add an endgame screen
+- [X] make it so you can't move further from the boundary
+- [X] add an endgame screen
 - [X] add a pre-game screen
 - [ ] high scores stored locally?
 - [ ] high scores stored on a server somewhere?????

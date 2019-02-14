@@ -27,6 +27,8 @@ dependencies:
 - microlens
 - random
 - optparse-applicative
+- directory
+- filepath
 
 library:
   source-dirs: src

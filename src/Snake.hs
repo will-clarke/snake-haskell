@@ -6,8 +6,19 @@ module Snake
 import qualified Food
 import qualified Model as M
 
-initialSnake :: M.Snake
-initialSnake = M.Snake { M.getSegments = [M.Coordinate{M.x = 30, M.y = 15},M.Coordinate{M.x = 31, M.y = 15},M.Coordinate{M.x = 32, M.y = 15} ]}
+initialSnake :: M.Bounds -> M.Snake
+initialSnake bounds =
+  let maxWidth = M.maxWidth bounds
+      maxHeight = M.maxHeight bounds
+      midX = maxWidth `div` 2
+      midY = maxHeight `div` 2
+   in M.Snake
+        { M.getSegments =
+            [ M.Coordinate {M.x = midX + 1, M.y = midY}
+            , M.Coordinate {M.x = midX, M.y = midY}
+            , M.Coordinate {M.x = midX - 1, M.y = midY}
+            ]
+        }
 
 moveSnake :: M.Game -> M.Snake
 moveSnake game =

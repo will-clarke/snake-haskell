@@ -11,11 +11,11 @@ initialGame :: Int -> M.Bounds -> M.Graphics -> M.Game
 initialGame seed bounds graphics =
   M.Game
     { M.title = ""
-    , M.direction = M.North
-    , M.previousDirection = M.North
+    , M.direction = M.East
+    , M.previousDirection = M.East
     , M.score = 0
     , M.food = food
-    , M.snake = Snake.initialSnake
+    , M.snake = Snake.initialSnake bounds
     , M.bounds = bounds
     , M.graphics = graphics
     }

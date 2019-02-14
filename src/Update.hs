@@ -57,8 +57,7 @@ handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KUp [])) = B.continue $ M.Pl
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KDown [])) =  B.continue $ M.Playing $ updateGameDirection game M.South
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KLeft [])) =  B.continue $ M.Playing $ updateGameDirection game M.West
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KRight [])) =  B.continue $ M.Playing $ updateGameDirection game M.East
-handleEvent (M.Playing game) (B.VtyEvent (V.EvResize w h)) = B.continue $ M.Paused game
-  -- B.continue $ M.Playing $ game { M.bounds = M.Bounds w h }
+handleEvent (M.Playing game) (B.VtyEvent (V.EvResize w h)) = B.continue $ M.Playing $ game { M.bounds = M.Bounds w h }
 handleEvent (M.Playing game) (B.VtyEvent V.EvLostFocus) =  B.continue $ M.Paused game
 handleEvent (M.Playing game) (B.VtyEvent V.EvGainedFocus) = B.continue $ M.Paused game
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey (V.KChar 'p') [])) = B.continue $ M.Paused game

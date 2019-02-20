@@ -12,6 +12,7 @@ module Model
   , Options(..)
   ) where
 
+import qualified Data.Map
 import qualified System.Random
 
 data Tick = Tick
@@ -73,4 +74,13 @@ data Coordinate = Coordinate
 data Bounds = Bounds
   { maxWidth  :: Int
   , maxHeight :: Int
-  } deriving (Show, Read)
+  } deriving (Show, Read, Eq, Ord)
+
+
+data Score = Score Int
+
+newtype League = Leage Model.Bounds deriving (Eq, Ord)
+
+data Leaderboard = Leaderboard
+  { getLeagues :: Data.Map.Map League Score
+  }

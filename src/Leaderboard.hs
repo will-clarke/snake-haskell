@@ -1,6 +1,9 @@
 module Leaderboard
   ( getLeaderboardFile
   , maybeLineContaining
+  , deserialiseLeague
+  , serialiseLeague
+  , deserialiseScore
   ) where
 
 import qualified Data.List
@@ -8,6 +11,7 @@ import qualified Data.Maybe
 import qualified Data.Map
 import qualified Model
 import qualified Data.Text
+import qualified Text.Read
 import qualified System.Directory
 import           System.FilePath  ((</>))
 
@@ -21,28 +25,50 @@ maybeLineContaining :: String -> String -> Maybe String
 maybeLineContaining s linesString =
   Data.Maybe.listToMaybe $ filter (Data.List.isPrefixOf s) $ lines linesString
 
-deserialiseLeague :: String -> Maybe League
-deserialiseLeague str = Data.Text.splitOn "," . Data.Text.strip (Data.Text.pack str)
+-- TODO: This is a horrible way of parsing. Is there a better way? ¯\_(ツ)_/¯
+deserialiseLeague :: String -> Maybe Model.League
+deserialiseLeague str =
+  let textStr :: Data.Text.Text
+      textStr = Data.Text.pack str
+      strippedTxt :: Data.Text.Text
+      strippedTxt = Data.Text.dropAround (\c -> c == '[' || c == ']') . Data.Text.strip $
+        textStr
+      splitTxts :: [Data.Text.Text]
+      splitTxts =  map Data.Text.strip $ Data.Text.splitOn (Data.Text.pack ",") strippedTxt
+      possibleTextContaining :: String -> Maybe Data.Text.Text
+      possibleTextContaining s =
+        Data.Maybe.listToMaybe $
+        Data.List.filter (Data.Text.isInfixOf $ Data.Text.pack s) splitTxts
+      possibleIntContaining :: String -> Maybe Int
+      possibleIntContaining s =
+        let txtToRemove = Data.Text.pack $ s ++ ":"
+         in (Data.Text.unpack <$>
+             (possibleTextContaining s >>= Data.Text.stripPrefix txtToRemove)) >>=
+            Text.Read.readMaybe
+      possibleWidth = possibleIntContaining "W"
+      possibleHeight = possibleIntContaining "H"
+   in (Model.Bounds <$> possibleWidth <*> possibleHeight) >>= \b ->
+        Just (Model.League b)
 
-serialiseLeague :: League -> String
-serialiseLeague (Bounds width height) = "[W:" ++ (show width) ++ ",H:" ++ (show height) ++ "]"
+serialiseLeague :: Model.League -> String
+serialiseLeague (Model.League (Model.Bounds width height)) = "[W:" ++ (show width) ++ ",H:" ++ (show height) ++ "]"
 
-deserialiseScore :: String -> Maybe Int
+deserialiseScore :: String -> Maybe Model.Score
 deserialiseScore = undefined
 
-serialiseScore :: Score -> String
+serialiseScore :: Model.Score -> String
 serialiseScore = undefined
 
-deserialiseLeaderboard :: String -> Leaderboard
+deserialiseLeaderboard :: String -> Model.Leaderboard
 deserialiseLeaderboard = undefined
 
-serialiseLeaderboard :: Leaderboard -> String
+serialiseLeaderboard :: Model.Leaderboard -> String
 serialiseLeaderboard = undefined
 
-deserialiseLeaderboardScore :: String -> Maybe (Leaderboard, Score)
+deserialiseLeaderboardScore :: String -> Maybe (Model.Leaderboard, Model.Score)
 deserialiseLeaderboardScore = undefined
 
-serialiseLeaderboardScore :: (Leaderboard, Score) -> String
+serialiseLeaderboardScore :: (Model.Leaderboard, Model.Score) -> String
 serialiseLeaderboardScore = undefined
 
 -- boundsString :: Model.Bounds -> String

@@ -10,6 +10,9 @@ module Model
   , State(..)
   , Graphics(..)
   , Options(..)
+  , League(..)
+  , Leaderboard(..)
+  , Score(..)
   ) where
 
 import qualified Data.Map
@@ -77,10 +80,14 @@ data Bounds = Bounds
   } deriving (Show, Read, Eq, Ord)
 
 
-data Score = Score Int
+newtype Score = Score
+  { getPoints :: Int
+  } deriving (Show, Eq)
 
-newtype League = Leage Model.Bounds deriving (Eq, Ord)
+newtype League = League
+  { getBounds :: Model.Bounds
+  } deriving (Show, Eq, Ord)
 
-data Leaderboard = Leaderboard
+newtype Leaderboard = Leaderboard
   { getLeagues :: Data.Map.Map League Score
   }

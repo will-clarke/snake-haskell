@@ -15,39 +15,47 @@ exampleBounds = Model.Bounds <$> arbitrary <*> arbitrary
 -- exampleString :: Gen StringSample
 -- exampleString = frequency [(1, arbitrary) (2, arbitrary)]
 
-newtype StringSample = StringSample String
+-- newtype StringSample = StringSample String
 
-instance Arbitrary StringSample where
-  -- arbitrary :: Gen StringSample
-  arbitrary = frequency [
-    (1, return $ StringSample "hey"),
-    (1, return $ StringSample $ String arbitrary)
-                        ]
+-- instance Arbitrary StringSample where
+--   -- arbitrary :: Gen StringSample
+--   arbitrary = frequency [
+--     (1, return $ StringSample "hey"),
+--     (1, return $ StringSample $ String arbitrary)
+--                         ]
+
+
+-- leaderboard
 
 spec :: Spec
 spec = do
+  describe "Leaderboard.serialiseLeague" $ do
+    it "produces a new League string" $ do
+      Leaderboard.serialiseLeague (Model.League $ Model.Bounds 9 3) `shouldBe` "[W:9,H:3]"
+  describe "Leaderboard.deserialiseLeague" $ do
+    it "constructs a new League" $ do
+      Leaderboard.deserialiseLeague "[W:9,H:3]" `shouldBe` (Just $ Model.League $ Model.Bounds 9 3)
+  describe "Leaderboard" $ do
+    
   describe "Leaderboard.maybeLineContaining" $ do
-    context "when there is a matching line for a given bounds" $ do
+    -- context "when there is a matching line for a given boundsStr" $ do
+      -- it "matches the line" $ do
+        -- Leaderboard.maybeLineContaining boundsStr matchingString `shouldBe`
+        --   Just yes
+    context "when there is a matching line for a given boundsStr" $ do
       it "matches the line" $ do
-        Leaderboard.maybeLineContaining bounds matchingString `shouldBe`
-          Just yes
-    context "when there is a matching line for a given bounds" $ do
-      it "matches the line" $ do
-        Leaderboard.maybeLineContaining bounds nonMatchinString `shouldBe`
+        Leaderboard.maybeLineContaining boundsStr nonMatchinString `shouldBe`
           Nothing
     context "when there is a blank file" $ do
       it "returns Nothing" $ do
-        Leaderboard.maybeLineContaining bounds "" `shouldBe` Nothing
+        Leaderboard.maybeLineContaining boundsStr "" `shouldBe` Nothing
       -- it "this is a pointless test" $ do
-      --   let exampleStrings = ["hey", show bounds ++ "wooo", "nope", "omg" ++ show bounds]
+      --   let exampleStrings = ["hey", show boundsStr ++ "wooo", "nope", "omg" ++ show boundsStr]
             -- genStrings = choose exampleStrings
           -- in forAll (elements exampleStrings) $ \string -> if string `Data.List.isInfixOf` `shouldBe`
-
-          -- show bounds `Data.List.isPrefixOf` (Leaderboard.maybeLineContaining bounds string)
-
-          -- in forAll (elements exampleStrings) $ \string -> Leaderboard.maybeLineContaining bounds string `shouldBe` Just "omg"--(Data.List.isInfixOf string (show bounds))
-
-         -- in forAll (pure $ bounds) $ \bounds' ->
+          -- show boundsStr `Data.List.isPrefixOf` (Leaderboard.maybeLineContaining boundsStr string)
+          -- in forAll (elements exampleStrings) $ \string -> Leaderboard.maybeLineContaining boundsStr string `shouldBe` Just "omg"--(Data.List.isInfixOf string (show boundsStr))
+         -- in forAll (pure $ boundsStr) $ \bounds' ->
          --      Model.maxHeight bounds' == Model.maxHeight bounds'
   -- regex
     -- context "property Testing - no idea what I'm doing" $ do
@@ -108,6 +116,9 @@ myList' = frequency
 
 bounds :: Model.Bounds
 bounds = Model.Bounds 11 12
+
+boundsStr :: String
+boundsStr = "[11,12]"
 
 yes :: [Char]
 yes = "Bounds {maxWidth = 11, maxHeight = 12} - Yep"

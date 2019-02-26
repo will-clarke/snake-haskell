@@ -4,6 +4,7 @@ module Leaderboard
   , deserialiseLeague
   , serialiseLeague
   , deserialiseScore
+  , serialiseScore
   ) where
 
 import qualified Control.Monad
@@ -70,7 +71,7 @@ deserialiseScore s =
    in Model.Score <$> points
 
 serialiseScore :: Model.Score -> String
-serialiseScore = undefined
+serialiseScore score = "[Score - Points:" ++ show (Model.getPoints score) ++ "]"
 
 deserialiseLeaderboard :: String -> Model.Leaderboard
 deserialiseLeaderboard = undefined

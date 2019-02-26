@@ -34,6 +34,10 @@ exampleBounds = Model.Bounds <$> arbitrary <*> arbitrary
 exampleLeague :: Gen Model.League
 exampleLeague = Model.League <$> exampleBounds
 
+exampleScore :: Gen Model.Score
+exampleScore = Model.Score <$> arbitrary
+
+
 spec :: Spec
 spec = do
   describe "Leaderboard.serialiseLeague" $ do
@@ -49,15 +53,17 @@ spec = do
       forAll exampleLeague $ \league ->
         (Leaderboard.deserialiseLeague (Leaderboard.serialiseLeague league)) `shouldBe`
         Just league
-  describe "SerialiseScore" $ do
-    it "should output the correct score" $ do
-      Leaderboard.deserialiseScore "[Score - Points:21]" `shouldBe` (Just $ Model.Score 21)
-      -- league <- exampleLeague
-      -- league `shouldBe` (Model.League $ Model.Bounds 9 3)
-      -- serialised <- Leaderboard.serialiseLeague league
-      -- serialised `shouldBe` "sf"
-      -- deserialised <- Leaderboard.deserialiseLeague serialised
-      -- league `shouldBe` deserialised
+  describe "Score" $ do
+    it "should deserialise the score correctly" $ do
+      Leaderboard.deserialiseScore "[Score - Points:21]" `shouldBe`
+        (Just $ Model.Score 21)
+    it "should serialise the score correctly" $ do
+      Leaderboard.serialiseScore (Model.Score 22) `shouldBe`
+        "[Score - Points:22]"
+    it "should be able to serialise & deserialise a lot" $ do
+      forAll exampleScore $ \score ->
+        (Leaderboard.deserialiseScore (Leaderboard.serialiseScore score)) `shouldBe`
+        Just score
   describe "Leaderboard.maybeLineContaining" $
     -- context "when there is a matching line for a given boundsStr" $ do
       -- it "matches the line" $ do

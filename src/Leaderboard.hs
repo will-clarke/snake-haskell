@@ -52,7 +52,17 @@ serialiseLeague :: Model.League -> String
 serialiseLeague (Model.League (Model.Bounds width height)) = "[League - Width:" ++ (show width) ++ ",Height:" ++ (show height) ++ "]"
 
 deserialiseScore :: String -> Maybe Model.Score
-deserialiseScore = undefined
+-- Leaderboard.deserialiseScore "[Score - Points:21]" `shouldBe` (Just $ Model.Score 21)
+deserialiseScore s =
+  let str :: Maybe String
+      str =
+        Data.Text.unpack <$>
+        (Data.Text.init <$>
+         (Data.Text.stripPrefix (Data.Text.pack "[Score - Points:") $
+          (Data.Text.pack s)))
+      points :: Maybe Int
+      points = Control.Monad.join $ Text.Read.readMaybe <$> str
+   in Model.Score <$> points
 
 serialiseScore :: Model.Score -> String
 serialiseScore = undefined

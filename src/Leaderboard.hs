@@ -6,14 +6,15 @@ module Leaderboard
   , deserialiseScore
   ) where
 
+import qualified Control.Monad
 import qualified Data.List
-import qualified Data.Maybe
 import qualified Data.Map
-import qualified Model
+import qualified Data.Maybe
 import qualified Data.Text
-import qualified Text.Read
+import qualified Model
 import qualified System.Directory
 import           System.FilePath  ((</>))
+import qualified Text.Read
 
 getLeaderboardFile :: IO FilePath
 getLeaderboardFile = do
@@ -28,30 +29,27 @@ maybeLineContaining s linesString =
 -- TODO: This is a horrible way of parsing. Is there a better way? ¯\_(ツ)_/¯
 deserialiseLeague :: String -> Maybe Model.League
 deserialiseLeague str =
-  let textStr :: Data.Text.Text
-      textStr = Data.Text.pack str
-      strippedTxt :: Data.Text.Text
-      strippedTxt = Data.Text.dropAround (\c -> c == '[' || c == ']') . Data.Text.strip $
-        textStr
-      splitTxts :: [Data.Text.Text]
-      splitTxts =  map Data.Text.strip $ Data.Text.splitOn (Data.Text.pack ",") strippedTxt
-      possibleTextContaining :: String -> Maybe Data.Text.Text
-      possibleTextContaining s =
-        Data.Maybe.listToMaybe $
-        Data.List.filter (Data.Text.isInfixOf $ Data.Text.pack s) splitTxts
-      possibleIntContaining :: String -> Maybe Int
-      possibleIntContaining s =
-        let txtToRemove = Data.Text.pack $ s ++ ":"
-         in (Data.Text.unpack <$>
-             (possibleTextContaining s >>= Data.Text.stripPrefix txtToRemove)) >>=
-            Text.Read.readMaybe
-      possibleWidth = possibleIntContaining "W"
-      possibleHeight = possibleIntContaining "H"
+  let txt :: Maybe Data.Text.Text
+      txt =
+        Data.Text.strip <$>
+        (Data.Text.stripPrefix (Data.Text.pack "League -") $
+         Data.Text.strip .
+         Data.Text.dropAround (\c -> c == '[' || c == ']') .
+         Data.Text.strip . Data.Text.pack $
+         str)
+      attrs :: Maybe [Data.Text.Text]
+      attrs = Data.Text.split (== ',') <$> txt
+      attrMatching :: Data.Text.Text -> Maybe Data.Text.Text
+      attrMatching t = Control.Monad.join $ Data.Text.stripPrefix t <$> (Control.Monad.join $ Data.Maybe.listToMaybe <$> (filter (Data.Text.isPrefixOf t) <$> attrs))
+      attr :: String -> Maybe Int
+      attr s = Control.Monad.join $ fmap (\t -> Text.Read.readMaybe (Data.Text.unpack t)) (attrMatching (Data.Text.pack s))
+      possibleWidth = attr "Width:"
+      possibleHeight = attr "Height:"
    in (Model.Bounds <$> possibleWidth <*> possibleHeight) >>= \b ->
         Just (Model.League b)
 
 serialiseLeague :: Model.League -> String
-serialiseLeague (Model.League (Model.Bounds width height)) = "[W:" ++ (show width) ++ ",H:" ++ (show height) ++ "]"
+serialiseLeague (Model.League (Model.Bounds width height)) = "[League - Width:" ++ (show width) ++ ",Height:" ++ (show height) ++ "]"
 
 deserialiseScore :: String -> Maybe Model.Score
 deserialiseScore = undefined

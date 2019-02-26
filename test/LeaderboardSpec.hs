@@ -9,8 +9,6 @@ import           Test.Hspec
 import           Test.QuickCheck
 
 
-exampleBounds :: Gen Model.Bounds
-exampleBounds = Model.Bounds <$> arbitrary <*> arbitrary
 
 -- exampleString :: Gen StringSample
 -- exampleString = frequency [(1, arbitrary) (2, arbitrary)]
@@ -24,24 +22,48 @@ exampleBounds = Model.Bounds <$> arbitrary <*> arbitrary
 --     (1, return $ StringSample $ String arbitrary)
 --                         ]
 
+instance Arbitrary Model.Bounds where
+  arbitrary = Model.Bounds <$> arbitrary <*> arbitrary
 
--- leaderboard
+instance Arbitrary Model.League where
+  arbitrary = Model.League <$> exampleBounds
+
+exampleBounds :: Gen Model.Bounds
+exampleBounds = Model.Bounds <$> arbitrary <*> arbitrary
+
+exampleLeague :: Gen Model.League
+exampleLeague = Model.League <$> exampleBounds
 
 spec :: Spec
 spec = do
   describe "Leaderboard.serialiseLeague" $ do
     it "produces a new League string" $ do
-      Leaderboard.serialiseLeague (Model.League $ Model.Bounds 9 3) `shouldBe` "[W:9,H:3]"
+      Leaderboard.serialiseLeague (Model.League $ Model.Bounds 9 3) `shouldBe`
+        "[League - Width:9,Height:3]"
   describe "Leaderboard.deserialiseLeague" $ do
     it "constructs a new League" $ do
-      Leaderboard.deserialiseLeague "[W:9,H:3]" `shouldBe` (Just $ Model.League $ Model.Bounds 9 3)
-  describe "Leaderboard" $ do
-    
-  describe "Leaderboard.maybeLineContaining" $ do
+      Leaderboard.deserialiseLeague "[League - Width:9,Height:3]" `shouldBe`
+        (Just $ Model.League $ Model.Bounds 9 3)
+  describe "League" $ do
+    it "should be able to serialise and deserialise properly" $ do
+      forAll exampleLeague $ \league ->
+        (Leaderboard.deserialiseLeague (Leaderboard.serialiseLeague league)) `shouldBe`
+        Just league
+  describe "SerialiseScore" $ do
+    it "should output the correct score" $ do
+      Leaderboard.deserialiseScore "[Score - Points:21]" `shouldBe` (Just $ Model.Score 21)
+      -- league <- exampleLeague
+      -- league `shouldBe` (Model.League $ Model.Bounds 9 3)
+      -- serialised <- Leaderboard.serialiseLeague league
+      -- serialised `shouldBe` "sf"
+      -- deserialised <- Leaderboard.deserialiseLeague serialised
+      -- league `shouldBe` deserialised
+  describe "Leaderboard.maybeLineContaining" $
     -- context "when there is a matching line for a given boundsStr" $ do
       -- it "matches the line" $ do
         -- Leaderboard.maybeLineContaining boundsStr matchingString `shouldBe`
         --   Just yes
+   do
     context "when there is a matching line for a given boundsStr" $ do
       it "matches the line" $ do
         Leaderboard.maybeLineContaining boundsStr nonMatchinString `shouldBe`
@@ -69,7 +91,7 @@ generator :: IO Integer
 generator = generate $ elements [1,2,3]
 
 -- http://www.cse.chalmers.se/~rjmh/QuickCheck/manual.html
-	-- forAll <generator>         $ \<pattern> -> <property>
+-- forAll <generator>         $ \<pattern> -> <property>
 -- The following is a property:
   -- generators :: x -> Gen x
 prop_Test = forAll (elements [1,2,3]) $ \x -> x < 5

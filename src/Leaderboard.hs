@@ -32,36 +32,41 @@ deserialiseLeague str =
   let txt :: Maybe Data.Text.Text
       txt =
         Data.Text.strip <$>
-        (Data.Text.stripPrefix (Data.Text.pack "League -") $
-         Data.Text.strip .
-         Data.Text.dropAround (\c -> c == '[' || c == ']') .
-         Data.Text.strip . Data.Text.pack $
-         str)
+        Data.Text.stripPrefix
+          (Data.Text.pack "League -")
+          (Data.Text.strip .
+           Data.Text.dropAround (\c -> c == '[' || c == ']') .
+           Data.Text.strip . Data.Text.pack $
+           str)
       attrs :: Maybe [Data.Text.Text]
       attrs = Data.Text.split (== ',') <$> txt
       attrMatching :: Data.Text.Text -> Maybe Data.Text.Text
-      attrMatching t = Control.Monad.join $ Data.Text.stripPrefix t <$> (Control.Monad.join $ Data.Maybe.listToMaybe <$> (filter (Data.Text.isPrefixOf t) <$> attrs))
+      attrMatching t =
+        Data.Text.stripPrefix t =<<
+        (Data.Maybe.listToMaybe =<< (filter (Data.Text.isPrefixOf t) <$> attrs))
       attr :: String -> Maybe Int
-      attr s = Control.Monad.join $ fmap (\t -> Text.Read.readMaybe (Data.Text.unpack t)) (attrMatching (Data.Text.pack s))
+      attr s =
+        (Text.Read.readMaybe . Data.Text.unpack) =<<
+        attrMatching (Data.Text.pack s)
       possibleWidth = attr "Width:"
       possibleHeight = attr "Height:"
    in (Model.Bounds <$> possibleWidth <*> possibleHeight) >>= \b ->
         Just (Model.League b)
 
 serialiseLeague :: Model.League -> String
-serialiseLeague (Model.League (Model.Bounds width height)) = "[League - Width:" ++ (show width) ++ ",Height:" ++ (show height) ++ "]"
+serialiseLeague (Model.League (Model.Bounds width height)) =
+  "[League - Width:" ++ show width ++ ",Height:" ++ show height ++ "]"
 
 deserialiseScore :: String -> Maybe Model.Score
--- Leaderboard.deserialiseScore "[Score - Points:21]" `shouldBe` (Just $ Model.Score 21)
 deserialiseScore s =
   let str :: Maybe String
       str =
         Data.Text.unpack <$>
         (Data.Text.init <$>
-         (Data.Text.stripPrefix (Data.Text.pack "[Score - Points:") $
-          (Data.Text.pack s)))
+         Data.Text.stripPrefix (Data.Text.pack "[Score - Points:")
+          (Data.Text.pack s))
       points :: Maybe Int
-      points = Control.Monad.join $ Text.Read.readMaybe <$> str
+      points = Text.Read.readMaybe =<< str
    in Model.Score <$> points
 
 serialiseScore :: Model.Score -> String

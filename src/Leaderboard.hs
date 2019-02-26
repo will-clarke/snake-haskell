@@ -5,6 +5,8 @@ module Leaderboard
   , serialiseLeague
   , deserialiseScore
   , serialiseScore
+  , deserialiseLeaderboardScore
+  , serialiseLeaderboardScore
   ) where
 
 import qualified Control.Monad
@@ -73,17 +75,29 @@ deserialiseScore s =
 serialiseScore :: Model.Score -> String
 serialiseScore score = "[Score - Points:" ++ show (Model.getPoints score) ++ "]"
 
-deserialiseLeaderboard :: String -> Model.Leaderboard
+deserialiseLeaderboard :: String -> Maybe Model.Leaderboard
 deserialiseLeaderboard = undefined
 
 serialiseLeaderboard :: Model.Leaderboard -> String
 serialiseLeaderboard = undefined
 
-deserialiseLeaderboardScore :: String -> Maybe (Model.Leaderboard, Model.Score)
-deserialiseLeaderboardScore = undefined
+deserialiseLeaderboardScore :: String -> Maybe (Model.League, Model.Score)
+deserialiseLeaderboardScore line =
+  let lines :: [Data.Text.Text]
+      lines = Data.Text.splitOn (Data.Text.pack " -- ") (Data.Text.pack line)
+      possibleLeague :: [Data.Text.Text] -> Maybe Model.League
+      possibleLeague (l:xs) = deserialiseLeague (Data.Text.unpack l)
+      possibleLeague _      = Nothing
+      possibleScore :: [Data.Text.Text] -> Maybe Model.Score
+      possibleScore (_:scoreTxt:[]) =
+        deserialiseScore (Data.Text.unpack scoreTxt)
+      possibleScore _ = Nothing
+   in do league <- possibleLeague lines
+         score <- possibleScore lines
+         return (league, score)
 
-serialiseLeaderboardScore :: (Model.Leaderboard, Model.Score) -> String
-serialiseLeaderboardScore = undefined
+serialiseLeaderboardScore :: (Model.League, Model.Score) -> String
+serialiseLeaderboardScore (league, score) = serialiseLeague league ++ " -- " ++ serialiseScore score
 
 -- boundsString :: Model.Bounds -> String
 -- boundsString (Model.Bounds width height) = "[" <> show width <> "," <> show height <> "]"

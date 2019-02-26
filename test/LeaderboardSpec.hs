@@ -8,8 +8,6 @@ import qualified Model
 import           Test.Hspec
 import           Test.QuickCheck
 
-
-
 -- exampleString :: Gen StringSample
 -- exampleString = frequency [(1, arbitrary) (2, arbitrary)]
 
@@ -64,12 +62,11 @@ spec = do
       forAll exampleScore $ \score ->
         (Leaderboard.deserialiseScore (Leaderboard.serialiseScore score)) `shouldBe`
         Just score
-  describe "Leaderboard.maybeLineContaining" $
-    -- context "when there is a matching line for a given boundsStr" $ do
-      -- it "matches the line" $ do
-        -- Leaderboard.maybeLineContaining boundsStr matchingString `shouldBe`
-        --   Just yes
-   do
+  describe "serialising an entire line" $ do
+    it "should be able to serialise & deserialise back & forth" $ do
+      forAll (Control.Monad.liftM2 (,) exampleLeague exampleScore) $ \x ->
+        (Leaderboard.deserialiseLeaderboardScore (Leaderboard.serialiseLeaderboardScore x)) `shouldBe`
+        Just x
     context "when there is a matching line for a given boundsStr" $ do
       it "matches the line" $ do
         Leaderboard.maybeLineContaining boundsStr nonMatchinString `shouldBe`

@@ -42,8 +42,8 @@ deserialiseLeague str =
       attrs = Data.Text.split (== ',') <$> txt
       attrMatching :: Data.Text.Text -> Maybe Data.Text.Text
       attrMatching t =
-        Data.Text.stripPrefix t =<<
-        (Data.Maybe.listToMaybe =<< (filter (Data.Text.isPrefixOf t) <$> attrs))
+        ((filter (Data.Text.isPrefixOf t) <$> attrs) >>= Data.Maybe.listToMaybe) >>=
+        Data.Text.stripPrefix t
       attr :: String -> Maybe Int
       attr s =
         (Text.Read.readMaybe . Data.Text.unpack) =<<

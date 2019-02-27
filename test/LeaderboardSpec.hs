@@ -3,6 +3,7 @@ module LeaderboardSpec where
 import           Control.Exception (evaluate)
 import qualified Control.Monad
 import qualified Data.List
+import qualified Data.Map
 import qualified Leaderboard
 import qualified Model
 import           Test.Hspec
@@ -20,11 +21,17 @@ import           Test.QuickCheck
 --     (1, return $ StringSample $ String arbitrary)
 --                         ]
 
+instance Arbitrary Model.Leaderboard where
+  arbitrary = Model.Leaderboard <$> arbitrary
+
 instance Arbitrary Model.Bounds where
   arbitrary = Model.Bounds <$> arbitrary <*> arbitrary
 
 instance Arbitrary Model.League where
   arbitrary = Model.League <$> exampleBounds
+
+instance Arbitrary Model.Score where
+  arbitrary = Model.Score <$> arbitrary
 
 exampleBounds :: Gen Model.Bounds
 exampleBounds = Model.Bounds <$> arbitrary <*> arbitrary
@@ -34,6 +41,9 @@ exampleLeague = Model.League <$> exampleBounds
 
 exampleScore :: Gen Model.Score
 exampleScore = Model.Score <$> arbitrary
+
+exampleLeaderboard :: Gen Model.Leaderboard
+exampleLeaderboard = Model.Leaderboard <$> arbitrary
 
 
 spec :: Spec
@@ -65,12 +75,19 @@ spec = do
   describe "serialising an entire line" $ do
     it "should be able to serialise & deserialise back & forth" $ do
       forAll (Control.Monad.liftM2 (,) exampleLeague exampleScore) $ \x ->
-        (Leaderboard.deserialiseLeaderboardScore (Leaderboard.serialiseLeaderboardScore x)) `shouldBe`
+        (Leaderboard.deserialiseLeaderboardScore
+           (Leaderboard.serialiseLeaderboardScore x)) `shouldBe`
         Just x
     context "when there is a matching line for a given boundsStr" $ do
       it "matches the line" $ do
         Leaderboard.maybeLineContaining boundsStr nonMatchinString `shouldBe`
           Nothing
+  describe "Leaderboard serialisation" $ do
+    it "works" $ do
+      forAll (Model.Leaderboard <$> arbitrary) $ \leaderboard ->
+        (Leaderboard.deserialiseLeaderboard
+           (Leaderboard.serialiseLeaderboard leaderboard)) `shouldBe`
+        Just leaderboard
     context "when there is a blank file" $ do
       it "returns Nothing" $ do
         Leaderboard.maybeLineContaining boundsStr "" `shouldBe` Nothing

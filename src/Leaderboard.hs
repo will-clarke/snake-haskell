@@ -5,8 +5,8 @@ module Leaderboard
   , serialiseLeague
   , deserialiseScore
   , serialiseScore
- , deserialiseLeaderboardScore
-  , serialiseLeaderboardScore
+ , deserialiseAttempt
+  , serialiseAttempt
   , deserialiseLeaderboard
   , serialiseLeaderboard
   ) where
@@ -98,22 +98,22 @@ serialiseScore score = "[Score - Points:" ++ show (Model.getPoints score) ++ "]"
 
 deserialiseLeaderboard :: String -> Maybe Model.Leaderboard
 deserialiseLeaderboard fileBody =
-  let listOfLeaguesAndScores :: [Maybe (Model.League, Model.Score)]
-      listOfLeaguesAndScores = map deserialiseLeaderboardScore (lines fileBody)
-      maybeLeaguesAndScores :: Maybe [(Model.League, Model.Score)]
-      maybeLeaguesAndScores = sequence listOfLeaguesAndScores
-   in maybeLeaguesAndScores >>= \leagueAndScores ->
-        Just $ Model.Leaderboard (Data.Map.fromList leagueAndScores)
+  let attempts :: [Maybe Model.Attempt]
+      attempts = map deserialiseAttempt (lines fileBody)
+      maybeAttempts :: Maybe [Model.Attempt]
+      maybeAttempts = sequence attempts
+   in maybeAttempts >>= \attempts' ->
+        Just $ Model.Leaderboard (Data.Map.fromList $ map Model.toTuple attempts')
 
 serialiseLeaderboard :: Model.Leaderboard -> String
 serialiseLeaderboard leaderboard =
   concatMap
-    (\(league, score) -> serialiseLeaderboardScore (league, score))
+    (\(league, score) -> serialiseAttempt (Model.Attempt league score))
        -- serialiseLeague league ++ " -- " ++ serialiseScore score ++ "\n")
     (Data.Map.toDescList $ Model.getLeagues leaderboard)
 
-deserialiseLeaderboardScore :: String -> Maybe (Model.League, Model.Score)
-deserialiseLeaderboardScore line =
+deserialiseAttempt :: String -> Maybe Model.Attempt
+deserialiseAttempt line =
   let lines :: [Data.Text.Text]
       lines = map Data.Text.strip $ Data.Text.splitOn (Data.Text.pack " -- ") (Data.Text.pack line)
       possibleLeague :: [Data.Text.Text] -> Maybe Model.League
@@ -125,10 +125,10 @@ deserialiseLeaderboardScore line =
       possibleScore _ = Nothing
    in do league <- possibleLeague lines
          score <- possibleScore lines
-         return (league, score)
+         return (Model.Attempt league score)
 
-serialiseLeaderboardScore :: (Model.League, Model.Score) -> String
-serialiseLeaderboardScore (league, score) = serialiseLeague league ++ " -- " ++ serialiseScore score  ++ "\n"
+serialiseAttempt :: Model.Attempt -> String
+serialiseAttempt (Model.Attempt league score) = serialiseLeague league ++ " -- " ++ serialiseScore score  ++ "\n"
 
 -- boundsString :: Model.Bounds -> String
 -- boundsString (Model.Bounds width height) = "[" <> show width <> "," <> show height <> "]"

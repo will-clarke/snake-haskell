@@ -14,6 +14,7 @@ module Model
   , Leaderboard(..)
   , Score(..)
   , Attempt(..)
+  , toTuple
   ) where
 
 import qualified Data.Map
@@ -84,7 +85,10 @@ data Bounds = Bounds
 data Attempt = Attempt
   { getLeague :: League
   , getScore :: Score
-  }
+  } deriving (Show, Eq)
+
+toTuple :: Attempt -> (League, Score)
+toTuple (Attempt l s) = (l, s)
 
 newtype Score = Score
   { getPoints :: Int

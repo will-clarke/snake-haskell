@@ -33,6 +33,9 @@ instance Arbitrary Model.League where
 instance Arbitrary Model.Score where
   arbitrary = Model.Score <$> arbitrary
 
+instance Arbitrary Model.Attempt where
+  arbitrary = Model.Attempt <$> arbitrary <*> arbitrary
+
 exampleBounds :: Gen Model.Bounds
 exampleBounds = Model.Bounds <$> arbitrary <*> arbitrary
 
@@ -74,9 +77,9 @@ spec = do
         Just score
   describe "serialising an entire line" $ do
     it "should be able to serialise & deserialise back & forth" $ do
-      forAll (Control.Monad.liftM2 (,) exampleLeague exampleScore) $ \x ->
-        (Leaderboard.deserialiseLeaderboardScore
-           (Leaderboard.serialiseLeaderboardScore x)) `shouldBe`
+      forAll arbitrary $ \x ->
+        (Leaderboard.deserialiseAttempt
+           (Leaderboard.serialiseAttempt x)) `shouldBe`
         Just x
     context "when there is a matching line for a given boundsStr" $ do
       it "matches the line" $ do

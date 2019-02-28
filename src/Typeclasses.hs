@@ -17,11 +17,11 @@ class Tickable a where
   tick :: Model.Game -> a
 
 instance Typeclasses.Drawable Model.Food where
-  widget _ = Brick.withAttr Attr.food $ Brick.str "@"
+  widget _ = Brick.withAttr Attr.food $ Brick.str "▒"
   coords (Model.Food food _) = food
 
 instance Typeclasses.Drawable Model.Snake where
-  widget _ = Brick.withAttr Attr.snakeBody $ Brick.str "*"
+  widget _ = Brick.withAttr Attr.snakeBody $ Brick.str "■"
   coords (Model.Snake snake) = snake -- or T.getSegments snake
 
 instance Typeclasses.Tickable Model.Snake where

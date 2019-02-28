@@ -18,8 +18,27 @@ import qualified Data.Maybe
 import qualified Data.Text
 import qualified Model
 import qualified System.Directory
+import qualified System.IO
 import           System.FilePath  ((</>))
 import qualified Text.Read
+
+getLeaderboard :: IO (Maybe Model.Leaderboard)
+getLeaderboard = do
+  lbFile <- getLeaderboardFile
+  exists <- System.Directory.doesFileExist lbFile
+  if exists
+     then deserialiseLeaderboard <$> System.IO.readFile lbFile
+    -- Text.Read.readMaybe <$> System.IO.readFile lbFile
+     -- then System.IO.readFile lbFile >>= deserialiseLeaderboard
+     -- then deserialiseLeaderboard lbFile
+     else return Nothing
+
+-- setLeaderboard :: (Model.League, Model.Score) -> IO ()
+-- setLeaderboard s = do
+--   lb <- getLeaderboard
+--   writeFile lb (show s)
+
+-- updateLeaderboard :: Model.Leaderboard ->
 
 getLeaderboardFile :: IO FilePath
 getLeaderboardFile = do
@@ -118,8 +137,8 @@ serialiseLeaderboardScore (league, score) = serialiseLeague league ++ " -- " ++ 
 
 
 
--- getHighScore :: Model.Bounds -> IO (Maybe Int)
--- getHighScore bounds = do
+-- getLeaderboard :: Model.Bounds -> IO (Maybe Int)
+-- getLeaderboard bounds = do
 --   file <- getLeaderboardFile
 --   exists <- System.Directory.doesFileExist file
 --   if exists
@@ -135,7 +154,7 @@ serialiseLeaderboardScore (league, score) = serialiseLeague league ++ " -- " ++ 
 -- maybeFindHighScore
 -- readMaybe <$> readFile file
 
--- setHighScore bounds :: Model.Bounds -> Int -> IO ()
--- setHighScore s = do
+-- setLeaderboard bounds :: Model.Bounds -> Int -> IO ()
+-- setLeaderboard s = do
 --   file <- getLeaderboardFile
 --   writeFile file (show s)

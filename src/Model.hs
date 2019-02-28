@@ -13,6 +13,7 @@ module Model
   , League(..)
   , Leaderboard(..)
   , Score(..)
+  , Attempt(..)
   ) where
 
 import qualified Data.Map
@@ -79,6 +80,11 @@ data Bounds = Bounds
   , maxHeight :: Int
   } deriving (Show, Read, Eq, Ord)
 
+
+data Attempt = Attempt
+  { getLeague :: League
+  , getScore :: Score
+  }
 
 newtype Score = Score
   { getPoints :: Int

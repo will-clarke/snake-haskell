@@ -23,11 +23,6 @@ app = B.App
   , B.appAttrMap      = const Attr.defaultMap
   }
 
-  -- TODO: OH HEY.
-  -- It'd sure be swell if we could
-  -- 1. add a game over screen
-  -- 2. implement DEATH
-
 playGame :: Model.Options -> IO Model.State
 playGame options = do
   let delay = 100000

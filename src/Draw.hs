@@ -19,7 +19,7 @@ drawHeader :: Model.Game -> B.Widget Model.Name
 drawHeader game =
   Border.borderWithLabel
     (B.withAttr foundFgOnly $ B.str $ Model.title game)
-    (B.withAttr foundFull $B.str (show (Model.direction game, Model.previousDirection game)) B.<+>
+    (B.withAttr foundFull $B.str (show (Model.direction game)) B.<+>
      B.padLeft B.Max (B.str ("Score: " ++ show (Model.score game) ++ " ")))
   where foundFull = Brick.AttrMap.attrName "foundFull"
         foundFgOnly = Brick.AttrMap.attrName "foundFgOnly"
@@ -85,7 +85,7 @@ draw (Model.Playing game) =
 draw (Model.StartScreen _options) = [Center.center (Border.border $ B.str "Welcome")]
 draw (Model.Paused _game) = [Center.center (Border.border $ B.str "** PAUSED **")]
 draw (Model.GameOver score) =
-  [Center.center (Border.border $ B.str $ "You lost ;(\n\n score = " ++ show score)]
+  [Center.center (Border.border $ B.str $ "You lost ;(\n\n score = " ++ show (Model.getPoints $ Model.getScore score))]
 
 emptyAttrMap :: a -> B.AttrMap
 emptyAttrMap = const (B.attrMap V.currentAttr [])

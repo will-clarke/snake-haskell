@@ -25,15 +25,18 @@ class Tickable a where
 #+END_SRC
 No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 
+- [ ] Make sure all record-syntax functions are sytematically named (eg. "getSomething")
 - [ ] Make the game faster as you eat more fruit
 - [ ] changing background colours depending on the level ----- DO WE EVEN WANT THIS?
 - [ ] Find out how to get screen dimensions from Brick. This could be tricky / monad-y
-- [ ] high scores stored locally?
+- [ ] show high scores
+- [ ] update high scores
 - [ ] high scores stored on a server somewhere?????
 - [ ] (prerequisite of below): store a continually increasing integer - the "tick" of the game
 - [ ] record a list of all the keystrokes??? We could even replay this later on....
 - [ ] backwards mode: keys do the opposite of what you expect (/ something totally random)
 - [ ] parsing -- some DSL for styling / add a map
+- [X] high scores stored locally?
 - [X] start snake in the middle
 - [X] Start snake moving left to right or something
 - [X] implement pausing / resuming on screen blur / focus

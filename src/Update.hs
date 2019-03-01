@@ -52,7 +52,7 @@ dead game =
 --- TODO: Refactor this horrific mess :|
 handleEvent :: M.State -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.Playing game
-handleEvent (M.Playing game) _ | (dead game) = B.continue $ M.GameOver $ M.score game
+handleEvent (M.Playing game) _ | dead game = B.continue $ M.GameOver $ M.toAttempt game
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KUp [])) = B.continue $ M.Playing $ updateGameDirection game M.North
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KDown [])) =  B.continue $ M.Playing $ updateGameDirection game M.South
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KLeft [])) =  B.continue $ M.Playing $ updateGameDirection game M.West

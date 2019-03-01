@@ -15,6 +15,7 @@ module Model
   , Score(..)
   , Attempt(..)
   , toTuple
+  , toAttempt
   ) where
 
 import qualified Data.Map
@@ -46,7 +47,7 @@ data Graphics = Simple | Complex deriving (Show, Read)
 --      "complex" -> return (Complex, [])
 --      _ -> error $ "Cannot parse " ++ string
 
-data State = StartScreen Options | Playing Game | Paused Game | GameOver Int
+data State = StartScreen Options | Playing Game | Paused Game | GameOver Attempt
 
 data Options = Options
   { startSeed     :: Int
@@ -86,6 +87,9 @@ data Attempt = Attempt
   { getLeague :: League
   , getScore :: Score
   } deriving (Show, Eq)
+
+toAttempt :: Game -> Attempt
+toAttempt g = Attempt (League (bounds g)) (Score (score g))
 
 toTuple :: Attempt -> (League, Score)
 toTuple (Attempt l s) = (l, s)

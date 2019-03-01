@@ -1,13 +1,14 @@
 module Main where
 
 import qualified Attr
-import qualified Brick                     as B
+import qualified Brick               as B
 import qualified Brick.BChan
-import           Brick.Main                ()
+import           Brick.Main          ()
 import qualified Control.Concurrent
 import qualified Control.Monad
 import qualified Draw
 import qualified Game
+import qualified Leaderboard
 import qualified Model
 import qualified Options.Applicative as O
 import qualified Update
@@ -26,17 +27,30 @@ app = B.App
   -- It'd sure be swell if we could
   -- 1. add a game over screen
   -- 2. implement DEATH
-main :: IO Model.State
-main = do
+
+playGame :: Model.Options -> IO Model.State
+playGame options = do
   let delay = 100000
-  (Model.Options seed bounds graphics') <- O.execParser fullopts
   chan <- Brick.BChan.newBChan 10
   Control.Monad.void . Control.Concurrent.forkIO $
     Control.Monad.forever $ do
       Brick.BChan.writeBChan chan Model.Tick
       Control.Concurrent.threadDelay delay
   B.customMain Draw.defaultVty (Just chan) app $
-    Model.StartScreen (Model.Options seed bounds graphics')
+    Model.StartScreen options
+
+main :: IO ()
+main = do
+  options <- O.execParser fullopts :: IO Model.Options
+  game <- playGame options
+  handleEndGame game
+  -- -- return game
+
+handleEndGame :: Model.State -> IO ()
+handleEndGame (Model.GameOver attempt) = do
+  file <- Leaderboard.getLeaderboardFile
+  writeFile file $ Leaderboard.serialiseAttempt attempt
+handleEndGame _ = return ()
 
 startingGame :: Int -> Model.Graphics -> Model.Game
 startingGame seed = Game.initialGame seed bounds

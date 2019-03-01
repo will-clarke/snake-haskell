@@ -64,7 +64,34 @@ spec = do
       forAll exampleLeague $ \league ->
         (Leaderboard.deserialiseLeague (Leaderboard.serialiseLeague league)) `shouldBe`
         Just league
-  describe "Score" $ do
+  describe "Attempts" $ do
+    it "should be deserialisable" $ do
+      Leaderboard.deserialiseAttempt
+        "[League - Width:10,Height:5] -- [Score - Points:100]\n" `shouldBe`
+        Just
+          (Model.Attempt (Model.League $ Model.Bounds 10 5) (Model.Score 100))
+  describe "entire Leaderboard file" $ do
+    it "should be deserialisable" $ do
+      Leaderboard.deserialiseLeaderboard
+        "[League - Width:10,Height:5] -- [Score - Points:100]\n\
+      \[League - Width:11,Height:5] -- [Score - Points:101]\n\
+      \[League - Width:12,Height:5] -- [Score - Points:102]" `shouldBe`
+        Just
+          (Model.Leaderboard
+             (Data.Map.fromList
+                [ (Model.League (Model.Bounds 10 5), (Model.Score 100))
+                , (Model.League (Model.Bounds 11 5), (Model.Score 101))
+                , (Model.League (Model.Bounds 12 5), (Model.Score 102))
+                ]))
+
+
+-- Data.Map.empty)
+      -- Leaderboard.deserialiseLeaderboard "[League - Width:10,Height:5] -- [Score - Points:100]\
+      -- \[League - Width:11,Height:5] -- [Score - Points:101]\
+      -- \[League - Width:12,Height:5] -- [Score - Points:102]" `shouldBe` Just (Model.Leaderboard Data.Map.empty)
+    -- it "should be serialisable" $ do
+       -- Leaderboard.serialiseLeaderboard (Model.Leaderboard {Model.getLeagues = Data.Map.fromList [(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -26, Model.maxHeight = 3}},Model.Score {Model.getPoints = 3}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -25, Model.maxHeight = -13}},Model.Score {Model.getPoints = -23}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -19, Model.maxHeight = 22}},Model.Score {Model.getPoints = 4}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -18, Model.maxHeight = 11}},Model.Score {Model.getPoints = 13}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -15, Model.maxHeight = 4}},Model.Score {Model.getPoints = 26}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -15, Model.maxHeight = 17}},Model.Score {Model.getPoints = 7}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -12, Model.maxHeight = 22}},Model.Score {Model.getPoints = 19}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -8, Model.maxHeight = 19}},Model.Score {Model.getPoints = -21}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 4, Model.maxHeight = 1}},Model.Score {Model.getPoints = -10}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 6, Model.maxHeight = -6}},Model.Score {Model.getPoints = 1}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 9, Model.maxHeight = -9}},Model.Score {Model.getPoints = 10}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 11, Model.maxHeight = -22}},Model.Score {Model.getPoints = -5}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 12, Model.maxHeight = 0}},Model.Score {Model.getPoints = -8}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 16, Model.maxHeight = -29}},Model.Score {Model.getPoints = 25}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 18, Model.maxHeight = 11}},Model.Score {Model.getPoints = 1}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 21, Model.maxHeight = 19}},Model.Score {Model.getPoints = -18}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 24, Model.maxHeight = -4}},Model.Score {Model.getPoints = -29})]}) `shouldBe` "Zomg"
+  describe "Model.Score" $ do
     it "should deserialise the score correctly" $ do
       Leaderboard.deserialiseScore "[Score - Points:21]" `shouldBe`
         (Just $ Model.Score 21)
@@ -77,10 +104,9 @@ spec = do
         Just score
   describe "serialising an entire line" $ do
     it "should be able to serialise & deserialise back & forth" $ do
-      forAll arbitrary $ \x ->
-        (Leaderboard.deserialiseAttempt
-           (Leaderboard.serialiseAttempt x)) `shouldBe`
-        Just x
+      forAll arbitrary $ \attempt ->
+        (Leaderboard.deserialiseAttempt (Leaderboard.serialiseAttempt attempt)) `shouldBe`
+        Just attempt
     context "when there is a matching line for a given boundsStr" $ do
       it "matches the line" $ do
         Leaderboard.maybeLineContaining boundsStr nonMatchinString `shouldBe`
@@ -166,13 +192,13 @@ boundsStr :: String
 boundsStr = "[11,12]"
 
 yes :: [Char]
-yes = "Bounds {maxWidth = 11, maxHeight = 12} - Yep"
+yes = "Bounds {maxWidth = 11, Model.maxHeight = 12} - Yep"
 
 no1 :: [Char]
-no1 = "Bounds {maxWidth = 12, maxHeight = 12} - Nope"
+no1 = "Bounds {maxWidth = 12, Model.maxHeight = 12} - Nope"
 
 no2 :: [Char]
-no2 = "Bounds {maxWidth = 10, maxHeight = 12} - NOOO"
+no2 = "Bounds {maxWidth = 10, Model.maxHeight = 12} - NOOO"
 
 matchingString :: [Char]
 matchingString = no1 ++ "\n" ++ yes ++ "\n" ++ no2

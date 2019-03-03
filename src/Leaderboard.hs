@@ -1,11 +1,12 @@
 module Leaderboard
   ( getLeaderboardFile
+  , getLeaderboard
   , maybeLineContaining
   , deserialiseLeague
   , serialiseLeague
   , deserialiseScore
   , serialiseScore
- , deserialiseAttempt
+  , deserialiseAttempt
   , serialiseAttempt
   , deserialiseLeaderboard
   , serialiseLeaderboard
@@ -22,12 +23,29 @@ import qualified System.IO
 import           System.FilePath  ((</>))
 import qualified Text.Read
 
+-- This is the main Leaderboard function.. that reads, updates & writes the leaderboard file
+writeLeaderboard :: Model.Attempt -> IO Model.Leaderboard
+writeLeaderboard (Model.Attempt league score) = do
+  lbFile <- getLeaderboardFile
+  fileBody <- System.IO.readFile lbFile
+  exists <- System.Directory.doesFileExist lbFile
+  if exists
+    then return l
+    else return l
+  where
+    l = Model.Leaderboard Data.Map.empty
+
+isHighScore :: Model.Attempt -> Model.Leaderboard -> Bool
+isHighScore attempt leaderboard = 
+  Data.List.isInfixOf (serialiseAttempt attempt)
+
 getLeaderboard :: IO (Maybe Model.Leaderboard)
 getLeaderboard = do
   lbFile <- getLeaderboardFile
   exists <- System.Directory.doesFileExist lbFile
   if exists
-     then deserialiseLeaderboard <$> System.IO.readFile lbFile
+    then deserialiseLeaderboard <$> System.IO.readFile lbFile
+         -- deserialiseLeaderboard fileBody
     -- Text.Read.readMaybe <$> System.IO.readFile lbFile
      -- then System.IO.readFile lbFile >>= deserialiseLeaderboard
      -- then deserialiseLeaderboard lbFile

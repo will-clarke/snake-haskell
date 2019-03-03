@@ -2,6 +2,7 @@ module Draw
   ( draw
   , emptyAttrMap
   , defaultVty
+  , gameOverWidget
   ) where
 
 import qualified Attr
@@ -84,8 +85,24 @@ draw (Model.Playing game) =
         Model.Complex -> [B.withBorderStyle BorderStyle.unicodeRounded gameWidget]
 draw (Model.StartScreen _options) = [Center.center (Border.border $ B.str "Welcome")]
 draw (Model.Paused _game) = [Center.center (Border.border $ B.str "** PAUSED **")]
-draw (Model.GameOver score) =
-  [Center.center (Border.border $ B.str $ "You lost ;(\n\n score = " ++ show (Model.getPoints $ Model.getScore score))]
+draw (Model.GameOver _score) =
+  [ Center.center $
+    B.str $
+    "\n\
+    \ YOU DIED\n\n\
+    \ /     \\ \n\
+    \| () () |\n\
+    \ \\  ^  /\n\
+    \  |||||\n\
+    \  |||||\n"
+  ]
+
+
+gameOverWidget :: Model.Attempt -> Maybe Model.Leaderboard -> B.Widget Model.Name
+gameOverWidget (Model.Attempt league score) _leaderboard =
+  Center.center
+    (Border.border $
+     B.str $ "You're rubbish.  :/\n\n score = " ++ show (Model.getPoints score))
 
 emptyAttrMap :: a -> B.AttrMap
 emptyAttrMap = const (B.attrMap V.currentAttr [])

@@ -39,13 +39,16 @@ main = do
   options <- O.execParser fullopts :: IO Model.Options
   game <- playGame options
   handleEndGame game
-  -- -- return game
 
 handleEndGame :: Model.State -> IO ()
-handleEndGame (Model.GameOver attempt) = do
-  file <- Leaderboard.getLeaderboardFile
-  writeFile file $ Leaderboard.serialiseAttempt attempt
+handleEndGame state@(Model.GameOver attempt) = do
+  Leaderboard.writeLeaderboard
+  -- file <- Leaderboard.getLeaderboardFile
+  -- beLeaderboard <- Leaderboard.getLeaderboard
+  -- writeFile file $ Leaderboard.serialiseAttempt attempt
+  B.simpleMain $ Draw.gameOverWidget attempt maybeLeaderboard
 handleEndGame _ = return ()
+-- handleEndGame _ = return (Model.GameOver (Model.Attempt (Model.League (Model.Bounds 1 1)) (Model.Score 1)))
 
 startingGame :: Int -> Model.Graphics -> Model.Game
 startingGame seed = Game.initialGame seed bounds

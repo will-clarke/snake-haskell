@@ -25,6 +25,7 @@ tick game =
           1 -> "Nice"
           2 -> "Keep On going"
           3 -> "You're winning"
+          4 -> "Omg. This is probably a high score or something"
           _ -> "You're super awesome :D"
    in M.Game
         { M.getTitle = newGetTitle

@@ -90,7 +90,7 @@ draw (Model.StartScreen _options) = [Center.center (Border.border $ B.str "Welco
 draw (Model.Paused _game) = [Center.center (Border.border $ B.str "** PAUSED **")]
 draw (Model.GameOver _score) =
   [ Center.center $
-    B.str $
+    B.str
     "\n\
     \ YOU DIED\n\n\
     \ /     \\ \n\

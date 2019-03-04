@@ -14,7 +14,6 @@ module Leaderboard
   , writeLeaderboard
   ) where
 
-import qualified Control.Monad
 import qualified Data.List
 import qualified Data.Map
 import qualified Data.Maybe
@@ -27,7 +26,7 @@ import qualified Text.Read
 
 -- This is the main Leaderboard function.. that reads, updates & writes the leaderboard file
 writeLeaderboard :: Model.Attempt -> IO Model.Leaderboard
-writeLeaderboard attempt@(Model.Attempt league score) = do
+writeLeaderboard attempt@(Model.Attempt _league _score) = do
   lbFile <- getLeaderboardFile
   lbFileBody <- System.IO.readFile lbFile
   exists <- System.Directory.doesFileExist lbFile
@@ -69,11 +68,11 @@ updateAndWriteLeaderboard (Just oldLeaderboard) attempt filepath = do
 updateAndWriteLeaderboard Nothing attempt filepath = writeSingleAttemptToLeaderboard attempt filepath
 
 updateLeaderboard :: Model.Leaderboard -> Model.Attempt -> Model.Leaderboard
-updateLeaderboard initialLB attempt@(Model.Attempt league score) =
+updateLeaderboard initialLB (Model.Attempt league score) =
   Model.Leaderboard
     (Data.Map.insertWithKey
-       (\key newVal oldVal ->
-          if (newVal >= oldVal)
+       (\_key newVal oldVal ->
+          if newVal >= oldVal
             then newVal
             else oldVal)
        league
@@ -83,12 +82,10 @@ updateLeaderboard initialLB attempt@(Model.Attempt league score) =
 
 isHighScore :: Model.Attempt -> Model.Leaderboard -> Bool
 isHighScore attempt leaderboard =
-  Data.List.isInfixOf
-    (serialiseAttempt attempt)
-    (serialiseLeaderboard leaderboard)
+  serialiseAttempt attempt `Data.List.isInfixOf` serialiseLeaderboard leaderboard
 
-emptyLeaderboard :: Model.Leaderboard
-emptyLeaderboard = Model.Leaderboard Data.Map.empty
+-- emptyLeaderboard :: Model.Leaderboard
+-- emptyLeaderboard = Model.Leaderboard Data.Map.empty
 
 pure :: Model.Attempt -> Model.Leaderboard
 pure attempt = Model.Leaderboard (Data.Map.fromList [ Model.toTuple attempt ] )
@@ -185,17 +182,17 @@ serialiseLeaderboard leaderboard =
 
 deserialiseAttempt :: String -> Maybe Model.Attempt
 deserialiseAttempt line =
-  let lines :: [Data.Text.Text]
-      lines = map Data.Text.strip $ Data.Text.splitOn (Data.Text.pack " -- ") (Data.Text.pack line)
+  let lines' :: [Data.Text.Text]
+      lines' = map Data.Text.strip $ Data.Text.splitOn (Data.Text.pack " -- ") (Data.Text.pack line)
       possibleLeague :: [Data.Text.Text] -> Maybe Model.League
-      possibleLeague (l:xs) = deserialiseLeague (Data.Text.unpack l)
+      possibleLeague (l:_xs) = deserialiseLeague (Data.Text.unpack l)
       possibleLeague _      = Nothing
       possibleScore :: [Data.Text.Text] -> Maybe Model.Score
-      possibleScore (_:scoreTxt:[]) =
+      possibleScore [_,scoreTxt] =
         deserialiseScore (Data.Text.unpack scoreTxt)
       possibleScore _ = Nothing
-   in do league <- possibleLeague lines
-         score <- possibleScore lines
+   in do league <- possibleLeague lines'
+         score <- possibleScore lines'
          return (Model.Attempt league score)
 
 serialiseAttempt :: Model.Attempt -> String

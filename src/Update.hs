@@ -89,4 +89,3 @@ newDirection M.East M.West   = M.West
 newDirection M.East _        = M.East
 newDirection M.West M.East   = M.East
 newDirection M.West _        = M.West
-

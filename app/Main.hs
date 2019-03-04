@@ -53,7 +53,7 @@ handleEndGame _ = return ()
 startingGame :: Int -> Model.Graphics -> Model.Game
 startingGame seed = Game.initialGame seed bounds
   where
-    bounds = Model.Bounds {Model.maxHeight = 20, Model.maxWidth = 60}
+    bounds = Model.Bounds {Model.getMaxHeight = 20, Model.getMaxWidth = 60}
 
 fullopts :: O.ParserInfo Model.Options
 fullopts = O.info (O.helper <*> parsedOptions)

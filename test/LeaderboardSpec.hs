@@ -90,7 +90,7 @@ spec = do
       -- \[League - Width:11,Height:5] -- [Score - Points:101]\
       -- \[League - Width:12,Height:5] -- [Score - Points:102]" `shouldBe` Just (Model.Leaderboard Data.Map.empty)
     -- it "should be serialisable" $ do
-       -- Leaderboard.serialiseLeaderboard (Model.Leaderboard {Model.getLeagues = Data.Map.fromList [(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -26, Model.maxHeight = 3}},Model.Score {Model.getPoints = 3}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -25, Model.maxHeight = -13}},Model.Score {Model.getPoints = -23}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -19, Model.maxHeight = 22}},Model.Score {Model.getPoints = 4}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -18, Model.maxHeight = 11}},Model.Score {Model.getPoints = 13}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -15, Model.maxHeight = 4}},Model.Score {Model.getPoints = 26}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -15, Model.maxHeight = 17}},Model.Score {Model.getPoints = 7}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -12, Model.maxHeight = 22}},Model.Score {Model.getPoints = 19}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = -8, Model.maxHeight = 19}},Model.Score {Model.getPoints = -21}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 4, Model.maxHeight = 1}},Model.Score {Model.getPoints = -10}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 6, Model.maxHeight = -6}},Model.Score {Model.getPoints = 1}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 9, Model.maxHeight = -9}},Model.Score {Model.getPoints = 10}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 11, Model.maxHeight = -22}},Model.Score {Model.getPoints = -5}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 12, Model.maxHeight = 0}},Model.Score {Model.getPoints = -8}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 16, Model.maxHeight = -29}},Model.Score {Model.getPoints = 25}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 18, Model.maxHeight = 11}},Model.Score {Model.getPoints = 1}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 21, Model.maxHeight = 19}},Model.Score {Model.getPoints = -18}),(Model.League {Model.getBounds = Model.Bounds {Model.maxWidth = 24, Model.maxHeight = -4}},Model.Score {Model.getPoints = -29})]}) `shouldBe` "Zomg"
+       -- Leaderboard.serialiseLeaderboard (Model.Leaderboard {Model.getLeagues = Data.Map.fromList [(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = -26, Model.getMaxHeight = 3}},Model.Score {Model.getPoints = 3}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = -25, Model.getMaxHeight = -13}},Model.Score {Model.getPoints = -23}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = -19, Model.getMaxHeight = 22}},Model.Score {Model.getPoints = 4}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = -18, Model.getMaxHeight = 11}},Model.Score {Model.getPoints = 13}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = -15, Model.getMaxHeight = 4}},Model.Score {Model.getPoints = 26}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = -15, Model.getMaxHeight = 17}},Model.Score {Model.getPoints = 7}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = -12, Model.getMaxHeight = 22}},Model.Score {Model.getPoints = 19}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = -8, Model.getMaxHeight = 19}},Model.Score {Model.getPoints = -21}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = 4, Model.getMaxHeight = 1}},Model.Score {Model.getPoints = -10}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = 6, Model.getMaxHeight = -6}},Model.Score {Model.getPoints = 1}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = 9, Model.getMaxHeight = -9}},Model.Score {Model.getPoints = 10}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = 11, Model.getMaxHeight = -22}},Model.Score {Model.getPoints = -5}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = 12, Model.getMaxHeight = 0}},Model.Score {Model.getPoints = -8}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = 16, Model.getMaxHeight = -29}},Model.Score {Model.getPoints = 25}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = 18, Model.getMaxHeight = 11}},Model.Score {Model.getPoints = 1}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = 21, Model.getMaxHeight = 19}},Model.Score {Model.getPoints = -18}),(Model.League {Model.getBounds = Model.Bounds {Model.getMaxWidth = 24, Model.getMaxHeight = -4}},Model.Score {Model.getPoints = -29})]}) `shouldBe` "Zomg"
   describe "Model.Score" $ do
     it "should deserialise the score correctly" $ do
       Leaderboard.deserialiseScore "[Score - Points:21]" `shouldBe`
@@ -127,7 +127,7 @@ spec = do
           -- show boundsStr `Data.List.isPrefixOf` (Leaderboard.maybeLineContaining boundsStr string)
           -- in forAll (elements exampleStrings) $ \string -> Leaderboard.maybeLineContaining boundsStr string `shouldBe` Just "omg"--(Data.List.isInfixOf string (show boundsStr))
          -- in forAll (pure $ boundsStr) $ \bounds' ->
-         --      Model.maxHeight bounds' == Model.maxHeight bounds'
+         --      Model.getMaxHeight bounds' == Model.getMaxHeight bounds'
   -- regex
     -- context "property Testing - no idea what I'm doing" $ do
     --   it "works" $ do
@@ -163,7 +163,7 @@ q = generate (arbitrary :: Gen Int)
 -- Using generators:
 -- forAll <generator> $ \<pattern> -> <property>
 
-w = forAll (pure $ Model.Bounds 1 10) $ \bounds' -> Model.maxHeight bounds' == Model.maxHeight bounds'
+w = forAll (pure $ Model.Bounds 1 10) $ \bounds' -> Model.getMaxHeight bounds' == Model.getMaxHeight bounds'
   -- choose
 
 randomBounds :: IO Model.Bounds
@@ -192,13 +192,13 @@ boundsStr :: String
 boundsStr = "[11,12]"
 
 yes :: [Char]
-yes = "Bounds {maxWidth = 11, Model.maxHeight = 12} - Yep"
+yes = "Bounds {getMaxWidth = 11, Model.getMaxHeight = 12} - Yep"
 
 no1 :: [Char]
-no1 = "Bounds {maxWidth = 12, Model.maxHeight = 12} - Nope"
+no1 = "Bounds {getMaxWidth = 12, Model.getMaxHeight = 12} - Nope"
 
 no2 :: [Char]
-no2 = "Bounds {maxWidth = 10, Model.maxHeight = 12} - NOOO"
+no2 = "Bounds {getMaxWidth = 10, Model.getMaxHeight = 12} - NOOO"
 
 matchingString :: [Char]
 matchingString = no1 ++ "\n" ++ yes ++ "\n" ++ no2

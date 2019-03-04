@@ -8,10 +8,10 @@ import qualified Model as M
 
 initialSnake :: M.Bounds -> M.Snake
 initialSnake bounds =
-  let maxWidth = M.maxWidth bounds
-      maxHeight = M.maxHeight bounds
-      midX = maxWidth `div` 2
-      midY = maxHeight `div` 2
+  let getMaxWidth = M.getMaxWidth bounds
+      getMaxHeight = M.getMaxHeight bounds
+      midX = getMaxWidth `div` 2
+      midY = getMaxHeight `div` 2
    in M.Snake
         { M.getSegments =
             [ M.Coordinate {M.x = midX + 1, M.y = midY}

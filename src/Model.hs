@@ -50,11 +50,10 @@ data Graphics = Simple | Complex deriving (Show, Read)
 data State = StartScreen Options | Playing Game | Paused Game | GameOver Attempt
 
 data Options = Options
-  { startSeed     :: Int
-  , startBounds   :: Model.Bounds
-  , startGraphics :: Model.Graphics
+  { getStartSeed     :: Int
+  , getStartBounds   :: Model.Bounds
+  , getStartGraphics :: Model.Graphics
   } deriving (Show)
-
 
 newtype Snake = Snake
   { getSegments :: [Model.Coordinate]
@@ -78,8 +77,8 @@ data Coordinate = Coordinate
   } deriving (Eq, Show)
 
 data Bounds = Bounds
-  { maxWidth  :: Int
-  , maxHeight :: Int
+  { getMaxWidth  :: Int
+  , getMaxHeight :: Int
   } deriving (Show, Read, Eq, Ord)
 
 

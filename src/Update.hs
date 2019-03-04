@@ -44,10 +44,10 @@ dead game =
       x = M.x getSnakeHead
       y = M.y getSnakeHead
       getBounds= M.getBounds game
-      maxWidth = M.maxWidth getBounds
-      maxHeight = M.maxHeight getBounds
+      getMaxWidth = M.getMaxWidth getBounds
+      getMaxHeight = M.getMaxHeight getBounds
       headIsOnBody = elem getSnakeHead getSnakeTail
-   in or [x < 0, y < 0, x > (maxWidth - 1), y > (maxHeight - 1), headIsOnBody]
+   in or [x < 0, y < 0, x > (getMaxWidth - 1), y > (getMaxHeight - 1), headIsOnBody]
 
 --- TODO: Refactor this horrific mess :|
 handleEvent :: M.State -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)

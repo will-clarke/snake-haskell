@@ -96,7 +96,7 @@ toTuple (Attempt l s) = (l, s)
 
 newtype Score = Score
   { getPoints :: Int
-  } deriving (Show, Eq)
+  } deriving (Show, Eq, Ord)
 
 newtype League = League
   { getBounds :: Model.Bounds

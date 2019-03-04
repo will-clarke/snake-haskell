@@ -42,11 +42,11 @@ main = do
 
 handleEndGame :: Model.State -> IO ()
 handleEndGame state@(Model.GameOver attempt) = do
-  Leaderboard.writeLeaderboard
+  leaderboard <- Leaderboard.writeLeaderboard attempt
   -- file <- Leaderboard.getLeaderboardFile
   -- beLeaderboard <- Leaderboard.getLeaderboard
   -- writeFile file $ Leaderboard.serialiseAttempt attempt
-  B.simpleMain $ Draw.gameOverWidget attempt maybeLeaderboard
+  B.simpleMain $ Draw.gameOverWidget attempt leaderboard
 handleEndGame _ = return ()
 -- handleEndGame _ = return (Model.GameOver (Model.Attempt (Model.League (Model.Bounds 1 1)) (Model.Score 1)))
 

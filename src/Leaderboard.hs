@@ -10,6 +10,8 @@ module Leaderboard
   , serialiseAttempt
   , deserialiseLeaderboard
   , serialiseLeaderboard
+  , isHighScore
+  , writeLeaderboard
   ) where
 
 import qualified Control.Monad
@@ -19,25 +21,77 @@ import qualified Data.Maybe
 import qualified Data.Text
 import qualified Model
 import qualified System.Directory
-import qualified System.IO
 import           System.FilePath  ((</>))
+import qualified System.IO
 import qualified Text.Read
 
 -- This is the main Leaderboard function.. that reads, updates & writes the leaderboard file
 writeLeaderboard :: Model.Attempt -> IO Model.Leaderboard
-writeLeaderboard (Model.Attempt league score) = do
+writeLeaderboard attempt@(Model.Attempt league score) = do
   lbFile <- getLeaderboardFile
-  fileBody <- System.IO.readFile lbFile
+  lbFileBody <- System.IO.readFile lbFile
   exists <- System.Directory.doesFileExist lbFile
   if exists
-    then return l
-    else return l
+    then updateAndWriteLeaderboard
+           (Leaderboard.deserialiseLeaderboard lbFileBody)
+           attempt
+           lbFile
+    else writeSingleAttemptToLeaderboard attempt lbFile
+    -- else return $ Leaderboard.pure attempt -- TODO: need to actually write file here.
+    -- leaderboard = Leaderboard.deserialiseLeaderboard lbFileBody
+
+writeSingleAttemptToLeaderboard :: Model.Attempt -> FilePath -> IO Model.Leaderboard
+writeSingleAttemptToLeaderboard attempt filepath = do
+  _ <- writeFile filepath serialisedLB
+  return leaderboard
   where
-    l = Model.Leaderboard Data.Map.empty
+    leaderboard = Leaderboard.pure attempt
+    serialisedLB = Leaderboard.serialiseLeaderboard leaderboard
+
+
+-- setLeaderboard :: (Model.League, Model.Score) -> IO ()
+-- setLeaderboard s = do
+--   lb <- getLeaderboard
+--   writeFile lb (show s)
+
+updateAndWriteLeaderboard ::
+     Maybe Model.Leaderboard
+  -> Model.Attempt
+  -> FilePath
+  -> IO Model.Leaderboard
+updateAndWriteLeaderboard (Just oldLeaderboard) attempt filepath = do
+  _ <- writeFile filepath serialisedNewLB
+  return newLeaderboard
+  where
+    newLeaderboard = updateLeaderboard oldLeaderboard attempt
+    serialisedNewLB = Leaderboard.serialiseLeaderboard newLeaderboard
+
+updateAndWriteLeaderboard Nothing attempt filepath = writeSingleAttemptToLeaderboard attempt filepath
+
+updateLeaderboard :: Model.Leaderboard -> Model.Attempt -> Model.Leaderboard
+updateLeaderboard initialLB attempt@(Model.Attempt league score) =
+  Model.Leaderboard
+    (Data.Map.insertWithKey
+       (\key newVal oldVal ->
+          if (newVal >= oldVal)
+            then newVal
+            else oldVal)
+       league
+       score
+       (Model.getLeagues initialLB))
+
 
 isHighScore :: Model.Attempt -> Model.Leaderboard -> Bool
-isHighScore attempt leaderboard = 
-  Data.List.isInfixOf (serialiseAttempt attempt)
+isHighScore attempt leaderboard =
+  Data.List.isInfixOf
+    (serialiseAttempt attempt)
+    (serialiseLeaderboard leaderboard)
+
+emptyLeaderboard :: Model.Leaderboard
+emptyLeaderboard = Model.Leaderboard Data.Map.empty
+
+pure :: Model.Attempt -> Model.Leaderboard
+pure attempt = Model.Leaderboard (Data.Map.fromList [ Model.toTuple attempt ] )
 
 getLeaderboard :: IO (Maybe Model.Leaderboard)
 getLeaderboard = do
@@ -45,7 +99,7 @@ getLeaderboard = do
   exists <- System.Directory.doesFileExist lbFile
   if exists
     then deserialiseLeaderboard <$> System.IO.readFile lbFile
-         -- deserialiseLeaderboard fileBody
+         -- deserialiseLeaderboard lbFileBody
     -- Text.Read.readMaybe <$> System.IO.readFile lbFile
      -- then System.IO.readFile lbFile >>= deserialiseLeaderboard
      -- then deserialiseLeaderboard lbFile
@@ -56,7 +110,7 @@ getLeaderboard = do
 --   lb <- getLeaderboard
 --   writeFile lb (show s)
 
--- updateLeaderboard :: Model.Leaderboard ->
+-- updateAndWriteLeaderboard :: Model.Leaderboard ->
 
 getLeaderboardFile :: IO FilePath
 getLeaderboardFile = do
@@ -115,9 +169,9 @@ serialiseScore :: Model.Score -> String
 serialiseScore score = "[Score - Points:" ++ show (Model.getPoints score) ++ "]"
 
 deserialiseLeaderboard :: String -> Maybe Model.Leaderboard
-deserialiseLeaderboard fileBody =
+deserialiseLeaderboard lbFileBody =
   let attempts :: [Maybe Model.Attempt]
-      attempts = map deserialiseAttempt (lines fileBody)
+      attempts = map deserialiseAttempt (lines lbFileBody)
       maybeAttempts :: Maybe [Model.Attempt]
       maybeAttempts = sequence attempts
    in maybeAttempts >>= \attempts' ->

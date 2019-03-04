@@ -12,6 +12,8 @@ import           Brick.BChan                ()
 import qualified Brick.Widgets.Border       as Border
 import qualified Brick.Widgets.Border.Style as BorderStyle
 import qualified Brick.Widgets.Center       as Center
+import qualified Brick.Widgets.Core
+import qualified Data.Map
 import qualified Graphics.Vty               as V
 import qualified Leaderboard
 import qualified Model
@@ -102,14 +104,29 @@ draw (Model.GameOver _score) =
 gameOverWidget :: Model.Attempt -> Model.Leaderboard -> B.Widget Model.Name
 gameOverWidget attempt@(Model.Attempt league score) leaderboard =
   let newHighScore = Leaderboard.isHighScore attempt leaderboard
-      text = if newHighScore then
-        "NEW HIGH SCORE OMG"
-        else
-        "You can do better. I BELIEVE IN YOU"
-   in Center.center
-        (Border.border $
-         B.str $
-         text ++ "\n\nYou got " ++ show (Model.getPoints score) ++ " points\n\n" ++ (show attempt) ++ "\n\n" ++ (show leaderboard))
+      defaultScore = Model.Score 0
+      previousHighScore =
+        Data.Map.findWithDefault
+          defaultScore
+          league
+          (Model.getLeaguesAndScores leaderboard)
+      title =
+        if newHighScore
+          then "NEW HIGH SCORE -- OMG CONGRATS <3"
+          else "You can do better. I BELIEVE IN YOU"
+      lastBit =
+        if newHighScore
+          then ""
+          else "\n\n\nPrevious high score was " ++
+               show (Model.getPoints previousHighScore)
+      widgetText =
+        title ++
+        "\n\nYou got " ++
+        show (Model.getPoints score) ++ " points" ++ lastBit
+      widget' = B.str widgetText
+      paddedWidget = Brick.Widgets.Core.padAll 3 widget'
+      boarderedWidget = Border.border paddedWidget
+   in Center.center boarderedWidget
 
 emptyAttrMap :: a -> B.AttrMap
 emptyAttrMap = const (B.attrMap V.currentAttr [])

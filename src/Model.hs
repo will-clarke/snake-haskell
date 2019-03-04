@@ -103,5 +103,5 @@ newtype League = League
   } deriving (Show, Eq, Ord)
 
 newtype Leaderboard = Leaderboard
-  { getLeagues :: Data.Map.Map League Score
+  { getLeaguesAndScores :: Data.Map.Map League Score
   } deriving (Show, Eq)

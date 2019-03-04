@@ -78,7 +78,7 @@ updateLeaderboard initialLB attempt@(Model.Attempt league score) =
             else oldVal)
        league
        score
-       (Model.getLeagues initialLB))
+       (Model.getLeaguesAndScores initialLB))
 
 
 isHighScore :: Model.Attempt -> Model.Leaderboard -> Bool
@@ -181,8 +181,7 @@ serialiseLeaderboard :: Model.Leaderboard -> String
 serialiseLeaderboard leaderboard =
   concatMap
     (\(league, score) -> serialiseAttempt (Model.Attempt league score))
-       -- serialiseLeague league ++ " -- " ++ serialiseScore score ++ "\n")
-    (Data.Map.toDescList $ Model.getLeagues leaderboard)
+    (Data.Map.toDescList $ Model.getLeaguesAndScores leaderboard)
 
 deserialiseAttempt :: String -> Maybe Model.Attempt
 deserialiseAttempt line =

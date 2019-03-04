@@ -22,17 +22,17 @@ initialSnake bounds =
 
 moveSnake :: M.Game -> M.Snake
 moveSnake game =
-  let snake = M.snake game
-      food = M.food game
-      snakeCoords = M.getSegments snake
+  let snake = M.getSnake game
+      food = M.getFood game
+      getSnakeCoords = M.getSegments snake
       direction = M.direction game
       previousDirection = M.previousDirection game
       isEating = Food.snakeEating snake food
       restOfSnake =
         if isEating
-          then snakeCoords
-          else init snakeCoords
-   in M.Snake (nextHeadCoords (head snakeCoords) direction previousDirection : restOfSnake)
+          then getSnakeCoords
+          else init getSnakeCoords
+   in M.Snake (nextHeadCoords (head getSnakeCoords) direction previousDirection : restOfSnake)
 
 nextHeadCoords :: M.Coordinate -> M.Direction -> M.Direction -> M.Coordinate
 nextHeadCoords c  M.North M.South = moveSouth c

@@ -17,7 +17,7 @@ calculateScore oldScore snake food =
     eating = snakeEating snake food
 
 isFoodAt :: M.Coordinate -> M.Food -> Bool
-isFoodAt coord food = elem coord $ M.getFood food
+isFoodAt coord food = elem coord $ M.getCoordinates food
 
 snakeEating :: M.Snake -> M.Food -> Bool
 snakeEating s = isFoodAt (head $ M.getSegments s)
@@ -25,11 +25,11 @@ snakeEating s = isFoodAt (head $ M.getSegments s)
 -- What happens when we tick food...
 update :: M.Game -> M.Food
 update game =
-  let currentFood = M.food game
-      snake = M.snake game
-      bounds = M.bounds game
+  let currentFood = M.getFood game
+      snake = M.getSnake game
+      bounds = M.getBounds game
       eating = snakeEating snake currentFood
-      food = M.food game
+      food = M.getFood game
       foodRNG = M.getRNG food
    in if eating
         then generateRandomFood foodRNG bounds

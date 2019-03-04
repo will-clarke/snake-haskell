@@ -22,9 +22,9 @@ import qualified Typeclasses
 drawHeader :: Model.Game -> B.Widget Model.Name
 drawHeader game =
   Border.borderWithLabel
-    (B.withAttr foundFgOnly $ B.str $ Model.title game)
+    (B.withAttr foundFgOnly $ B.str $ Model.getTitle game)
     (B.withAttr foundFull $B.str (show (Model.direction game)) B.<+>
-     B.padLeft B.Max (B.str ("Score: " ++ show (Model.score game) ++ " ")))
+     B.padLeft B.Max (B.str ("Score: " ++ show (Model.getScore game) ++ " ")))
   where foundFull = Brick.AttrMap.attrName "foundFull"
         foundFgOnly = Brick.AttrMap.attrName "foundFgOnly"
         -- general = Brick.AttrMap.attrName "general"
@@ -45,14 +45,14 @@ drawGame game =
 
 widgetRows :: Model.Game -> [[B.Widget Model.Name]]
 widgetRows game = foldr updateWidgets defaultGrid $ drawableEntities game
-  where bounds = Model.bounds game
+  where bounds = Model.getBounds game
         defaultGrid = emptyGrid bounds
 
 drawableEntities :: Model.Game -> [CoordWidget]
 drawableEntities game = [toCoordWidgets snake, toCoordWidgets food]
   where
-    snake = Model.snake game
-    food = Model.food game
+    snake = Model.getSnake game
+    food = Model.getFood game
 
 -- CoordWidget is an abstract implementation of `Drawable`s
 data CoordWidget = CoordWidget
@@ -81,14 +81,14 @@ emptyGrid (Model.Bounds width height) =
 
 draw :: Model.State -> [B.Widget Model.Name]
 draw (Model.Playing game) =
-  let graphics = Model.graphics game
+  let getGraphics = Model.getGraphics game
       gameWidget = drawHeader game B.<=> Center.center (Border.border $ drawGame game)
-   in case graphics of
+   in case getGraphics of
         Model.Simple -> [B.withBorderStyle BorderStyle.ascii $ B.forceAttr Attr.boring gameWidget]
         Model.Complex -> [B.withBorderStyle BorderStyle.unicodeRounded gameWidget]
 draw (Model.StartScreen _options) = [Center.center (Border.border $ B.str "Welcome")]
 draw (Model.Paused _game) = [Center.center (Border.border $ B.str "** PAUSED **")]
-draw (Model.GameOver _score) =
+draw (Model.GameOver _getScore) =
   [ Center.center $
     B.str
     "\n\
@@ -102,7 +102,7 @@ draw (Model.GameOver _score) =
 
 
 gameOverWidget :: Model.Attempt -> Model.Leaderboard -> B.Widget Model.Name
-gameOverWidget attempt@(Model.Attempt league score) leaderboard =
+gameOverWidget attempt@(Model.Attempt league getScore) leaderboard =
   let newHighScore = Leaderboard.isHighScore attempt leaderboard
       defaultScore = Model.Score 0
       previousHighScore =
@@ -110,19 +110,19 @@ gameOverWidget attempt@(Model.Attempt league score) leaderboard =
           defaultScore
           league
           (Model.getLeaguesAndScores leaderboard)
-      title =
+      getTitle =
         if newHighScore
-          then "NEW HIGH SCORE -- OMG CONGRATS <3"
+          then "NEW HIGH GETSCORE -- OMG CONGRATS <3"
           else "You can do better. I BELIEVE IN YOU"
       lastBit =
         if newHighScore
           then ""
-          else "\n\n\nPrevious high score was " ++
+          else "\n\n\nPrevious high getScore was " ++
                show (Model.getPoints previousHighScore)
       widgetText =
-        title ++
+        getTitle ++
         "\n\nYou got " ++
-        show (Model.getPoints score) ++ " points" ++ lastBit
+        show (Model.getPoints getScore) ++ " points" ++ lastBit
       widget' = B.str widgetText
       paddedWidget = Brick.Widgets.Core.padAll 3 widget'
       boarderedWidget = Border.border paddedWidget

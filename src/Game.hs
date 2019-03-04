@@ -10,14 +10,14 @@ import qualified System.Random
 initialGame :: Int -> M.Bounds -> M.Graphics -> M.Game
 initialGame seed bounds graphics =
   M.Game
-    { M.title = ""
+    { M.getTitle = ""
     , M.direction = M.East
     , M.previousDirection = M.East
-    , M.score = 0
-    , M.food = food
-    , M.snake = Snake.initialSnake bounds
-    , M.bounds = bounds
-    , M.graphics = graphics
+    , M.getScore = 0
+    , M.getFood = food
+    , M.getSnake = Snake.initialSnake bounds
+    , M.getBounds = bounds
+    , M.getGraphics = graphics
     }
   where
     rng = System.Random.mkStdGen seed

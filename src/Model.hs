@@ -28,14 +28,14 @@ data Name = Name deriving (Eq, Ord)
 
 -- | Our main game game
 data Game = Game {
-    title             :: String,
-    snake             :: Snake,
-    food              :: Food,
+    getTitle             :: String,
+    getSnake             :: Snake,
+    getFood              :: Food,
     direction         :: Direction,
     previousDirection :: Direction,
-    score             :: Int,
-    bounds            :: Bounds,
-    graphics          :: Graphics
+    getScore             :: Int,
+    getBounds            :: Bounds,
+    getGraphics          :: Graphics
 } deriving Show
 
 data Graphics = Simple | Complex deriving (Show, Read)
@@ -68,7 +68,7 @@ data Direction
   deriving (Eq, Show)
 
 data Food = Food
-  { getFood :: [Coordinate],
+  { getCoordinates :: [Coordinate],
     getRNG  :: System.Random.StdGen
   } deriving (Show)
 
@@ -84,12 +84,12 @@ data Bounds = Bounds
 
 
 data Attempt = Attempt
-  { getLeague :: League
-  , getScore :: Score
+  { getAttemptLeague :: League
+  , getAttemptScore :: Score
   } deriving (Show, Eq)
 
 toAttempt :: Game -> Attempt
-toAttempt g = Attempt (League (bounds g)) (Score (score g))
+toAttempt g = Attempt (League (getBounds g)) (Score (getScore g))
 
 toTuple :: Attempt -> (League, Score)
 toTuple (Attempt l s) = (l, s)
@@ -99,7 +99,7 @@ newtype Score = Score
   } deriving (Show, Eq, Ord)
 
 newtype League = League
-  { getBounds :: Model.Bounds
+  { getLeagueBounds :: Model.Bounds
   } deriving (Show, Eq, Ord)
 
 newtype Leaderboard = Leaderboard

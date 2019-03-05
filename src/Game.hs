@@ -7,8 +7,8 @@ import qualified Model         as M
 import qualified Snake
 import qualified System.Random
 
-initialGame :: Int -> M.Bounds -> M.Graphics -> M.Game
-initialGame seed bounds graphics =
+initialGame :: M.Options -> M.Game
+initialGame (M.Options seed graphics width height) =
   M.Game
     { M.getTitle = ""
     , M.direction = M.East
@@ -20,5 +20,6 @@ initialGame seed bounds graphics =
     , M.getGraphics = graphics
     }
   where
+    bounds = M.Bounds width height
     rng = System.Random.mkStdGen seed
     food = Food.generateRandomFood rng bounds

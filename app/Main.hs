@@ -50,10 +50,10 @@ handleEndGame state@(Model.GameOver attempt) = do
 handleEndGame _ = return ()
 -- handleEndGame _ = return (Model.GameOver (Model.Attempt (Model.League (Model.Bounds 1 1)) (Model.Score 1)))
 
-startingGame :: Int -> Model.Graphics -> Model.Game
-startingGame seed = Game.initialGame seed bounds
-  where
-    bounds = Model.Bounds {Model.getMaxHeight = 20, Model.getMaxWidth = 60}
+-- startingGame :: Int -> Model.Graphics -> Model.Game
+-- startingGame seed = Game.initialGame seed bounds
+--   where
+--     bounds = Model.Bounds {Model.getMaxHeight = 20, Model.getMaxWidth = 60}
 
 fullopts :: O.ParserInfo Model.Options
 fullopts = O.info (O.helper <*> parsedOptions)
@@ -71,12 +71,14 @@ parsedOptions =
      O.metavar "INT") <*>
   O.option
     O.auto
-    (O.long "bounds" <> O.help "Size of the grid" <> O.showDefault <>
-     O.value (Model.Bounds 40 20) <>
-     O.short 'b') <*>
+    (O.long "graphics" <> O.help "Choose graphics: [Simple | Complex]" <>
+     O.value Model.Complex <>
+     O.short 'g') <*>
   O.option
     O.auto
-    (O.long "graphics" <> O.help "Choose graphics: [Simple | Complex]" <>
-     O.showDefault <>
-     O.value Model.Complex <>
-     O.short 'g')
+    (O.long "width" <> O.help "Grid width" <> O.showDefault <> O.value 40 <>
+     O.short 'w') <*>
+  O.option
+    O.auto
+    (O.long "height" <> O.help "Grid height" <> O.showDefault <> O.value 20 <>
+     O.short 'h')

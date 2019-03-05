@@ -51,8 +51,9 @@ data State = StartScreen Options | Playing Game | Paused Game | GameOver Attempt
 
 data Options = Options
   { getStartSeed     :: Int
-  , getStartBounds   :: Model.Bounds
   , getStartGraphics :: Model.Graphics
+  , getStartHeight :: Int
+  , getStartWidth :: Int
   } deriving (Show)
 
 newtype Snake = Snake

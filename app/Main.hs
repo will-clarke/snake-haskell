@@ -1,16 +1,17 @@
 module Main where
 
 import qualified Attr
-import qualified Brick               as B
+import qualified Brick                  as B
 import qualified Brick.BChan
-import           Brick.Main          ()
+import           Brick.Main             ()
 import qualified Control.Concurrent
+import qualified Control.Concurrent.STM
 import qualified Control.Monad
 import qualified Draw
 import qualified Game
 import qualified Leaderboard
 import qualified Model
-import qualified Options.Applicative as O
+import qualified Options.Applicative    as O
 import qualified Update
 
 app :: B.App Model.State Model.Tick Model.Name
@@ -27,10 +28,12 @@ playGame :: Model.Options -> IO Model.State
 playGame options = do
   let delay = 100000
   chan <- Brick.BChan.newBChan 10
+  tvar <- Control.Concurrent.STM.newTVarIO 0
   Control.Monad.void . Control.Concurrent.forkIO $
     Control.Monad.forever $ do
       Brick.BChan.writeBChan chan Model.Tick
-      Control.Concurrent.threadDelay delay
+      n <- (Control.Concurrent.STM.readTVarIO tvar)
+      Control.Concurrent.threadDelay (delay + (n * 100000))
   B.customMain Draw.defaultVty (Just chan) app $
     Model.StartScreen options
 

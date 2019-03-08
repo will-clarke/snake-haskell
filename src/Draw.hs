@@ -22,19 +22,9 @@ import qualified Typeclasses
 drawHeader :: Model.Game -> B.Widget Model.Name
 drawHeader game =
   Border.borderWithLabel
-    (B.withAttr foundFgOnly $ B.str $ Model.getTitle game)
-    (B.withAttr foundFull $B.str (show (Model.direction game)) B.<+>
+    (B.withAttr Attr.title $ B.str $ Model.getTitle game)
+    (B.withAttr Attr.arena $B.str (show (Model.direction game)) B.<+>
      B.padLeft B.Max (B.str ("Score: " ++ show (Model.getScore game) ++ " ")))
-  where foundFull = Brick.AttrMap.attrName "foundFull"
-        foundFgOnly = Brick.AttrMap.attrName "foundFgOnly"
-        -- general = Brick.AttrMap.attrName "general"
-
--- Example of how to find the screen size... :|
--- getSize :: B.Widget Model.Name
--- getSize =
---   B.Widget B.Fixed B.Fixed $ do
---     c <- B.getContext
---     B.render $ B.str $ show (c ^. B.availWidthL, c ^. B.availHeightL)
 
 drawGame :: Model.Game -> B.Widget Model.Name
 drawGame game =

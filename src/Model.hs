@@ -41,13 +41,6 @@ data Game = Game {
 }
 
 data Graphics = Simple | Complex deriving (Show, Read)
--- NB. Read should only really deal with valid Haskell :|
--- instance Read Graphics where
---   readsPrec _ string =
---     case string of
---      "simple" -> return (Simple, [])
---      "complex" -> return (Complex, [])
---      _ -> error $ "Cannot parse " ++ string
 
 data State
   = StartScreen Options

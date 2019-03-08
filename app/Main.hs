@@ -8,7 +8,6 @@ import qualified Control.Concurrent
 import qualified Control.Concurrent.STM
 import qualified Control.Monad
 import qualified Draw
-import qualified Game
 import qualified Leaderboard
 import qualified Model
 import qualified Options.Applicative    as O
@@ -32,7 +31,7 @@ playGame options = do
   Control.Monad.void . Control.Concurrent.forkIO $
     Control.Monad.forever $ do
       Brick.BChan.writeBChan chan Model.Tick
-      n <- (Control.Concurrent.STM.readTVarIO tvar)
+      n <- Control.Concurrent.STM.readTVarIO tvar
       Control.Concurrent.threadDelay (delay - (n * 10000))
   B.customMain Draw.defaultVty (Just chan) app $
     Model.StartScreen options tvar
@@ -44,19 +43,10 @@ main = do
   handleEndGame game
 
 handleEndGame :: Model.State -> IO ()
-handleEndGame state@(Model.GameOver attempt) = do
+handleEndGame (Model.GameOver attempt) = do
   leaderboard <- Leaderboard.writeLeaderboard attempt
-  -- file <- Leaderboard.getLeaderboardFile
-  -- beLeaderboard <- Leaderboard.getLeaderboard
-  -- writeFile file $ Leaderboard.serialiseAttempt attempt
   B.simpleMain $ Draw.gameOverWidget attempt leaderboard
 handleEndGame _ = return ()
--- handleEndGame _ = return (Model.GameOver (Model.Attempt (Model.League (Model.Bounds 1 1)) (Model.Score 1)))
-
--- startingGame :: Int -> Model.Graphics -> Model.Game
--- startingGame seed = Game.initialGame seed bounds
---   where
---     bounds = Model.Bounds {Model.getMaxHeight = 20, Model.getMaxWidth = 60}
 
 fullopts :: O.ParserInfo Model.Options
 fullopts = O.info (O.helper <*> parsedOptions)

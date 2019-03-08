@@ -36,8 +36,6 @@ writeLeaderboard attempt@(Model.Attempt _league _score) = do
            attempt
            lbFile
     else writeSingleAttemptToLeaderboard attempt lbFile
-    -- else return $ Leaderboard.pure attempt -- TODO: need to actually write file here.
-    -- leaderboard = Leaderboard.deserialiseLeaderboard lbFileBody
 
 writeSingleAttemptToLeaderboard :: Model.Attempt -> FilePath -> IO Model.Leaderboard
 writeSingleAttemptToLeaderboard attempt filepath = do
@@ -46,12 +44,6 @@ writeSingleAttemptToLeaderboard attempt filepath = do
   where
     leaderboard = Leaderboard.pure attempt
     serialisedLB = Leaderboard.serialiseLeaderboard leaderboard
-
-
--- setLeaderboard :: (Model.League, Model.Score) -> IO ()
--- setLeaderboard s = do
---   lb <- getLeaderboard
---   writeFile lb (show s)
 
 updateAndWriteLeaderboard ::
      Maybe Model.Leaderboard
@@ -84,9 +76,6 @@ isHighScore :: Model.Attempt -> Model.Leaderboard -> Bool
 isHighScore attempt leaderboard =
   serialiseAttempt attempt `Data.List.isInfixOf` serialiseLeaderboard leaderboard
 
--- emptyLeaderboard :: Model.Leaderboard
--- emptyLeaderboard = Model.Leaderboard Data.Map.empty
-
 pure :: Model.Attempt -> Model.Leaderboard
 pure attempt = Model.Leaderboard (Data.Map.fromList [ Model.toTuple attempt ] )
 
@@ -96,18 +85,7 @@ getLeaderboard = do
   exists <- System.Directory.doesFileExist lbFile
   if exists
     then deserialiseLeaderboard <$> System.IO.readFile lbFile
-         -- deserialiseLeaderboard lbFileBody
-    -- Text.Read.readMaybe <$> System.IO.readFile lbFile
-     -- then System.IO.readFile lbFile >>= deserialiseLeaderboard
-     -- then deserialiseLeaderboard lbFile
      else return Nothing
-
--- setLeaderboard :: (Model.League, Model.Score) -> IO ()
--- setLeaderboard s = do
---   lb <- getLeaderboard
---   writeFile lb (show s)
-
--- updateAndWriteLeaderboard :: Model.Leaderboard ->
 
 getLeaderboardFile :: IO FilePath
 getLeaderboardFile = do
@@ -197,32 +175,3 @@ deserialiseAttempt line =
 
 serialiseAttempt :: Model.Attempt -> String
 serialiseAttempt (Model.Attempt league score) = serialiseLeague league ++ " -- " ++ serialiseScore score  ++ "\n"
-
--- boundsString :: Model.Bounds -> String
--- boundsString (Model.Bounds width height) = "[" <> show width <> "," <> show height <> "]"
-
-
-
-
-
--- getLeaderboard :: Model.Bounds -> IO (Maybe Int)
--- getLeaderboard bounds = do
---   file <- getLeaderboardFile
---   exists <- System.Directory.doesFileExist file
---   if exists
---      then maybeFindHighScore bounds $ readFile file
---      else return Nothing
-
--- maybeFindHighScore :: Model.Bounds -> IO String -> IO (Maybe Int)
--- maybeFindHighScore bounds ioString = do
---   fileContents <- ioString
---   line <- maybeLineContaining bounds fileContents
---   dropWhile (/= '-') line
-
--- maybeFindHighScore
--- readMaybe <$> readFile file
-
--- setLeaderboard bounds :: Model.Bounds -> Int -> IO ()
--- setLeaderboard s = do
---   file <- getLeaderboardFile
---   writeFile file (show s)

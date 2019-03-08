@@ -28,6 +28,8 @@ tick game =
           2 -> "Keep On going"
           3 -> "You're winning"
           4 -> "Omg. This is probably a high score or something"
+          5 -> "*sheds tears of joy*"
+          6 -> "Are you cheating?!"
           _ -> "You're super awesome :D"
    in M.Game
         { M.getTitle = newGetTitle

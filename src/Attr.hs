@@ -4,6 +4,7 @@ module Attr
   , snakeBody
   , arena
   , boring
+  , title
   ) where
 
 import qualified Brick                   as B
@@ -24,13 +25,7 @@ defaultMap =
     , (snakeHead, V.brightGreen `B.on` V.brightCyan)
     , (arena, V.white `B.on` V.green)
     , (boring, V.white `B.on` V.black)
-
-    , (Brick.AttrMap.attrName "foundFull", V.white `B.on` V.green)
-    , (Brick.AttrMap.attrName "foundFgOnly", B.fg V.red)
-    , (Brick.AttrMap.attrName "general", V.yellow `B.on` V.black)
-    , ( Brick.AttrMap.attrName "general" <> Brick.AttrMap.attrName "specific"
-      , B.fg V.cyan)
-    -- , (Brick.AttrMap.attrName "linked", B.fg V.yellow `V.withURL` "http://www.google.com/")
+    , (title, V.black `B.on` V.white)
     ]
 
 food :: Brick.AttrMap.AttrName
@@ -48,3 +43,6 @@ arena = Brick.AttrMap.attrName "arena"
 
 boring:: Brick.AttrMap.AttrName
 boring = Brick.AttrMap.attrName "boring"
+
+title :: Brick.AttrMap.AttrName
+title = Brick.AttrMap.attrName "title"

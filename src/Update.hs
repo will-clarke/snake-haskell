@@ -50,6 +50,20 @@ dead game =
       headIsOnBody = elem getSnakeHead getSnakeTail
    in or [x < 0, y < 0, x > (getMaxWidth - 1), y > (getMaxHeight - 1), headIsOnBody]
 
+newtype Omg a b = Omg a
+
+omgz :: IO (Omg Int Char)
+omgz = return hey
+
+hey :: Omg Int Char
+hey = Omg 2
+
+blah :: M.Game -> IO M.Game
+blah game = return game
+
+doSomethingGroovy :: M.Game -> B.EventM n (B.Next M.State)
+doSomethingGroovy game = B.continue (M.Playing $ tick game)
+
 --- TODO: Refactor this horrific mess :|
 handleEvent :: M.State -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.Playing game
@@ -63,12 +77,12 @@ handleEvent (M.Playing game) (B.VtyEvent V.EvLostFocus) =  B.continue $ M.Paused
 handleEvent (M.Playing game) (B.VtyEvent V.EvGainedFocus) = B.continue $ M.Paused game
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey (V.KChar 'p') [])) = B.continue $ M.Paused game
 handleEvent (M.Playing game) (B.VtyEvent (V.EvKey (V.KChar ' ') [])) =  B.continue (M.Playing $ tick game)
-handleEvent (M.Playing game) (B.AppEvent M.Tick) =  B.continue (M.Playing $ tick game)
+handleEvent (M.Playing game) (B.AppEvent M.Tick) = doSomethingGroovy game
 handleEvent (M.Playing game) _ = B.continue $ M.Playing game
 
-handleEvent (M.StartScreen options) (B.AppEvent M.Tick) = B.continue $ M.StartScreen options
-handleEvent (M.StartScreen options) (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.StartScreen options
-handleEvent (M.StartScreen options) _ = B.continue $ M.Playing (Game.initialGame options)
+handleEvent (M.StartScreen options tvar) (B.AppEvent M.Tick) = B.continue $ M.StartScreen options tvar
+handleEvent (M.StartScreen options tvar) (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.StartScreen options tvar
+handleEvent (M.StartScreen options tvar) _ = B.continue $ M.Playing (Game.initialGame options tvar)
 
 handleEvent (M.GameOver getScore') (B.AppEvent M.Tick) = B.continue $ M.GameOver getScore'
 handleEvent (M.GameOver getScore') _ = B.halt $ M.GameOver getScore'

@@ -35,7 +35,7 @@ playGame options = do
       n <- (Control.Concurrent.STM.readTVarIO tvar)
       Control.Concurrent.threadDelay (delay + (n * 100000))
   B.customMain Draw.defaultVty (Just chan) app $
-    Model.StartScreen options
+    Model.StartScreen options tvar
 
 main :: IO ()
 main = do

@@ -32,6 +32,7 @@ Pausing / resuming
 High scores (for given window sizes)
 Command line arguments
 Seeding
+Speed up with Spacebar
 
 - [ ] only change dimensions with command line arguments
 - [ ] Make the game faster as you eat more fruit

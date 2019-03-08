@@ -86,7 +86,7 @@ draw (Model.Playing game) =
    in case getGraphics of
         Model.Simple -> [B.withBorderStyle BorderStyle.ascii $ B.forceAttr Attr.boring gameWidget]
         Model.Complex -> [B.withBorderStyle BorderStyle.unicodeRounded gameWidget]
-draw (Model.StartScreen _options) = [Center.center (Border.border $ B.str "Welcome")]
+draw (Model.StartScreen _options _tvar) = [Center.center (Border.border $ B.str "Welcome")]
 draw (Model.Paused _game) = [Center.center (Border.border $ B.str "** PAUSED **")]
 draw (Model.GameOver _getScore) =
   [ Center.center $

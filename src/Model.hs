@@ -20,6 +20,7 @@ module Model
 
 import qualified Data.Map
 import qualified System.Random
+import qualified Control.Concurrent.STM
 
 data Tick = Tick
 
@@ -47,7 +48,12 @@ data Graphics = Simple | Complex deriving (Show, Read)
 --      "complex" -> return (Complex, [])
 --      _ -> error $ "Cannot parse " ++ string
 
-data State = StartScreen Options | Playing Game | Paused Game | GameOver Attempt
+data State
+  = StartScreen Options
+                (Control.Concurrent.STM.TVar Int)
+  | Playing Game
+  | Paused Game
+  | GameOver Attempt
 
 data Options = Options
   { getStartSeed     :: Int

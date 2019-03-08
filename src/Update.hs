@@ -10,6 +10,8 @@ import qualified Graphics.Vty as V
 import qualified Model        as M
 import           Snake        ()
 import qualified Typeclasses
+import qualified Control.Monad.IO.Class
+import qualified Control.Concurrent.STM
 
 tick :: M.Game -> M.Game
 tick game =
@@ -36,6 +38,7 @@ tick game =
         , M.getScore = newScore
         , M.getBounds = M.getBounds game
         , M.getGraphics = M.getGraphics game
+        , M.getSpeedControl = M.getSpeedControl game
         }
 
 dead :: M.Game -> Bool
@@ -50,19 +53,12 @@ dead game =
       headIsOnBody = elem getSnakeHead getSnakeTail
    in or [x < 0, y < 0, x > (getMaxWidth - 1), y > (getMaxHeight - 1), headIsOnBody]
 
-newtype Omg a b = Omg a
-
-omgz :: IO (Omg Int Char)
-omgz = return hey
-
-hey :: Omg Int Char
-hey = Omg 2
-
-blah :: M.Game -> IO M.Game
-blah game = return game
-
 doSomethingGroovy :: M.Game -> B.EventM n (B.Next M.State)
-doSomethingGroovy game = B.continue (M.Playing $ tick game)
+doSomethingGroovy game = do
+  Control.Monad.IO.Class.liftIO $
+    Control.Concurrent.STM.atomically $
+    Control.Concurrent.STM.writeTVar (M.getSpeedControl game) (M.getScore game)
+  B.continue (M.Playing $ tick game)
 
 --- TODO: Refactor this horrific mess :|
 handleEvent :: M.State -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)

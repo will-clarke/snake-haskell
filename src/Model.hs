@@ -18,9 +18,9 @@ module Model
   , toAttempt
   ) where
 
+import qualified Control.Concurrent.STM
 import qualified Data.Map
 import qualified System.Random
-import qualified Control.Concurrent.STM
 
 data Tick = Tick
 
@@ -29,15 +29,16 @@ data Name = Name deriving (Eq, Ord)
 
 -- | Our main game game
 data Game = Game {
-    getTitle             :: String,
-    getSnake             :: Snake,
-    getFood              :: Food,
+    getTitle          :: String,
+    getSnake          :: Snake,
+    getFood           :: Food,
     direction         :: Direction,
     previousDirection :: Direction,
-    getScore             :: Int,
-    getBounds            :: Bounds,
-    getGraphics          :: Graphics
-} deriving Show
+    getScore          :: Int,
+    getBounds         :: Bounds,
+    getGraphics       :: Graphics,
+    getSpeedControl   :: Control.Concurrent.STM.TVar Int
+}
 
 data Graphics = Simple | Complex deriving (Show, Read)
 -- NB. Read should only really deal with valid Haskell :|
@@ -58,8 +59,8 @@ data State
 data Options = Options
   { getStartSeed     :: Int
   , getStartGraphics :: Model.Graphics
-  , getStartHeight :: Int
-  , getStartWidth :: Int
+  , getStartHeight   :: Int
+  , getStartWidth    :: Int
   } deriving (Show)
 
 newtype Snake = Snake
@@ -75,7 +76,7 @@ data Direction
 
 data Food = Food
   { getCoordinates :: [Coordinate],
-    getRNG  :: System.Random.StdGen
+    getRNG         :: System.Random.StdGen
   } deriving (Show)
 
 data Coordinate = Coordinate
@@ -91,7 +92,7 @@ data Bounds = Bounds
 
 data Attempt = Attempt
   { getAttemptLeague :: League
-  , getAttemptScore :: Score
+  , getAttemptScore  :: Score
   } deriving (Show, Eq)
 
 toAttempt :: Game -> Attempt

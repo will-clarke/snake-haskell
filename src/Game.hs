@@ -19,6 +19,7 @@ initialGame (M.Options seed graphics width height) tvar =
     , M.getSnake = Snake.initialSnake bounds
     , M.getBounds = bounds
     , M.getGraphics = graphics
+    , M.getSpeedControl = tvar
     }
   where
     bounds = M.Bounds width height

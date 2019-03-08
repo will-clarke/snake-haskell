@@ -33,7 +33,7 @@ playGame options = do
     Control.Monad.forever $ do
       Brick.BChan.writeBChan chan Model.Tick
       n <- (Control.Concurrent.STM.readTVarIO tvar)
-      Control.Concurrent.threadDelay (delay + (n * 100000))
+      Control.Concurrent.threadDelay (delay - (n * 10000))
   B.customMain Draw.defaultVty (Just chan) app $
     Model.StartScreen options tvar
 

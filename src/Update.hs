@@ -55,38 +55,47 @@ dead game =
       headIsOnBody = elem getSnakeHead getSnakeTail
    in or [x < 0, y < 0, x > (getMaxWidth - 1), y > (getMaxHeight - 1), headIsOnBody]
 
-doSomethingGroovy :: M.Game -> B.EventM n (B.Next M.State)
-doSomethingGroovy game = do
+tickGame :: M.Game -> B.EventM n (B.Next M.State)
+tickGame game = do
   Control.Monad.IO.Class.liftIO $
     Control.Concurrent.STM.atomically $
     Control.Concurrent.STM.writeTVar (M.getSpeedControl game) (M.getScore game)
   B.continue (M.Playing $ tick game)
 
---- TODO: Refactor this horrific mess :|
 handleEvent :: M.State -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
-handleEvent (M.Playing game) (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.Playing game
-handleEvent (M.Playing game) _ | dead game = B.continue $ M.GameOver $ M.toAttempt game
-handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KUp [])) = B.continue $ M.Playing $ updateGameDirection game M.North
-handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KDown [])) =  B.continue $ M.Playing $ updateGameDirection game M.South
-handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KLeft [])) =  B.continue $ M.Playing $ updateGameDirection game M.West
-handleEvent (M.Playing game) (B.VtyEvent (V.EvKey V.KRight [])) =  B.continue $ M.Playing $ updateGameDirection game M.East
--- handleEvent (M.Playing game) (B.VtyEvent (V.EvResize w h)) = B.continue $ M.Playing $ game { M.getBounds = M.Bounds w h }
-handleEvent (M.Playing game) (B.VtyEvent V.EvLostFocus) =  B.continue $ M.Paused game
-handleEvent (M.Playing game) (B.VtyEvent V.EvGainedFocus) = B.continue $ M.Paused game
-handleEvent (M.Playing game) (B.VtyEvent (V.EvKey (V.KChar 'p') [])) = B.continue $ M.Paused game
-handleEvent (M.Playing game) (B.VtyEvent (V.EvKey (V.KChar ' ') [])) =  B.continue (M.Playing $ tick game)
-handleEvent (M.Playing game) (B.AppEvent M.Tick) = doSomethingGroovy game
-handleEvent (M.Playing game) _ = B.continue $ M.Playing game
+handleEvent (M.Playing game) event = handlePlaying game event
+handleEvent (M.StartScreen options tvar) event = handleStartScreen options tvar event
+handleEvent (M.Paused game) event = handlePaused game event
+handleEvent (M.GameOver attempt) event = handleGameOver attempt event
 
-handleEvent (M.StartScreen options tvar) (B.AppEvent M.Tick) = B.continue $ M.StartScreen options tvar
-handleEvent (M.StartScreen options tvar) (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.StartScreen options tvar
-handleEvent (M.StartScreen options tvar) _ = B.continue $ M.Playing (Game.initialGame options tvar)
+handlePlaying :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
+handlePlaying game (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.Playing game
+handlePlaying game _ | dead game = B.continue $ M.GameOver $ M.toAttempt game
+handlePlaying game (B.VtyEvent (V.EvKey V.KUp [])) = B.continue $ M.Playing $ updateGameDirection game M.North
+handlePlaying game (B.VtyEvent (V.EvKey V.KDown [])) =  B.continue $ M.Playing $ updateGameDirection game M.South
+handlePlaying game (B.VtyEvent (V.EvKey V.KLeft [])) =  B.continue $ M.Playing $ updateGameDirection game M.West
+handlePlaying game (B.VtyEvent (V.EvKey V.KRight [])) =  B.continue $ M.Playing $ updateGameDirection game M.East
+handlePlaying game (B.VtyEvent V.EvLostFocus) =  B.continue $ M.Paused game
+handlePlaying game (B.VtyEvent V.EvGainedFocus) = B.continue $ M.Paused game
+handlePlaying game (B.VtyEvent (V.EvKey (V.KChar 'p') [])) = B.continue $ M.Paused game
+handlePlaying game (B.VtyEvent (V.EvKey (V.KChar ' ') [])) =  B.continue (M.Playing $ tick game)
+handlePlaying game (B.AppEvent M.Tick) = tickGame game
+handlePlaying game _ = B.continue $ M.Playing game
 
-handleEvent (M.GameOver getScore') (B.AppEvent M.Tick) = B.continue $ M.GameOver getScore'
-handleEvent (M.GameOver getScore') _ = B.halt $ M.GameOver getScore'
+handleStartScreen :: M.Options -> Control.Concurrent.STM.TVar Int -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 
-handleEvent (M.Paused game) (B.AppEvent M.Tick) = B.continue $ M.Paused game
-handleEvent (M.Paused game) _ = B.continue $ M.Playing game
+handleStartScreen options tvar (B.AppEvent M.Tick) = B.continue $ M.StartScreen options tvar
+handleStartScreen options tvar (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.StartScreen options tvar
+handleStartScreen options tvar _ = B.continue $ M.Playing (Game.initialGame options tvar)
+
+
+handleGameOver :: M.Attempt -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
+handleGameOver attempt (B.AppEvent M.Tick) = B.continue $ M.GameOver attempt
+handleGameOver attempt _ = B.halt $ M.GameOver attempt
+
+handlePaused :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
+handlePaused game (B.AppEvent M.Tick) = B.continue $ M.Paused game
+handlePaused game _ = B.continue $ M.Playing game
 
 
 updateGameDirection :: M.Game -> M.Direction -> M.Game

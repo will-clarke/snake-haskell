@@ -76,16 +76,9 @@ handleReplay game _ | null (M.getPreviousGames game) = B.continue $ M.GameOver g
 handleReplay game _ = B.continue $ gamePopped (M.getPreviousGames game)
 
 gamePopped :: [M.Game] -> M.State
--- gamePopped [] = M.GameOver
-gamePopped (game:[]) = M.GameOver game { M.getPreviousGames = [] }
+gamePopped [] = undefined -- TODO: Is this legit?
+gamePopped [game] = M.GameOver game { M.getPreviousGames = [] }
 gamePopped (_old:game:previousGames) = M.Replaying game { M.getPreviousGames = previousGames}
-  -- if null (M.getPreviousGames game)
-  --   then game
-  --   else newGame {M.getPreviousGames = newGames}
-  -- where
-  --   games = M.getPreviousGames game
-  --   (_oldGame:[]) = games
-  --   newGames = 
 
 handlePlaying :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handlePlaying game (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.Playing game
@@ -113,17 +106,17 @@ handleStartScreen options tvar _ = B.continue $ M.Playing (Game.initialGame opti
 
 handleGameOver :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handleGameOver game (B.AppEvent M.Tick) = B.continue $ M.GameOver game
-handleGameOver game (B.VtyEvent (V.EvKey (V.KChar 'r') [])) =
-  B.continue $ M.Replaying reversedGames
+handleGameOver game (B.VtyEvent (V.EvKey (V.KChar 'r') []))
+  | not $ null (M.getPreviousGames game) =
+    B.continue $ M.Replaying reversedGames
   where
     previousGames = M.getPreviousGames game
-    reversedGames = game { M.getPreviousGames = reverse previousGames}
+    reversedGames = game {M.getPreviousGames = reverse previousGames}
 handleGameOver game _ = B.halt $ M.GameOver game
 
 handlePaused :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handlePaused game (B.AppEvent M.Tick) = B.continue $ M.Paused game
 handlePaused game _ = B.continue $ M.Playing game
-
 
 updateGameDirection :: M.Game -> M.Direction -> M.Game
 updateGameDirection game direction = game {M.direction = newDirection direction oldDirection}

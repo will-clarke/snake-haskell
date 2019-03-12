@@ -72,9 +72,13 @@ handlePlaying :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next
 handlePlaying game (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.Playing game
 handlePlaying game _ | dead game = B.continue $ M.GameOver $ M.toAttempt game
 handlePlaying game (B.VtyEvent (V.EvKey V.KUp [])) = B.continue $ M.Playing $ updateGameDirection game M.North
+handlePlaying game (B.VtyEvent (V.EvKey (V.KChar 'w') [])) = B.continue $ M.Playing $ updateGameDirection game M.North
 handlePlaying game (B.VtyEvent (V.EvKey V.KDown [])) =  B.continue $ M.Playing $ updateGameDirection game M.South
+handlePlaying game (B.VtyEvent (V.EvKey (V.KChar 's') [])) =  B.continue $ M.Playing $ updateGameDirection game M.South
 handlePlaying game (B.VtyEvent (V.EvKey V.KLeft [])) =  B.continue $ M.Playing $ updateGameDirection game M.West
+handlePlaying game (B.VtyEvent (V.EvKey (V.KChar 'a') [])) =  B.continue $ M.Playing $ updateGameDirection game M.West
 handlePlaying game (B.VtyEvent (V.EvKey V.KRight [])) =  B.continue $ M.Playing $ updateGameDirection game M.East
+handlePlaying game (B.VtyEvent (V.EvKey (V.KChar 'd') [])) =  B.continue $ M.Playing $ updateGameDirection game M.East
 handlePlaying game (B.VtyEvent V.EvLostFocus) =  B.continue $ M.Paused game
 handlePlaying game (B.VtyEvent V.EvGainedFocus) = B.continue $ M.Paused game
 handlePlaying game (B.VtyEvent (V.EvKey (V.KChar 'p') [])) = B.continue $ M.Paused game

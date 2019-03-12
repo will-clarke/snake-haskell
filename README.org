@@ -33,9 +33,8 @@ High scores (for given window sizes)
 Command line arguments
 Seeding
 Speed up with Spacebar
+Speeding up when you eat fruit
 
-- [ ] only change dimensions with command line arguments
-- [ ] Make the game faster as you eat more fruit
 - [ ] backwards mode: keys do the opposite of what you expect (/ something totally random)
 - [ ] 
 - [ ] (prerequisite of below): store a continually increasing integer - the "tick" of the game
@@ -46,6 +45,8 @@ Speed up with Spacebar
 - [ ] changing background colours depending on the level ----- DO WE EVEN WANT THIS?
 - [ ] Find out how to get screen dimensions from Brick. This could be tricky / monad-y
 - [ ] parsing -- some DSL for styling / add a map
+- [X] only change dimensions with command line arguments
+- [X] Make the game faster as you eat more fruit
 - [X] show high scores
 - [X] update high scores
 - [X] Make sure all record-syntax functions are sytematically named (eg. "getSomething")

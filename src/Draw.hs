@@ -26,8 +26,8 @@ drawHeader game =
     (B.withAttr Attr.arena $B.str (show (Model.direction game)) B.<+>
      B.padLeft B.Max (B.str ("Score: " ++ show (Model.getScore game) ++ " ")))
 
-drawGame :: Model.Game -> B.Widget Model.Name
-drawGame game =
+drawGameWidget :: Model.Game -> B.Widget Model.Name
+drawGameWidget game =
   foldl
     (B.<=>)
     B.emptyWidget
@@ -69,13 +69,17 @@ emptyGrid (Model.Bounds width height) =
   let row = replicate width (B.withAttr Attr.arena $ B.str " ")
   in replicate height row
 
-draw :: Model.State -> [B.Widget Model.Name]
-draw (Model.Playing game) =
+drawGame :: Model.Game -> [B.Widget Model.Name]
+drawGame game =
   let getGraphics = Model.getGraphics game
-      gameWidget = drawHeader game B.<=> Center.center (Border.border $ drawGame game)
+      gameWidget = drawHeader game B.<=> Center.center (Border.border $ drawGameWidget game)
    in case getGraphics of
         Model.Simple -> [B.withBorderStyle BorderStyle.ascii $ B.forceAttr Attr.boring gameWidget]
         Model.Complex -> [B.withBorderStyle BorderStyle.unicodeRounded gameWidget]
+
+draw :: Model.State -> [B.Widget Model.Name]
+draw (Model.Playing game) = drawGame game
+draw (Model.Replaying game) = drawGame game
 draw (Model.StartScreen _options _tvar) = [Center.center (Border.border $ B.str "Welcome")]
 draw (Model.Paused _game) = [Center.center (Border.border $ B.str "** PAUSED **")]
 draw (Model.GameOver _getScore) =
@@ -87,7 +91,8 @@ draw (Model.GameOver _getScore) =
     \| () () |\n\
     \ \\  ^  /\n\
     \  |||||\n\
-    \  |||||\n"
+    \  |||||\n\n\
+    \Press r to Replay"
   ]
 
 

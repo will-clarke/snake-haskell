@@ -35,11 +35,10 @@ Seeding
 Speed up with Spacebar
 Speeding up when you eat fruit
 
-- [ ] backwards mode: keys do the opposite of what you expect (/ something totally random)
-- [ ] 
 - [ ] (prerequisite of below): store a continually increasing integer - the "tick" of the game
 - [ ] record a list of all the keystrokes??? We could even replay this later on....
 - [ ] 
+- [ ] backwards mode: keys do the opposite of what you expect (/ something totally random)
 - [ ] make snake head a different colour
 - [ ] high scores stored on a server somewhere?????
 - [ ] changing background colours depending on the level ----- DO WE EVEN WANT THIS?

@@ -20,6 +20,7 @@ initialGame (M.Options seed graphics width height) tvar =
     , M.getBounds = bounds
     , M.getGraphics = graphics
     , M.getSpeedControl = tvar
+    , M.getPreviousGames = []
     }
   where
     bounds = M.Bounds width height

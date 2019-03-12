@@ -43,9 +43,9 @@ main = do
   handleEndGame game
 
 handleEndGame :: Model.State -> IO ()
-handleEndGame (Model.GameOver attempt) = do
-  leaderboard <- Leaderboard.writeLeaderboard attempt
-  B.simpleMain $ Draw.gameOverWidget attempt leaderboard
+handleEndGame (Model.GameOver game) = do
+  leaderboard <- Leaderboard.writeLeaderboard (Model.toAttempt game)
+  B.simpleMain $ Draw.gameOverWidget (Model.toAttempt game) leaderboard
 handleEndGame _ = return ()
 
 fullopts :: O.ParserInfo Model.Options

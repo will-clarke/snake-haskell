@@ -37,7 +37,8 @@ data Game = Game {
     getScore          :: Int,
     getBounds         :: Bounds,
     getGraphics       :: Graphics,
-    getSpeedControl   :: Control.Concurrent.STM.TVar Int
+    getSpeedControl   :: Control.Concurrent.STM.TVar Int,
+    getPreviousGames  :: [Game]
 }
 
 data Graphics = Simple | Complex deriving (Show, Read)
@@ -47,7 +48,8 @@ data State
                 (Control.Concurrent.STM.TVar Int)
   | Playing Game
   | Paused Game
-  | GameOver Attempt
+  | Replaying Game
+  | GameOver Game
 
 data Options = Options
   { getStartSeed     :: Int

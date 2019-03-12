@@ -41,6 +41,7 @@ tick game =
         , M.getBounds = M.getBounds game
         , M.getGraphics = M.getGraphics game
         , M.getSpeedControl = M.getSpeedControl game
+        , M.getPreviousGames = game : M.getPreviousGames game
         }
 
 dead :: M.Game -> Bool
@@ -64,13 +65,17 @@ tickGame game = do
 
 handleEvent :: M.State -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handleEvent (M.Playing game) event = handlePlaying game event
+handleEvent (M.Replaying game) _ = handleReplay game
 handleEvent (M.StartScreen options tvar) event = handleStartScreen options tvar event
 handleEvent (M.Paused game) event = handlePaused game event
-handleEvent (M.GameOver attempt) event = handleGameOver attempt event
+handleEvent (M.GameOver game) event = handleGameOver game event
+
+handleReplay :: M.Game -> B.EventM M.Name (B.Next M.State)
+handleReplay game | null (M.getPreviousGames game) = B.continue $ M.GameOver game
 
 handlePlaying :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handlePlaying game (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.Playing game
-handlePlaying game _ | dead game = B.continue $ M.GameOver $ M.toAttempt game
+handlePlaying game _ | dead game = B.continue $ M.GameOver game
 handlePlaying game (B.VtyEvent (V.EvKey V.KUp [])) = B.continue $ M.Playing $ updateGameDirection game M.North
 handlePlaying game (B.VtyEvent (V.EvKey (V.KChar 'w') [])) = B.continue $ M.Playing $ updateGameDirection game M.North
 handlePlaying game (B.VtyEvent (V.EvKey V.KDown [])) =  B.continue $ M.Playing $ updateGameDirection game M.South
@@ -92,10 +97,9 @@ handleStartScreen options tvar (B.AppEvent M.Tick) = B.continue $ M.StartScreen 
 handleStartScreen options tvar (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.StartScreen options tvar
 handleStartScreen options tvar _ = B.continue $ M.Playing (Game.initialGame options tvar)
 
-
-handleGameOver :: M.Attempt -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
-handleGameOver attempt (B.AppEvent M.Tick) = B.continue $ M.GameOver attempt
-handleGameOver attempt _ = B.halt $ M.GameOver attempt
+handleGameOver :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
+handleGameOver game (B.AppEvent M.Tick) = B.continue $ M.GameOver game
+handleGameOver game _ = B.halt $ M.GameOver game
 
 handlePaused :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handlePaused game (B.AppEvent M.Tick) = B.continue $ M.Paused game

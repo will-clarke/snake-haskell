@@ -29,15 +29,13 @@ No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
 
 *** Cool features
 Pausing / resuming 
+Replaying
 High scores (for given window sizes)
 Command line arguments
 Seeding
 Speed up with Spacebar
 Speeding up when you eat fruit
 
-- [ ] (prerequisite of below): store a continually increasing integer - the "tick" of the game
-- [ ] record a list of all the keystrokes??? We could even replay this later on....
-- [ ] 
 - [ ] backwards mode: keys do the opposite of what you expect (/ something totally random)
 - [ ] make snake head a different colour
 - [ ] high scores stored on a server somewhere?????

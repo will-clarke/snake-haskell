@@ -82,18 +82,24 @@ draw (Model.Playing game) = drawGame game
 draw (Model.Replaying game) = drawGame game
 draw (Model.StartScreen _options _tvar) = [Center.center (Border.border $ B.str "Welcome")]
 draw (Model.Paused _game) = [Center.center (Border.border $ B.str "** PAUSED **")]
-draw (Model.GameOver _getScore) =
+draw (Model.GameOver game) =
   [ Center.center $
     B.str
-    "\n\
+      ("\n\
     \ YOU DIED\n\n\
     \ /     \\ \n\
     \| () () |\n\
     \ \\  ^  /\n\
     \  |||||\n\
-    \  |||||\n\n\
-    \Press r to Replay"
+    \  |||||\n" ++
+       replayNote)
   ]
+  where
+    replayNote =
+      if null (Model.getPreviousGames game)
+        then ""
+        else "\n\
+    \Press r to Replay"
 
 
 gameOverWidget :: Model.Attempt -> Model.Leaderboard -> B.Widget Model.Name

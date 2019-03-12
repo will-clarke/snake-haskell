@@ -73,13 +73,19 @@ handleEvent (M.GameOver game) event = handleGameOver game event
 handleReplay :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 -- handleReplay game (B.AppEvent M.Tick) = B.continue $ M.Replaying $ gamePopped game
 handleReplay game _ | null (M.getPreviousGames game) = B.continue $ M.GameOver game
-handleReplay game _ = B.continue $ M.Replaying $ gamePopped game
+handleReplay game _ = B.continue $ gamePopped (M.getPreviousGames game)
 
-gamePopped :: M.Game -> M.Game
-gamePopped game = let
-  games = M.getPreviousGames game
-  (_oldGame:newGame:newGames) = games
-  in newGame { M.getPreviousGames = newGames }
+gamePopped :: [M.Game] -> M.State
+-- gamePopped [] = M.GameOver
+gamePopped (game:[]) = M.GameOver game { M.getPreviousGames = [] }
+gamePopped (_old:game:previousGames) = M.Replaying game { M.getPreviousGames = previousGames}
+  -- if null (M.getPreviousGames game)
+  --   then game
+  --   else newGame {M.getPreviousGames = newGames}
+  -- where
+  --   games = M.getPreviousGames game
+  --   (_oldGame:[]) = games
+  --   newGames = 
 
 handlePlaying :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handlePlaying game (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.Playing game

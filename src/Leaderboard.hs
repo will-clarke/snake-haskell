@@ -28,10 +28,11 @@ import qualified Text.Read
 writeLeaderboard :: Model.Attempt -> IO Model.Leaderboard
 writeLeaderboard attempt@(Model.Attempt _league _score) = do
   lbFile <- getLeaderboardFile
-  lbFileBody <- System.IO.readFile lbFile
   exists <- System.Directory.doesFileExist lbFile
   if exists
-    then updateAndWriteLeaderboard
+    then do
+    lbFileBody <- System.IO.readFile lbFile
+    updateAndWriteLeaderboard
            (Leaderboard.deserialiseLeaderboard lbFileBody)
            attempt
            lbFile

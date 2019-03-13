@@ -86,12 +86,13 @@ draw (Model.GameOver game) =
   [ Center.center $
     B.str
       ("\n\
-    \ YOU DIED\n\n\
-    \ /     \\ \n\
-    \| () () |\n\
-    \ \\  ^  /\n\
-    \  |||||\n\
-    \  |||||\n" ++
+    \    YOU DIED\n\n\
+    \    /     \\ \n\
+    \   | () () |\n\
+    \    \\  ^  /\n\
+    \     |||||\n\
+    \     |||||\n\n\
+    \Press <Spacebar> to continue\n" ++
        replayNote)
   ]
   where
@@ -99,7 +100,7 @@ draw (Model.GameOver game) =
       if null (Model.getPreviousGames game)
         then ""
         else "\n\
-    \Press r to View a replay"
+    \Press <r> to View a replay"
 
 
 gameOverWidget :: Model.Attempt -> Model.Leaderboard -> B.Widget Model.Name

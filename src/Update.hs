@@ -71,7 +71,7 @@ handleEvent (M.Paused game) event = handlePaused game event
 handleEvent (M.GameOver game) event = handleGameOver game event
 
 handleReplay :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
--- handleReplay game (B.AppEvent M.Tick) = B.continue $ M.Replaying $ gamePopped game
+handleReplay game (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.Replaying game
 handleReplay game _ | null (M.getPreviousGames game) = B.continue $ M.GameOver game
 handleReplay game _ = B.continue $ gamePopped (M.getPreviousGames game)
 
@@ -107,12 +107,17 @@ handleStartScreen options tvar _ = B.continue $ M.Playing (Game.initialGame opti
 handleGameOver :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handleGameOver game (B.AppEvent M.Tick) = B.continue $ M.GameOver game
 handleGameOver game (B.VtyEvent (V.EvKey (V.KChar 'r') []))
-  | not $ null (M.getPreviousGames game) =
+  | not $ null (M.getPreviousGames game) = do
+    Control.Monad.IO.Class.liftIO $
+      Control.Concurrent.STM.atomically $
+      Control.Concurrent.STM.writeTVar (M.getSpeedControl game) 0
     B.continue $ M.Replaying reversedGames
   where
     previousGames = M.getPreviousGames game
     reversedGames = game {M.getPreviousGames = reverse previousGames}
-handleGameOver game _ = B.halt $ M.GameOver game
+handleGameOver game (B.VtyEvent (V.EvKey (V.KChar ' ') [])) = B.halt $ M.GameOver game
+handleGameOver game (B.VtyEvent (V.EvKey (V.KChar 'q') [])) = B.halt $ M.GameOver game
+handleGameOver game _ = B.continue $ M.GameOver game
 
 handlePaused :: M.Game -> B.BrickEvent M.Name M.Tick -> B.EventM M.Name (B.Next M.State)
 handlePaused game (B.AppEvent M.Tick) = B.continue $ M.Paused game

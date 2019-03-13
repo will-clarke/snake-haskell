@@ -99,7 +99,7 @@ draw (Model.GameOver game) =
       if null (Model.getPreviousGames game)
         then ""
         else "\n\
-    \Press r to Replay"
+    \Press r to View a replay"
 
 
 gameOverWidget :: Model.Attempt -> Model.Leaderboard -> B.Widget Model.Name

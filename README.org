@@ -1,6 +1,6 @@
 * Snake written in Haskell
 
-[[./media/snake-haskell.gif]]
+[[./media/haskell-snake.gif]]
 
 *** Cool features
 - Command line arguments: alter the dimensions, the seed & ASCII style

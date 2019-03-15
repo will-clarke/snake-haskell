@@ -13,14 +13,14 @@ import qualified Model
 import qualified Options.Applicative    as O
 import qualified Update
 
-app :: B.App Model.State Model.Tick Model.Name
+app :: Model.Graphics -> B.App Model.State Model.Tick Model.Name
 
-app = B.App
+app graphics = B.App
   { B.appDraw         = Draw.draw
   , B.appChooseCursor = B.neverShowCursor
   , B.appHandleEvent  = Update.handleEvent
   , B.appStartEvent   = return
-  , B.appAttrMap      = const Attr.defaultMap
+  , B.appAttrMap      = const $ Attr.defaultMap graphics
   }
 
 playGame :: Model.Options -> IO Model.State
@@ -33,7 +33,7 @@ playGame options = do
       Brick.BChan.writeBChan chan Model.Tick
       n <- Control.Concurrent.STM.readTVarIO tvar
       Control.Concurrent.threadDelay (delay - (n * 10000))
-  B.customMain Draw.defaultVty (Just chan) app $
+  B.customMain Draw.defaultVty (Just chan) (app $ Model.getStartGraphics options) $
     Model.StartScreen options tvar
 
 main :: IO ()

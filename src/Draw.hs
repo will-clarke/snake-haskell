@@ -80,7 +80,16 @@ drawGame game =
 draw :: Model.State -> [B.Widget Model.Name]
 draw (Model.Playing game) = drawGame game
 draw (Model.Replaying game) = drawGame game
-draw (Model.StartScreen _options _tvar) = [Center.center (Border.border $ B.str "Welcome")]
+draw (Model.StartScreen options _tvar) =
+  let style =
+        case Model.getStartGraphics options of
+          Model.Simple  -> BorderStyle.ascii
+          Model.Complex -> BorderStyle.unicodeRounded
+   in [ B.withBorderStyle style $
+        Center.center (Border.border $ B.str "Welcome")
+      ]
+
+
 draw (Model.Paused _game) = [Center.center (Border.border $ B.str "** PAUSED **")]
 draw (Model.GameOver game) =
   [ Center.center $

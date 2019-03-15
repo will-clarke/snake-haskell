@@ -9,17 +9,19 @@ module Attr
 
 import qualified Brick                   as B
 import qualified Brick.AttrMap
+import qualified Model
 import qualified Brick.Util
 import qualified Graphics.Vty            as V
 import qualified Graphics.Vty.Attributes as Attrs
 
-globalDefault :: Attrs.Attr
-globalDefault = V.white `Brick.Util.on` V.blue
+globalDefault :: Model.Graphics -> Attrs.Attr
+globalDefault Model.Complex = V.white `Brick.Util.on` V.blue
+globalDefault Model.Simple = V.white `Brick.Util.on` V.black
 
-defaultMap :: Brick.AttrMap.AttrMap
-defaultMap =
+defaultMap :: Model.Graphics -> Brick.AttrMap.AttrMap
+defaultMap graphics =
   Brick.AttrMap.attrMap
-    globalDefault
+    (globalDefault graphics)
     [ (food, V.red `B.on` V.brightBlue)
     , (snakeBody, V.black `B.on` V.brightYellow)
     , (snakeHead, V.brightGreen `B.on` V.brightCyan)

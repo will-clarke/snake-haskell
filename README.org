@@ -1,6 +1,15 @@
 * Snake written in Haskell
 
-No idea if this will ever work... at the moment we've got some basic stuff showing on a terminal :|
+[[./media/snake-haskell.gif]]
+
+*** Cool features
+- Command line arguments: alter the dimensions, the seed & ASCII style
+- Pausing / resuming ('p')
+- Replaying your last game ('r')
+- High scores (for given window sizes)
+- Seeding
+- Speed up with Spacebar
+- Speeding up when you eat fruit
 
 *** How to run
 
@@ -11,31 +20,7 @@ cd snake-haskell
 stack run
 #+END_SRC    
 
-
-Some notes about how I'm implementing this:
-- Worth having two typeclasses - ~Tickable~ & ~Drawable~?
-
-#+BEGIN_SRC haskell
-class Drawable a where
-    coords :: [Coordinates]
-    widget :: Char
-  
-class Tickable a where
-    tick :: a - > a
-#+END_SRC
-
-No idea if this is a good idea... We'll find out I guess... ¯\_(ツ)_/¯
-
-
-*** Cool features
-Pausing / resuming 
-Replaying
-High scores (for given window sizes)
-Command line arguments
-Seeding
-Speed up with Spacebar
-Speeding up when you eat fruit
-
+*** Dev TODOs: 
 - [ ] backwards mode: keys do the opposite of what you expect (/ something totally random)
 - [ ] make snake head a different colour
 - [ ] high scores stored on a server somewhere?????
